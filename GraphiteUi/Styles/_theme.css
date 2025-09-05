@@ -1,0 +1,124 @@
+@import "./_dark";
+
+@custom-variant dark (&:where(.dark, [data-theme="dark"]));
+
+@layer theme, base, components, utilities;
+
+/* ---- THEME (static, inline) ------------------------------------------- */
+@theme static inline {
+    /* radii */
+    --radius-small: 8px;
+    --radius-default: 12px;
+    --radius-large: 16px;
+    /* Ring defaults */
+    --default-ring-width: 6px;
+    /* typography */
+    --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    /* transitions */
+    --default-transition-duration: .15s;
+    --transition-property-colors-opacity: color, background-color, border-color, text-decoration-color, fill, stroke, opacity;
+    /* shadows */
+    --shadow-xs: var(--graphite-shadow-xs);
+    --shadow-sm: var(--graphite-shadow-sm);
+    --shadow-md: var(--graphite-shadow-md);
+    --shadow-xl: var(--graphite-shadow-lg);
+    --shadow-2xl: var(--graphite-shadow-2xl);
+    /* Surfaces (semantic) */
+    --surface1: var(--graphite-surface1);
+    --surface1-foreground: var(--graphite-surface1-foreground);
+    --surface2: var(--graphite-surface2);
+    --surface2-foreground: var(--graphite-surface2-foreground);
+    --divider: var(--graphite-divider);
+    --focus: var(--graphite-focus);
+    /* PRIMARY */
+    --color-primary: var(--graphite-primary);
+    --color-primary-1: var(--graphite-primary-1);
+    --color-primary-5: var(--graphite-primary-5);
+    --color-primary-10: var(--graphite-primary-10);
+    --color-primary-15: var(--graphite-primary-15);
+    --color-primary-20: var(--graphite-primary-20);
+    --color-primary-30: var(--graphite-primary-30);
+    --color-primary-50: var(--graphite-primary-50);
+    --color-primary-60: var(--graphite-primary-60);
+    --color-primary-70: var(--graphite-primary-70);
+    --color-primary-foreground: var(--graphite-primary-foreground);
+    /* SECONDARY */
+    --color-secondary-5: var(--graphite-secondary-5);
+    --color-secondary-6: var(--graphite-secondary-6);
+    --color-secondary-10: var(--graphite-secondary-10);
+    --color-secondary-15: var(--graphite-secondary-15);
+    --color-secondary-20: var(--graphite-secondary-20);
+    --color-secondary-30: var(--graphite-secondary-30);
+    --color-secondary-40: var(--graphite-secondary-40);
+    --color-secondary-80: var(--graphite-secondary-80);
+    --color-secondary-90: var(--graphite-secondary-90);
+    --color-secondary: var(--graphite-secondary);
+    --color-secondary-foreground: var(--graphite-secondary-foreground);
+    /* SUCCESS */
+    --color-success-400: var(--graphite-success-400);
+    --color-success-500: var(--graphite-success-500);
+    --color-success-600: var(--graphite-success-600);
+    --color-success: var(--graphite-success);
+    --color-success-foreground: var(--graphite-success-foreground);
+    /* WARNING */
+    --color-warning-400: var(--graphite-warning-400);
+    --color-warning-500: var(--graphite-warning-500);
+    --color-warning-600: var(--graphite-warning-600);
+    --color-warning: var(--graphite-warning);
+    --color-warning-foreground: var(--graphite-warning-foreground);
+    /* DANGER */
+    --color-danger-400: var(--graphite-danger-400);
+    --color-danger-500: var(--graphite-danger-500);
+    --color-danger-600: var(--graphite-danger-600);
+    --color-danger: var(--graphite-danger);
+    --color-danger-foreground: var(--graphite-danger-foreground);
+    /* INFO */
+    --color-info-500: var(--graphite-info-500);
+    --color-info: var(--graphite-info);
+    --color-info-foreground: var(--graphite-info-foreground);
+
+
+    /* Typography sizes carried over as utilities: text-h1, text-h2, ... */
+    --text-h1: 32px;
+    --text-h1--font-weight: 700;
+    --text-h2: 28px;
+    --text-h2--font-weight: 700;
+    --text-h3: 24px;
+    --text-h3--font-weight: 600;
+    --text-h4: 20px;
+    --text-h4--font-weight: 600;
+    --text-h5: 18px;
+    --text-h5--font-weight: 600;
+    --text-h6: 16px;
+    --text-h6--font-weight: 600;
+    --text-header: 18px;
+    --text-header--font-weight: 600;
+    --text-regular: 16px;
+    --text-regular--font-weight: 500;
+    --text-small: 14px;
+    --text-small--font-weight: 500;
+    --text-heading: 14px;
+    --text-heading--font-weight: 600;
+    --text-heading--letter-spacing: 0.1em;
+    --text-label-large: 1.25rem;
+    --text-label-large--line-height: 1;
+    --text-label-large--font-weight: 400;
+    --text-label-large--letter-spacing: 0.00938em;
+    --text-label-small: 1.125rem;
+    --text-label-small--line-height: 1;
+    --text-label-small--font-weight: 400;
+    --text-label-small--letter-spacing: 0.00938em;
+}
+
+/* ---- BASE -------------------------------------------------------------- */
+@layer base {
+    :where(html, body) {
+        background: var(--graphite-background);
+        color: var(--graphite-foreground);
+        font-family: var(--font-family-sans);
+    }
+}

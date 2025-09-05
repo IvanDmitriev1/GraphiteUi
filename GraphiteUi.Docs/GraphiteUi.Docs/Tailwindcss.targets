@@ -1,0 +1,43 @@
+<Project>
+	<PropertyGroup>
+		<!-- Version -->
+		<TailwindVersion>v4.1.11</TailwindVersion>
+		<TailwindDir>$(ProjectDir)obj/</TailwindDir>
+
+		<!-- OS-specific binary name -->
+		<TailwindBinName Condition="'$(OS)' == 'Windows_NT'">tailwindcss.exe</TailwindBinName>
+		<TailwindBinName Condition="'$(OS)' != 'Windows_NT'">tailwindcss</TailwindBinName>
+
+		<!-- Full path to binary (CRUCIAL) -->
+		<TailwindBin>$(TailwindDir)$(TailwindBinName)</TailwindBin>
+
+		<!-- Single-line URLs (no newline/indent) -->
+		<TailwindUrl Condition="'$(OS)' == 'Windows_NT'">https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/tailwindcss-windows-x64.exe</TailwindUrl>
+		<TailwindUrl Condition="'$(OS)' != 'Windows_NT'">https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/tailwindcss-linux-x64</TailwindUrl>
+
+		<!-- Use full path to curl on Windows -->
+		<CurlExe Condition="'$(OS)' == 'Windows_NT'">%25SystemRoot%25\System32\curl.exe</CurlExe>
+		<CurlExe Condition="'$(OS)' != 'Windows_NT'">curl</CurlExe>
+
+		<!-- Your input/output -->
+		<TailwindInput>wwwroot/styles/app.css</TailwindInput>
+		<TailwindOutput>wwwroot/app.css</TailwindOutput>
+	</PropertyGroup>
+
+	<!-- Ensure CLI is present -->
+	<Target Name="EnsureTailwind"
+	        AfterTargets="Build;Publish"
+			Condition="!Exists('$(TailwindBin)')">
+		<Message Importance="High" Text="Downloading Tailwind CLI $(TailwindVersion) to $(TailwindBin)..." />
+		<MakeDir Directories="$(TailwindDir)" />
+		<Exec Command="&quot;$(CurlExe)&quot; -sSL -o &quot;$(TailwindBin)&quot; &quot;$(TailwindUrl)&quot;" />
+		<Exec Command="chmod +x &quot;$(TailwindBin)&quot;" Condition="'$(OS)' != 'Windows_NT'" />
+	</Target>
+
+	<!-- Build CSS with a FULL PATH to the binary -->
+	<Target Name="RunTailwind"
+			DependsOnTargets="EnsureTailwind;CopyContents"
+			AfterTargets="Build;Publish">
+		<Exec Command="&quot;$(TailwindBin)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot;" />
+	</Target>
+</Project>

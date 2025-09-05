@@ -1,0 +1,20 @@
+<!-- Copies style-related C# files to the specified output directory of a consuming project -->
+<Project>
+	<!-- Allow overriding the destination folder via a property -->
+	<PropertyGroup>
+		<!-- If consumer sets GraphiteUI, use it; otherwise default to bin\GraphiteUI in the project -->
+		<GraphiteUI>
+			$(MSBuildProjectDirectory)\bin\GraphiteUi
+		</GraphiteUI>
+	</PropertyGroup>
+
+	<Target Name="CopyContents" AfterTargets="Build">
+		<!-- Include the files from the package `theme` folder -->
+		<ItemGroup>
+			<Files Include="$(MSBuildThisFileDirectory)..\theme\**\*" />
+		</ItemGroup>
+
+		<!-- Copy it to the consumer's bin\GraphiteUi (or override location) -->
+		<Copy SourceFiles="@(Files)" DestinationFolder="$(GraphiteUi)" SkipUnchangedFiles="true" />
+	</Target>
+</Project>

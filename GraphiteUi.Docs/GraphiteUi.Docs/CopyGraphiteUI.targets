@@ -1,0 +1,15 @@
+<Project>
+	<PropertyGroup>
+		<SolutionDir Condition="'$(SolutionDir)' == '' ">$(MSBuildThisFileDirectory)../../../</SolutionDir>
+	</PropertyGroup>
+
+	<Target Name="CopyContents" BeforeTargets="Build">
+		<ItemGroup>
+			<Files Include="$(SolutionDir)/GraphiteUi/Styles/**/*" />
+		</ItemGroup>
+
+		<Copy SourceFiles="@(Files)"
+		      DestinationFolder="$(MSBuildProjectDirectory)/bin/GraphiteUi"
+		      SkipUnchangedFiles="true" />
+	</Target>
+</Project>

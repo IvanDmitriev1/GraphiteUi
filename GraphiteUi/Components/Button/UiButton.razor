@@ -1,0 +1,14 @@
+﻿@namespace GraphiteUi.Components
+@inherits UiComponentBase<UiButton, GraphiteUi.Styles.ButtonStyles>
+
+<UiComponent As="@As"
+                Class="@RootClass"
+                type="@Type.ToHtmlValue()"
+                disabled="@Disabled"
+                data-disabled="@Disabled.ToAttributeValue()"
+                @attributes="@AdditionalAttributes"
+                @onclick="@OnClickAsync">
+    @StartContent
+    @ChildContent
+    @EndContent
+</UiComponent>
