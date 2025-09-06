@@ -13,6 +13,11 @@
     <ValidationSummary />
     
     <UiTextbox Label="Name"
+               Placeholder="Some text"
+               @bind-Value="FormData.Name" />
+    
+    <UiTextbox Label="Name"
+               Disabled="true"
                @bind-Value="FormData.Name" />
 
     <div>

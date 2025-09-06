@@ -69,6 +69,11 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
         [ThemeColor.Info] = "active:bg-info-500 active:text-info-foreground"
     };
 
+    private static CssClassBuilder GetDisabled() => CssClassBuilder.Empty()
+        .Add(ColorVariants.Disabled.Background)
+        .Add(ColorVariants.Disabled.Foreground)
+        .Add("disabled:cursor-default");
+
     public static string GetClasses(UiButton component)
     {
         return CssClassBuilder.Empty()
@@ -80,7 +85,7 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
             .Add(ColorVariants.Border.Default)
             .Add(ColorVariants.Ring.Focus[component.Color])
             .Add(GetSizeStyles(component.Size))
-            .Add(ColorVariants.DisabledStyles)
+            .Add(GetDisabled())
             .Add(component.Class)
             .ToString();
     }

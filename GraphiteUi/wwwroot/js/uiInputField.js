@@ -16,10 +16,7 @@
     };
 
     const hasInputValue = () => {
-        if ('value' in input)
-            return !!input.value;
-
-        const text = input.textContent ?? '';
+        const text = (('value' in input ? input.value : input.textContent) || input.placeholder || '').toString();
         return text.trim().length > 0;
     };
 

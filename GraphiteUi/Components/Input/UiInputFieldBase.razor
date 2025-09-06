@@ -12,6 +12,8 @@
     private RenderFragment InputWrapper =>
         @<div data-slot="input-wrapper"
               data-invalid="@IsInvalid.ToAttributeValue()"
+              data-readonly="@ReadOnly.ToAttributeValue()"
+              data-disabled="@Disabled"
               class="@_styles.InputWrapperClass">
 
             @if (!string.IsNullOrEmpty(Label))
@@ -26,6 +28,8 @@
                    disabled="@Disabled"
                    readonly="@ReadOnly"
                    required="@Required"
+                   aria-disabled="@Disabled"
+                   aria-readonly="@ReadOnly"
                    name="@NameAttributeValue"
                    data-slot="input"
                    @attributes="@AdditionalAttributes"

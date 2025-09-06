@@ -23,6 +23,7 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add("has-[label]:mt-[calc(var(--text-small)_+_10px)]")
         .Add("border")
         .Add("rounded-md")
+        .Add(ColorVariants.Placeholder.Foreground)
         .Add(ColorVariants.Surface.Background)
         .Add(ColorVariants.Surface.HoverBackground)
         .Add(ColorVariants.Border.Default)
@@ -31,6 +32,10 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add(ColorVariants.Ring.FocusWithin[ThemeColor.Primary])
         .Add("data-[invalid=true]:border-danger-400")
         .Add("data-[invalid=true]:focus-within:ring-danger-600/20")
+        .Add(ColorVariants.Disabled.Background)
+        .Add(ColorVariants.Disabled.Foreground)
+        .Add("disabled:cursor-default")
+        .Add("data-disabled:border-none")
         .ToString();
 
     public string LabelClass { get; } = new CssClassBuilder(stackalloc char[256])
@@ -53,6 +58,7 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add("group-data-[active=true]:pointer-events-auto")
         .Add("group-data-[active=true]:-translate-y-[calc(100%_+_var(--text-small)/2_+_20px)]")
         .Add("group-data-[active=true]:text-foreground")
+        .Add(ColorVariants.Disabled.GroupForeground)
         .ToString();
 
     public string InputClass { get; } = new CssClassBuilder(stackalloc char[256])

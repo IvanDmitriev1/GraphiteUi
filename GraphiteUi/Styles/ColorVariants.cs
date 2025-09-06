@@ -53,10 +53,18 @@ internal static class ColorVariants
             [ThemeColor.Info] = string.Empty
         };
     }
-    
-    public static readonly string DisabledStyles = new CssClassBuilder(stackalloc char[64])
-        .Add("disabled:bg-primary-5")
-        .Add("disabled:text-primary-20")
-        .Add("disabled:cursor-default")
-        .ToString();
+
+    public static class Disabled
+    {
+        public const string Background = "disabled:bg-primary-5 data-disabled:bg-primary-5";
+        public const string Foreground = "disabled:text-primary-20 data-disabled:text-primary-20";
+
+        public const string GroupBackground = "group-data-[disabled=true]:bg-primary-5";
+        public const string GroupForeground = "group-data-[disabled=true]:text-primary-20";
+    }
+
+    public static class Placeholder
+    {
+        public const string Foreground = "placeholder:text-primary-30";
+    }
 }
