@@ -1,0 +1,40 @@
+﻿@namespace GraphiteUi.Components
+@inherits UiDebouncedInputBase<TValue>
+@typeparam TValue
+
+<div class="@Class" data-slot="main-wrapper">
+    @InputWrapper
+    @HelperWrapper
+</div>
+
+@code{
+
+    private RenderFragment InputWrapper =>
+        @<div data-slot="input-wrapper"
+              data-invalid="@IsInvalid.ToAttributeValue()"
+              class="@_styles.InputWrapperClass">
+
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <label class="@_styles.LabelClass" data-slot="label">@Label</label>
+            }
+
+            <input type="@InputTypeString"
+                   class="@_styles.InputClass"
+                   value="@CurrentValueAsString"
+                   placeholder="@Placeholder"
+                   disabled="@Disabled"
+                   readonly="@ReadOnly"
+                   required="@Required"
+                   name="@NameAttributeValue"
+                   data-slot="input"
+                   @attributes="@AdditionalAttributes"
+                   @oninput="@OnInputAsync"/>
+        </div>;
+
+    private RenderFragment HelperWrapper =>
+        @<div>
+            
+        </div>;
+
+}

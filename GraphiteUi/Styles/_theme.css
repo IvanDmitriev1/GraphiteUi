@@ -6,10 +6,6 @@
 
 /* ---- THEME (static, inline) ------------------------------------------- */
 @theme static inline {
-    /* radii */
-    --radius-small: 8px;
-    --radius-default: 12px;
-    --radius-large: 16px;
     /* Ring defaults */
     --default-ring-width: 6px;
     /* typography */
@@ -28,12 +24,12 @@
     --shadow-xl: var(--graphite-shadow-lg);
     --shadow-2xl: var(--graphite-shadow-2xl);
     /* Surfaces (semantic) */
-    --surface1: var(--graphite-surface1);
-    --surface1-foreground: var(--graphite-surface1-foreground);
-    --surface2: var(--graphite-surface2);
-    --surface2-foreground: var(--graphite-surface2-foreground);
-    --divider: var(--graphite-divider);
-    --focus: var(--graphite-focus);
+    --color-surface1: var(--graphite-surface1);
+    --color-surface1-foreground: var(--graphite-surface1-foreground);
+    --color-surface2: var(--graphite-surface2);
+    --color-surface2-foreground: var(--graphite-surface2-foreground);
+    --color-divider: var(--graphite-divider);
+    --color-focus: var(--graphite-focus);
     /* PRIMARY */
     --color-primary: var(--graphite-primary);
     --color-primary-1: var(--graphite-primary-1);
@@ -80,8 +76,6 @@
     --color-info-500: var(--graphite-info-500);
     --color-info: var(--graphite-info);
     --color-info-foreground: var(--graphite-info-foreground);
-
-
     /* Typography sizes carried over as utilities: text-h1, text-h2, ... */
     --text-h1: 32px;
     --text-h1--font-weight: 700;

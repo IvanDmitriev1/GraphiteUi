@@ -1,0 +1,60 @@
+﻿@page "/simple-form"
+
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Simple Form</PageTitle>
+
+<h3>Simple Form Example</h3>
+
+<EditForm Model="@FormData"
+          FormName="one"
+          OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    
+    <UiTextbox Label="Name"
+               @bind-Value="FormData.Name" />
+
+    <div>
+        <label for="age">Age:</label>
+        <InputNumber id="age" @bind-Value="FormData.Age" />
+        <ValidationMessage For="@(() => FormData.Age)" />
+    </div>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@if (submitted)
+{
+    <p>
+        <b>You submitted:</b><br />
+        Name: @FormData.Name<br />
+        Age: @FormData.Age
+    </p>
+}
+
+@code {
+
+    [SupplyParameterFromForm]
+    private FormModel? FormData { get; set; }
+    private bool submitted;
+
+    protected override void OnInitialized()
+    {
+        FormData ??= new FormModel();
+    }
+
+    private void HandleValidSubmit()
+    {
+        submitted = true;
+    }
+
+    public class FormModel
+    {
+        [Required(ErrorMessage = "Name is required.")]
+        public string? Name { get; set; }
+
+        [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
+        public int? Age { get; set; }
+    }
+}

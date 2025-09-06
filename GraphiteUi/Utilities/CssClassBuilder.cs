@@ -58,7 +58,7 @@ public ref struct CssClassBuilder
         if (value.IsEmpty)
             return;
 
-        if (value[^1] != ' ')
+        if (_stringBuilder.Length > 0 && value[^1] != ' ')
             _stringBuilder.Append(' ');
 
         _stringBuilder.Append(value);

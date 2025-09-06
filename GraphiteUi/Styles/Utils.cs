@@ -24,4 +24,12 @@ public static class Utils
         .Add("focus-visible:outline-focus")
         .Add("focus-visible:outline-offset-2")
         .ToString();
+
+    public static readonly string FocusWithin = new CssClassBuilder(stackalloc char[128])
+        .Add("outline-hidden")
+        .Add("focus-within:z-10")
+        .Add("focus-within:outline-2")
+        .Add("focus-within:outline-focus")
+        .Add("focus-within:outline-offset-2")
+        .ToString();
 }

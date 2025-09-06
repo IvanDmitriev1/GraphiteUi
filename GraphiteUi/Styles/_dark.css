@@ -45,7 +45,7 @@
     --graphite-warning: var(--graphite-warning-500);
     --graphite-warning-foreground: #FFFFFF;
     /* Danger */
-    --graphite-danger-400: #FF0000;
+    --graphite-danger-400: #FF1515;
     --graphite-danger-500: #BB2200;
     --graphite-danger-600: #9F0000;
     --graphite-danger: var(--graphite-danger-500);
