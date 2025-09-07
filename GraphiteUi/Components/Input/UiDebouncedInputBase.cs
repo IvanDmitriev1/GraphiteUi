@@ -42,12 +42,12 @@ public abstract class UiDebouncedInputBase<TValue> : UiInputBase<TValue>
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _cts?.Cancel();
-            _cts?.Dispose();
-        }
-
         base.Dispose(disposing);
+
+        if (!disposing) 
+            return;
+
+        _cts?.Cancel();
+        _cts?.Dispose();
     }
 }

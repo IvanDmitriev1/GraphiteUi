@@ -32,8 +32,8 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
         .ToString();
 
     private static CssClassBuilder GetSizeStyles(Size size) => CssClassBuilder.Empty()
-        .Add("min-w-16 py-2.5 px-3 gap-1.5 text-small", when: size is Size.Small)
-        .Add("min-w-20 py-4 px-5 gap-1.5 text-medium", when: size is Size.Medium)
+        .Add("min-w-16 py-1.5 px-2 gap-1.5 text-small", when: size is Size.Small)
+        .Add("min-w-20 py-2.5 px-3 gap-1.5 text-medium", when: size is Size.Medium)
         .Add("min-w-24 py-5 px-6 gap-1.5 font-bold text-large", when: size is Size.Large);
 
     private static readonly IReadOnlyDictionary<ThemeColor, string> Background = new Dictionary<ThemeColor, string>()

@@ -3,38 +3,41 @@
 @typeparam TValue
 
 <div class="@Class" data-slot="main-wrapper">
-    @InputWrapper
+    <div data-slot="input-wrapper"
+         data-invalid="@IsInvalid.ToAttributeValue()"
+         data-readonly="@ReadOnly.ToAttributeValue()"
+         data-disabled="@Disabled"
+         class="@_styles.InputWrapperClass"
+         @ref="_wrapperReference">
+
+        @if (!string.IsNullOrEmpty(Label))
+        {
+            <label class="@_styles.LabelClass"
+                   data-slot="label">
+                @Label
+            </label>
+        }
+
+        <input type="@TypeString"
+               class="@_styles.InputClass"
+               value="@CurrentValueAsString"
+               placeholder="@Placeholder"
+               disabled="@Disabled"
+               readonly="@ReadOnly"
+               required="@Required"
+               aria-disabled="@Disabled"
+               aria-readonly="@ReadOnly"
+               aria-label="@Label"
+               name="@NameAttributeValue"
+               data-slot="input"
+               @attributes="@AdditionalAttributes"
+               @oninput="@OnInputAsync"/>
+    </div>
+
     @HelperWrapper
 </div>
 
 @code{
-
-    private RenderFragment InputWrapper =>
-        @<div data-slot="input-wrapper"
-              data-invalid="@IsInvalid.ToAttributeValue()"
-              data-readonly="@ReadOnly.ToAttributeValue()"
-              data-disabled="@Disabled"
-              class="@_styles.InputWrapperClass">
-
-            @if (!string.IsNullOrEmpty(Label))
-            {
-                <label class="@_styles.LabelClass" data-slot="label">@Label</label>
-            }
-
-            <input type="@InputTypeString"
-                   class="@_styles.InputClass"
-                   value="@CurrentValueAsString"
-                   placeholder="@Placeholder"
-                   disabled="@Disabled"
-                   readonly="@ReadOnly"
-                   required="@Required"
-                   aria-disabled="@Disabled"
-                   aria-readonly="@ReadOnly"
-                   name="@NameAttributeValue"
-                   data-slot="input"
-                   @attributes="@AdditionalAttributes"
-                   @oninput="@OnInputAsync"/>
-        </div>;
 
     private RenderFragment HelperWrapper =>
         @<div>

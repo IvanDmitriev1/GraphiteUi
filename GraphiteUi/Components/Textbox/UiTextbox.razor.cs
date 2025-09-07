@@ -17,7 +17,7 @@ public partial class UiTextbox : UiInputFieldBase<string>
 
     protected override void OnInitialized()
     {
-        InputTypeString = Type.ToHtmlValue();
+        TypeString = Type.ToHtmlValue();
     }
 
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out string result, [NotNullWhen(false)] out string? validationErrorMessage)

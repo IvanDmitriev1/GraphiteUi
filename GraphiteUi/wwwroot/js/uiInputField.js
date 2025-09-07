@@ -46,11 +46,10 @@
     wrapper.__graphiteUiInit = true;
 }
 
-export function initUiInputFields(root = document) {
+export function refreshUiInputFields(root = document) {
     root.querySelectorAll('[data-slot="input-wrapper"]').forEach(setupField);
 }
 
-export function refreshUiInputFields(root = document) {
-    // When Blazor patches a subtree, new wrappers appear uninitialized.
-    initUiInputFields(root);
+export function refreshUiInputFieldsBlazor(wrapper) {
+    setupField(wrapper);
 }
