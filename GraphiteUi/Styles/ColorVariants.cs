@@ -59,8 +59,8 @@ internal static class ColorVariants
         public const string Background = "disabled:bg-primary-5 data-disabled:bg-primary-5";
         public const string Foreground = "disabled:text-primary-20 data-disabled:text-primary-20";
 
-        public const string GroupBackground = "group-data-[disabled=true]:bg-primary-5";
-        public const string GroupForeground = "group-data-[disabled=true]:text-primary-20";
+        public const string GroupBackground = "group-data-disabled:bg-primary-5";
+        public const string GroupForeground = "group-data-disabled:text-primary-20";
     }
 
     public static class Placeholder

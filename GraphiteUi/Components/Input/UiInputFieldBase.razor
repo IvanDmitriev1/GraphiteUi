@@ -4,9 +4,10 @@
 
 <div class="@Class" data-slot="main-wrapper">
     <div data-slot="input-wrapper"
-         data-invalid="@IsInvalid.ToAttributeValue()"
-         data-readonly="@ReadOnly.ToAttributeValue()"
+         data-invalid="@IsInvalid"
+         data-readonly="@ReadOnly"
          data-disabled="@Disabled"
+         data-active="@(!string.IsNullOrWhiteSpace(CurrentValueAsString))"
          class="@_styles.InputWrapperClass"
          @ref="_wrapperReference">
 

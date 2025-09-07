@@ -1,6 +1,5 @@
 ﻿using GraphiteUi.Components;
 using GraphiteUi.Utilities;
-using System.ComponentModel;
 using GraphiteUi.Common;
 
 namespace GraphiteUi.Styles;
@@ -30,8 +29,8 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add(Utils.FocusWithin)
         .Add("focus-within:ring")
         .Add(ColorVariants.Ring.FocusWithin[ThemeColor.Primary])
-        .Add("data-[invalid=true]:border-danger-400")
-        .Add("data-[invalid=true]:focus-within:ring-danger-600/20")
+        .Add("data-invalid:border-danger-400")
+        .Add("data-invalid:focus-within:ring-danger-600/20")
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add("disabled:cursor-default")
@@ -54,10 +53,10 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add("-translate-y-1/2")
         .Add("left-3")
         .Add("text-small")
-        .Add("group-data-[active=true]:left-0")
-        .Add("group-data-[active=true]:pointer-events-auto")
-        .Add("group-data-[active=true]:-translate-y-[calc(100%_+_var(--text-small)/2_+_20px)]")
-        .Add("group-data-[active=true]:text-foreground")
+        .Add("group-data-active:left-0")
+        .Add("group-data-active:pointer-events-auto")
+        .Add("group-data-active:-translate-y-[calc(100%_+_var(--text-small)/2_+_20px)]")
+        .Add("group-data-active:text-foreground")
         .Add(ColorVariants.Disabled.GroupForeground)
         .ToString();
 
