@@ -8,7 +8,7 @@
 
 Welcome to your new app.
 
-<div class="flex" flex-row gap-1>
+<div class="flex flex-row flex-wrap gap-1">
     <UiButton OnClick="Callback">Primary</UiButton>
     <UiButton Disabled="true">Disabled</UiButton>
     <UiButton Color="ThemeColor.Danger">Danger</UiButton>
@@ -24,7 +24,7 @@ Welcome to your new app.
         {
 			DismissOnOverlayClick = true,
             CloseOnEscape = true,
-            Classes = "max-w-md"
+            Classes = "md:max-w-md"
         }, null);
     }
 }

@@ -64,19 +64,19 @@ public partial class DialogHost : UiComponentBase, IDisposable
         }
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            DialogService.RegisterHost(this);
-        }
-    }
-
     public void Dispose()
     {
         foreach (var instance in _instances)
         {
             instance.Close();
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            DialogService.RegisterHost(this);
         }
     }
 }

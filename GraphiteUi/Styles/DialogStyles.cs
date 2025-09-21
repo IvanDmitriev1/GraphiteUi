@@ -11,6 +11,8 @@ internal static class DialogStyles
         .Add("drop-shadow-xl")
         .Add("m-auto")
         .Add("w-full")
+        .Add("max-w-[min(100dvw-2rem,42rem)]")
+        .Add("max-h-[min(100dvh-2rem,80vh)]")
         .Add("outline-none")
         .Add("focus:outline-none")
         .Add("focus-visible:outline-none")
