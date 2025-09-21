@@ -23,6 +23,9 @@
     --shadow-md: var(--graphite-shadow-md);
     --shadow-xl: var(--graphite-shadow-lg);
     --shadow-2xl: var(--graphite-shadow-2xl);
+    /*Page colors*/
+    --color-background: var(--graphite-background);
+    --color-foreground: var(--graphite-foreground);
     /* Surfaces (semantic) */
     --color-surface1: var(--graphite-surface1);
     --color-surface1-foreground: var(--graphite-surface1-foreground);
@@ -111,8 +114,8 @@
 /* ---- BASE -------------------------------------------------------------- */
 @layer base {
     :where(html, body) {
-        background: var(--graphite-background);
-        color: var(--graphite-foreground);
+        background: var(--color-background);
+        color: var(--color-foreground);
         font-family: var(--font-family-sans);
     }
 }

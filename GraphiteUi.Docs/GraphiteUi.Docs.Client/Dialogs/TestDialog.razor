@@ -1,0 +1,13 @@
+﻿@inherits BaseDialog<bool>
+
+<h1>Hi</h1>
+
+<UiButton OnClick="Callback">Close</UiButton>
+
+@code {
+
+	private void Callback()
+	{
+		SetResult(false);
+	}
+}

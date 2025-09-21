@@ -5,6 +5,11 @@ namespace GraphiteUi.Styles;
 
 internal static class ColorVariants
 {
+    public static readonly string PageColors = new CssClassBuilder(stackalloc char[128])
+        .Add("bg-background")
+        .Add("text-foreground")
+        .ToString();
+
     public static class Surface
     {
         public static readonly string Background = new CssClassBuilder(stackalloc char[128])
@@ -22,6 +27,10 @@ internal static class ColorVariants
     {
         public static readonly string Default = new CssClassBuilder(stackalloc char[128])
             .Add("border-primary-5")
+            .ToString();
+
+        public static readonly string Secondary = new CssClassBuilder(stackalloc char[128])
+            .Add("border-primary")
             .ToString();
     }
 

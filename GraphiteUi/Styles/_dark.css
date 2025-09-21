@@ -2,7 +2,7 @@
 .dark {
     --graphite-background: #242424;
     --graphite-foreground: #FFFFFF;
-    --graphite-divider: #2b3036;
+    --graphite-divider: var(--graphite-primary-10);
     --graphite-focus: var(--graphite-primary-15);
     --graphite-surface1: var(--graphite-primary-10);
     --graphite-surface1-foreground: var(--graphite-primary-foreground);

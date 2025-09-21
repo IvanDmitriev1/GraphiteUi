@@ -1,5 +1,6 @@
 ﻿@page "/"
-@using GraphiteUi.Common
+@rendermode InteractiveServer
+@inject IDialogService DialogService
 
 <PageTitle>Home</PageTitle>
 
@@ -8,7 +9,7 @@
 Welcome to your new app.
 
 <div class="flex" flex-row gap-1>
-    <UiButton>Primary</UiButton>
+    <UiButton OnClick="Callback">Primary</UiButton>
     <UiButton Disabled="true">Disabled</UiButton>
     <UiButton Color="ThemeColor.Danger">Danger</UiButton>
     <UiButton Color="ThemeColor.Success">Success</UiButton>
@@ -16,3 +17,14 @@ Welcome to your new app.
     <UiButton As="a" href="/simple-form">Link</UiButton>
 </div>
 
+@code {
+    private async Task Callback()
+    {
+        var result = await DialogService.ShowAsync<TestDialog, bool>(new DialogOptions()
+        {
+			DismissOnOverlayClick = true,
+            CloseOnEscape = true,
+            Classes = "max-w-md"
+        }, null);
+    }
+}
