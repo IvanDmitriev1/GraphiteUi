@@ -31,7 +31,7 @@ function UnlockScroll() {
     document.body.style.overflow = "auto";
 }
 
-function EnableOverlayDismiss(dialog, delayMs = 1000) {
+function EnableOverlayDismiss(dialog, delayMs = 800) {
     const onClick = (e) => {
         const r = dialog.getBoundingClientRect();
         const outside =

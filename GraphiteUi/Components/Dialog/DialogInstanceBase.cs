@@ -1,6 +1,5 @@
 ﻿using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace GraphiteUi.Components;
 
@@ -23,7 +22,7 @@ internal abstract class DialogInstanceBase<TDialog> : IDialogInstance
     public abstract void Close();
 
 
-    public RenderFragment BuildRender(IReadOnlyDictionary<string, object>? parameters) => builder =>
+    private RenderFragment BuildRender(IReadOnlyDictionary<string, object>? parameters) => builder =>
     {
         var seq = 0;
 

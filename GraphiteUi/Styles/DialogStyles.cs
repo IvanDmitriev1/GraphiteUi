@@ -18,6 +18,7 @@ internal static class DialogStyles
         .Add("focus-visible:outline-none")
         .Add(ColorVariants.Border.Secondary)
         .Add(ColorVariants.PageColors)
-        .Add("backdrop:bg-background/80")
+        .Add("backdrop:bg-background/40")
+        .Add("backdrop:backdrop-blur-[1.5px]")
         .ToString();
 }
