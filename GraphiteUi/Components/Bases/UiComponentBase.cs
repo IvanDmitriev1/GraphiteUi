@@ -7,7 +7,7 @@ namespace GraphiteUi.Components.Bases;
 /// <summary>
 /// Represents a base class for all components.
 /// </summary>
-public abstract class UiComponentBase : ComponentBase
+public abstract class UiComponentBase : ComponentBase, IUiComponent
 {
     /// <summary>
     /// Gets or sets an HTML tag of the component.

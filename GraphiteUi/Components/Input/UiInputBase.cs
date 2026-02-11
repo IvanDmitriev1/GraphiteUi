@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using GraphiteUi.Components.Bases;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace GraphiteUi.Components;
 
-public abstract class UiInputBase<TValue> : InputBase<TValue>
+public abstract class UiInputBase<TValue> : InputBase<TValue>, IUiComponent
 {
     /// <summary>
     /// Gets or sets CSS class names that will be applied to the component.

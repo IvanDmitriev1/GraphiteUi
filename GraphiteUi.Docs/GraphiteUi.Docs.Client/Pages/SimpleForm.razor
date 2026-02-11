@@ -19,6 +19,10 @@
     <UiNumbox Label="Age:"
               @bind-Value="FormData.Age" />
     
+    <UiCheckbox @bind-Value="FormData.Argree">
+        Agree
+    </UiCheckbox>
+
     <UiButton Type="ButtonType.Submit">
         Submit
     </UiButton>
@@ -56,5 +60,7 @@
 
         [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
         public double Age { get; set; } = 1;
+
+        public bool Argree { get; set; }
     }
 }
