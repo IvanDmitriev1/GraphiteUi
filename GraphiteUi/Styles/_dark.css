@@ -51,6 +51,7 @@
     --graphite-danger: var(--graphite-danger-500);
     --graphite-danger-foreground: #FFFFFF;
     /* INFO */
+    --graphite-info-400: #3385FF;
     --graphite-info-500: #0066FF;
     --graphite-info: var(--graphite-info-500);
     --graphite-info-foreground: #FFFFFF;

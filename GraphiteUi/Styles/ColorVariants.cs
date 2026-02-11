@@ -37,7 +37,7 @@ internal static class ColorVariants
     public static class Ring
     {
         public static readonly string Default = new CssClassBuilder(stackalloc char[128])
-            .Add("ring:primary-5")
+            .Add("ring-primary-5")
             .ToString();
 
         private static readonly string[] FocusByThemeColor =

@@ -1,5 +1,7 @@
 <Project>
 	<PropertyGroup>
+		<SolutionDir Condition="'$(SolutionDir)' == '' ">$(MSBuildThisFileDirectory)../../</SolutionDir>
+
 		<!-- Version -->
 		<TailwindVersion>v4.1.13</TailwindVersion>
 		<TailwindDir>$(ProjectDir)obj/</TailwindDir>
@@ -29,10 +31,18 @@
 		<TailwindMinifyArg Condition="'$(TailwindMinify)' != 'true'"></TailwindMinifyArg>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\$(TailwindInput)" />
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\wwwroot\styles\**\*.css" />
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\..\GraphiteUi.Docs.Client\**\*.razor" />
+		<TailwindInputs Include="$(SolutionDir)GraphiteUi\Styles\**\*.cs" />
+		<TailwindInputs Include="$(SolutionDir)GraphiteUi\Styles\**\*.css" />
+	</ItemGroup>
+
 	<!-- Ensure CLI is present -->
 	<Target Name="EnsureTailwind"
 	        AfterTargets="Build;Publish"
-			Condition="!Exists('$(TailwindBin)')">
+			Condition="'$(DesignTimeBuild)' != 'true' and !Exists('$(TailwindBin)')">
 		<Message Importance="High" Text="Downloading Tailwind CLI $(TailwindVersion) to $(TailwindBin)..." />
 		<MakeDir Directories="$(TailwindDir)" />
 		<Exec Command="&quot;$(CurlExe)&quot; -sSL -o &quot;$(TailwindBin)&quot; &quot;$(TailwindUrl)&quot;" />
@@ -42,7 +52,10 @@
 	<!-- Build CSS with a FULL PATH to the binary -->
 	<Target Name="RunTailwind"
 			DependsOnTargets="EnsureTailwind;GraphiteUiDocs_CopyLocalThemeContents"
-			AfterTargets="Build;Publish">
+			AfterTargets="Build;Publish"
+			Condition="'$(DesignTimeBuild)' != 'true'"
+			Inputs="@(TailwindInputs)"
+			Outputs="$(MSBuildProjectDirectory)\$(TailwindOutput)">
 		<Exec Command="&quot;$(TailwindBin)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot;$(TailwindMinifyArg)" />
 	</Target>
 </Project>

@@ -1,4 +1,4 @@
-﻿using GraphiteUi.Components.Bases;
+using GraphiteUi.Components.Bases;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -26,4 +26,6 @@ public abstract class UiInputBase<TValue> : InputBase<TValue>, IUiComponent
     /// Gets or sets a value indicating whether the input is required.
     /// </summary>
     [Parameter] public bool Required { get; set; }
+
+    protected bool IsInvalid => !EditContext.IsValid(FieldIdentifier);
 }

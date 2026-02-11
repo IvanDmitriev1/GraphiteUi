@@ -13,6 +13,7 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
         .Add(Utils.InlineFlexCentered)
         .Add("min-w-max")
         .Add("font-normal")
+        .Add("gap-1.5")
         .Add("appearance-none")
         .Add("select-none")
         .Add("rounded-md")
@@ -32,9 +33,9 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
 
     private static readonly string[] SizeClasses =
     [
-        "min-w-16 py-1.5 px-2 gap-1.5 text-small",
-        "min-w-20 py-2.5 px-3 gap-1.5 text-medium",
-        "min-w-24 py-5 px-6 gap-1.5 font-bold text-large"
+        "min-w-16 py-1.5 px-2 text-small",
+        "min-w-20 py-2.5 px-3 text-medium",
+        "min-w-24 py-5 px-6 font-bold text-large"
     ];
 
     private static readonly ColorStyles[] Colors =
@@ -42,10 +43,10 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
         new(string.Empty, string.Empty, string.Empty),
         new("bg-primary text-primary-foreground", "hover:bg-white hover:text-secondary-foreground", "active:bg-white active:text-black"),
         new("bg-secondary text-secondary-foreground", "hover:bg-primary-15 hover:text-primary-foreground", "active:bg-primary active:text-primary-foreground"),
-        new("bg-success text-success-foreground", "hover:bg-success-400 hover:text-success-foreground", "active:bg-success-500 active:text-success-foreground"),
-        new("bg-warning text-warning-foreground", "hover:bg-warning-400 hover:text-warning-foreground", "active:bg-warning-500 active:text-warning-foreground"),
-        new("bg-danger text-danger-foreground", "hover:bg-danger-400 hover:text-danger-foreground", "active:bg-danger-500 active:text-danger-foreground"),
-        new("bg-info text-info-foreground", "hover:bg-info-400 hover:text-info-foreground", "active:bg-info-500 active:text-info-foreground")
+        new("bg-success text-success-foreground", "hover:bg-success-400", "active:bg-success-500"),
+        new("bg-warning text-warning-foreground", "hover:bg-warning-400", "active:bg-warning-500"),
+        new("bg-danger text-danger-foreground", "hover:bg-danger-400", "active:bg-danger-500"),
+        new("bg-info text-info-foreground", "hover:bg-info-400", "active:bg-info-500")
     ];
 
     private static readonly string Disabled = new CssClassBuilder(stackalloc char[128])

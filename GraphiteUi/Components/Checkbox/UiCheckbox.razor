@@ -1,4 +1,4 @@
-﻿@namespace GraphiteUi.Components
+@namespace GraphiteUi.Components
 @inherits UiInputBase<bool>
 
 <UiComponent As="Label"
@@ -7,6 +7,7 @@
              data-slot="base"
              data-checked="@CurrentValue.ToAttributeValue()"
              data-disabled="@Disabled.ToAttributeValue()"
+             data-invalid="@IsInvalid.ToAttributeValue()"
              data-readonly="@ReadOnly.ToAttributeValue()"
              @attributes="@AdditionalAttributes"
              @onclick:stopPropagation="@true">
@@ -14,14 +15,19 @@
 	<span class="@WrapperClass" data-slot="wrapper">
 		<input type="checkbox"
 		       class="@InputClass"
-		       value="@true"
+		       value="true"
 		       checked="@CurrentValue"
 		       disabled="@Disabled"
 		       aria-disabled="@Disabled"
+		       aria-invalid="@IsInvalid"
 		       aria-readonly="@ReadOnly"
+		       name="@NameAttributeValue"
 			   @onchange="@OnChangeAsync" />
 
-        <span class="@ControlClass" data-slot="control" aria-hidden="true">
+        <span class="@ControlClass"
+              data-slot="control"
+              data-invalid="@IsInvalid.ToAttributeValue()"
+              aria-hidden="true">
             <svg class="@IconClass"
                  viewBox="0 0 16 16"
                  fill="none"

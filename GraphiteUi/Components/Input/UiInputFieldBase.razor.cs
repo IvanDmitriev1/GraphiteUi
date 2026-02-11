@@ -1,4 +1,4 @@
-﻿using GraphiteUi.Common;
+using GraphiteUi.Common;
 using GraphiteUi.Extensions;
 using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
@@ -34,8 +34,6 @@ public abstract partial class UiInputFieldBase<TValue> : UiDebouncedInputBase<TV
     [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
 
     protected string TypeString { get; set; } = "text";
-    protected bool IsInvalid => !EditContext.IsValid(FieldIdentifier);
-
 
     private readonly IUiInputFieldStyles _styles = DefaultUiInputFieldStyles.Instance;
     private ElementReference _wrapperReference;

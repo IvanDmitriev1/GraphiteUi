@@ -1,4 +1,4 @@
-﻿@page "/simple-form"
+@page "/simple-form"
 
 @using System.ComponentModel.DataAnnotations
 @using GraphiteUi.Common
@@ -13,19 +13,22 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
     
-    <UiTextbox Label="Name:"
-               @bind-Value="FormData!.Name" />
+    <div class="flex flex-col gap-1.5">
+	    <UiTextbox Label="Name:"
+	               @bind-Value="FormData!.Name" />
                
-    <UiNumbox Label="Age:"
-              @bind-Value="FormData.Age" />
+	    <UiNumbox Label="Age:"
+	              @bind-Value="FormData.Age" />
     
-    <UiCheckbox @bind-Value="FormData.Argree">
-        Agree
-    </UiCheckbox>
+	    <UiCheckbox @bind-Value="FormData.Argree">
+		    Agree
+	    </UiCheckbox>
 
-    <UiButton Type="ButtonType.Submit">
-        Submit
-    </UiButton>
+	    <UiButton Type="ButtonType.Submit">
+		    Submit
+	    </UiButton>
+    </div>
+    
 </EditForm>
 
 @if (submitted)
@@ -34,6 +37,7 @@
         <b>You submitted:</b><br />
         Name: @FormData.Name<br />
         Age: @FormData.Age
+        Agree: @FormData.Argree
     </p>
 }
 
@@ -61,6 +65,7 @@
         [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
         public double Age { get; set; } = 1;
 
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You have to agree.")]
         public bool Argree { get; set; }
     }
 }

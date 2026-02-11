@@ -1,6 +1,8 @@
 using GraphiteUi.Styles;
 using GraphiteUi.Utilities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
 using TailwindMerge;
 
@@ -40,7 +42,11 @@ public partial class UiCheckbox : UiInputBase<bool>
             return Task.CompletedTask;
         }
 
-        CurrentValue = (bool)args.Value!;
+        if (BindConverter.TryConvertToBool(args.Value, CultureInfo.InvariantCulture, out bool isChecked))
+        {
+            CurrentValue = isChecked;
+        }
+
         return Task.CompletedTask;
     }
 }

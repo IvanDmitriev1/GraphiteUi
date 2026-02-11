@@ -1,4 +1,4 @@
-﻿using GraphiteUi.Components;
+using GraphiteUi.Components;
 using GraphiteUi.Utilities;
 using GraphiteUi.Common;
 
@@ -55,7 +55,7 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add("text-small")
         .Add("group-data-active:left-0")
         .Add("group-data-active:pointer-events-auto")
-        .Add("group-data-active:-translate-y-[calc(100%_+_var(--text-small)/2_+_20px)]")
+        .Add("group-data-active:-translate-y-[calc(100%_+_var(--text-small)/2_+_18px)]")
         .Add("group-data-active:text-foreground")
         .Add(ColorVariants.Disabled.GroupForeground)
         .ToString();

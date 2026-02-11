@@ -1,6 +1,5 @@
 using GraphiteUi.Components;
 using GraphiteUi.Components.Checkbox;
-using GraphiteUi.Common;
 using GraphiteUi.Utilities;
 
 namespace GraphiteUi.Styles;
@@ -8,8 +7,7 @@ namespace GraphiteUi.Styles;
 public sealed class CheckBoxStyles : ICheckBoxStyles
 {
     private static readonly string BaseClass = new CssClassBuilder(stackalloc char[256])
-        .Add("p-1")
-        .Add("-m-1")
+        .Add("p-1 -m-1")
         .Add("group")
         .Add("max-w-fit")
         .Add(Utils.InlineFlexStart)
@@ -57,21 +55,17 @@ public sealed class CheckBoxStyles : ICheckBoxStyles
         .Add("peer-checked:bg-primary-foreground")
         .Add("peer-checked:border-primary-foreground")
         .Add("peer-checked:text-secondary-foreground")
-        // checked state (like screenshot: white box, dark check)
-        .Add("group-data-[checked=true]:bg-primary-foreground")
-        .Add("group-data-[checked=true]:border-primary-foreground")
-        .Add("group-data-[checked=true]:text-secondary-foreground")
+        // validation state
+        .Add("data-[invalid=true]:border-danger-400")
         // focus state
         .Add("group-focus-within:ring")
         .Add("peer-focus-visible:ring")
-        .Add(ColorVariants.Ring.Focus(ThemeColor.Primary))
+        .Add("group-focus-within:ring-primary-5")
+        .Add("peer-focus-visible:ring-primary-5")
         // disabled state
         .Add("peer-disabled:bg-primary-5")
         .Add("peer-disabled:border-primary-10")
         .Add("peer-disabled:text-primary-20")
-        .Add("group-data-[disabled=true]:bg-primary-5")
-        .Add("group-data-[disabled=true]:border-primary-10")
-        .Add("group-data-[disabled=true]:text-primary-20")
         .ToString();
 
     public static string IconClass { get; } = new CssClassBuilder(stackalloc char[256])
@@ -83,7 +77,6 @@ public sealed class CheckBoxStyles : ICheckBoxStyles
         .Add("text-foreground")
         .Add("leading-none")
         .Add("peer-disabled:text-primary-30")
-        .Add("group-data-[disabled=true]:text-primary-30")
         .ToString();
 }
 
