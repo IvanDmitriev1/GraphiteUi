@@ -22,6 +22,11 @@
 		<!-- Your input/output -->
 		<TailwindInput>wwwroot/styles/app.css</TailwindInput>
 		<TailwindOutput>wwwroot/app.css</TailwindOutput>
+
+		<TailwindMinify Condition="'$(TailwindMinify)' == '' and '$(Configuration)' == 'Release'">true</TailwindMinify>
+		<TailwindMinify Condition="'$(TailwindMinify)' == ''">false</TailwindMinify>
+		<TailwindMinifyArg Condition="'$(TailwindMinify)' == 'true'"> --minify</TailwindMinifyArg>
+		<TailwindMinifyArg Condition="'$(TailwindMinify)' != 'true'"></TailwindMinifyArg>
 	</PropertyGroup>
 
 	<!-- Ensure CLI is present -->
@@ -36,8 +41,8 @@
 
 	<!-- Build CSS with a FULL PATH to the binary -->
 	<Target Name="RunTailwind"
-			DependsOnTargets="EnsureTailwind;CopyContents"
+			DependsOnTargets="EnsureTailwind;GraphiteUiDocs_CopyLocalThemeContents"
 			AfterTargets="Build;Publish">
-		<Exec Command="&quot;$(TailwindBin)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot;" />
+		<Exec Command="&quot;$(TailwindBin)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot;$(TailwindMinifyArg)" />
 	</Target>
 </Project>

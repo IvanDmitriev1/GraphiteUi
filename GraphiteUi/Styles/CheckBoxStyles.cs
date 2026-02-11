@@ -7,51 +7,40 @@ namespace GraphiteUi.Styles;
 
 public sealed class CheckBoxStyles : ICheckBoxStyles
 {
-    private static CssClassBuilder Base() => CssClassBuilder.Empty()
+    private static readonly string BaseClass = new CssClassBuilder(stackalloc char[256])
         .Add("p-1")
         .Add("-m-1")
         .Add("group")
         .Add("max-w-fit")
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("justify-start")
+        .Add(Utils.InlineFlexStart)
         .Add("outline-hidden")
         .Add("cursor-pointer")
-        .Add("data-[disabled=true]:cursor-default")
-        .Add("data-[readonly=true]:cursor-default");
+        .Add(Utils.DataDisabledCursorDefault)
+        .Add(Utils.DataReadonlyCursorDefault)
+        .ToString();
 
-    public static string GetClasses(UiCheckbox component)
-    {
-        CssClassBuilder builder = new CssClassBuilder(stackalloc char[256]);
-        builder.Add(Base());
-        builder.Add(component.Class);
-        return builder.ToString();
-    }
+    public static string GetCoreClasses(UiCheckbox component) => BaseClass;
 
     public static string WrapperClass { get; } = new CssClassBuilder(stackalloc char[512])
         .Add("relative")
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("justify-start")
+        .Add(Utils.InlineFlexStart)
         .Add("gap-1.5")
         .Add("flex-shrink-0")
         .Add("transition-transform")
-        .Add("motion-reduce:transition-none")
+        .Add(Utils.MotionReduceTransitionNone)
         .Add("group-active:scale-95")
-        .Add("group-data-[disabled=true]:cursor-default")
-        .Add("group-data-[readonly=true]:cursor-default")
+        .Add(Utils.GroupDataDisabledCursorDefault)
+        .Add(Utils.GroupDataReadonlyCursorDefault)
         .ToString();
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add(StyleUtils.VisuallyHidden)
+        .Add(Utils.VisuallyHidden)
         .Add("peer")
         .ToString();
 
     public static string ControlClass { get; } = new CssClassBuilder(stackalloc char[1024])
         .Add("relative")
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("justify-center")
+        .Add(Utils.InlineFlexCentered)
         .Add("size-8")
         .Add("rounded-md")
         .Add("border")
@@ -60,7 +49,7 @@ public sealed class CheckBoxStyles : ICheckBoxStyles
         .Add("text-transparent")
         .Add("select-none")
         .Add("transition-[background-color,border-color,color,box-shadow]")
-        .Add("motion-reduce:transition-none")
+        .Add(Utils.MotionReduceTransitionNone)
         // static -> hovered
         .Add("group-hover:bg-primary-15")
         .Add("group-hover:border-primary-20")
@@ -75,7 +64,7 @@ public sealed class CheckBoxStyles : ICheckBoxStyles
         // focus state
         .Add("group-focus-within:ring")
         .Add("peer-focus-visible:ring")
-        .Add(ColorVariants.Ring.Focus[ThemeColor.Primary])
+        .Add(ColorVariants.Ring.Focus(ThemeColor.Primary))
         // disabled state
         .Add("peer-disabled:bg-primary-5")
         .Add("peer-disabled:border-primary-10")

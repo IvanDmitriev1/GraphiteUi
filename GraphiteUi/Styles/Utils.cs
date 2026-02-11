@@ -8,6 +8,15 @@ public static class Utils
         .Add("sr-only")
         .ToString();
 
+    public const string InlineFlexCentered = "inline-flex items-center justify-center";
+    public const string InlineFlexStart = "inline-flex items-center justify-start";
+    public const string MotionReduceTransitionNone = "motion-reduce:transition-none";
+    public const string DisabledCursorDefault = "disabled:cursor-default";
+    public const string DataDisabledCursorDefault = "data-[disabled=true]:cursor-default";
+    public const string DataReadonlyCursorDefault = "data-[readonly=true]:cursor-default";
+    public const string GroupDataDisabledCursorDefault = "group-data-[disabled=true]:cursor-default";
+    public const string GroupDataReadonlyCursorDefault = "group-data-[readonly=true]:cursor-default";
+
     public static readonly string ReduceMotion = new CssClassBuilder(stackalloc char[128])
         .Add("reduce-motion:transition-none")
         .ToString();

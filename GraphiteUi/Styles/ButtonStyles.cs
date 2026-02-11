@@ -1,17 +1,16 @@
-﻿using GraphiteUi.Common;
+using GraphiteUi.Common;
 using GraphiteUi.Components;
 using GraphiteUi.Components.Bases;
 using GraphiteUi.Utilities;
-using Size = GraphiteUi.Common.Size;
 
 namespace GraphiteUi.Styles;
 
 public sealed class ButtonStyles : IUiComponentStyle<UiButton>
 {
+    private readonly record struct ColorStyles(string Background, string Hover, string Active);
+
     private static readonly string Base = new CssClassBuilder(stackalloc char[256])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("justify-center")
+        .Add(Utils.InlineFlexCentered)
         .Add("min-w-max")
         .Add("font-normal")
         .Add("appearance-none")
@@ -25,68 +24,74 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
         .Add("shadow-sm")
         // transition
         .Add("transition-colors-transform-opacity")
-        .Add("motion-reduce:transition-none")
+        .Add(Utils.MotionReduceTransitionNone)
         // focus ring
         .Add("focus:ring")
         .Add(Utils.FocusVisible)
         .ToString();
 
-    private static CssClassBuilder GetSizeStyles(Size size) => CssClassBuilder.Empty()
-        .Add("min-w-16 py-1.5 px-2 gap-1.5 text-small", when: size is Size.Small)
-        .Add("min-w-20 py-2.5 px-3 gap-1.5 text-medium", when: size is Size.Medium)
-        .Add("min-w-24 py-5 px-6 gap-1.5 font-bold text-large", when: size is Size.Large);
+    private static readonly string[] SizeClasses =
+    [
+        "min-w-16 py-1.5 px-2 gap-1.5 text-small",
+        "min-w-20 py-2.5 px-3 gap-1.5 text-medium",
+        "min-w-24 py-5 px-6 gap-1.5 font-bold text-large"
+    ];
 
-    private static readonly IReadOnlyDictionary<ThemeColor, string> Background = new Dictionary<ThemeColor, string>()
-    {
-        [ThemeColor.Inherit] = string.Empty,
-        [ThemeColor.Primary] = "bg-primary text-primary-foreground",
-        [ThemeColor.Secondary] = "bg-secondary text-secondary-foreground",
-        [ThemeColor.Success] = "bg-success text-success-foreground",
-        [ThemeColor.Warning] = "bg-warning text-warning-foreground",
-        [ThemeColor.Danger] = "bg-danger text-danger-foreground",
-        [ThemeColor.Info] = "bg-info text-info-foreground"
-    };
+    private static readonly ColorStyles[] Colors =
+    [
+        new(string.Empty, string.Empty, string.Empty),
+        new("bg-primary text-primary-foreground", "hover:bg-white hover:text-secondary-foreground", "active:bg-white active:text-black"),
+        new("bg-secondary text-secondary-foreground", "hover:bg-primary-15 hover:text-primary-foreground", "active:bg-primary active:text-primary-foreground"),
+        new("bg-success text-success-foreground", "hover:bg-success-400 hover:text-success-foreground", "active:bg-success-500 active:text-success-foreground"),
+        new("bg-warning text-warning-foreground", "hover:bg-warning-400 hover:text-warning-foreground", "active:bg-warning-500 active:text-warning-foreground"),
+        new("bg-danger text-danger-foreground", "hover:bg-danger-400 hover:text-danger-foreground", "active:bg-danger-500 active:text-danger-foreground"),
+        new("bg-info text-info-foreground", "hover:bg-info-400 hover:text-info-foreground", "active:bg-info-500 active:text-info-foreground")
+    ];
 
-    private static readonly IReadOnlyDictionary<ThemeColor, string> HoverBackground = new Dictionary<ThemeColor, string>()
-    {
-        [ThemeColor.Inherit] = string.Empty,
-        [ThemeColor.Primary] = "hover:bg-white hover:text-secondary-foreground",
-        [ThemeColor.Secondary] = "hover:bg-primary-15 hover:text-primary-foreground",
-        [ThemeColor.Success] = "hover:bg-success-400 hover:text-success-foreground",
-        [ThemeColor.Warning] = "hover:bg-warning-400 hover:text-warning-foreground",
-        [ThemeColor.Danger] = "hover:bg-danger-400 hover:text-danger-foreground",
-        [ThemeColor.Info] = "hover:bg-info-400 hover:text-info-foreground"
-    };
-
-    private static readonly IReadOnlyDictionary<ThemeColor, string> ActiveBackground = new Dictionary<ThemeColor, string>()
-    {
-        [ThemeColor.Inherit] = string.Empty,
-        [ThemeColor.Primary] = "active:bg-white active:text-black",
-        [ThemeColor.Secondary] = "active:bg-primary active:text-primary-foreground",
-        [ThemeColor.Success] = "active:bg-success-500 active:text-success-foreground",
-        [ThemeColor.Warning] = "active:bg-warning-500 active:text-warning-foreground",
-        [ThemeColor.Danger] = "active:bg-danger-500 active:text-danger-foreground",
-        [ThemeColor.Info] = "active:bg-info-500 active:text-info-foreground"
-    };
-
-    private static CssClassBuilder GetDisabled() => CssClassBuilder.Empty()
+    private static readonly string Disabled = new CssClassBuilder(stackalloc char[128])
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
-        .Add("disabled:cursor-default");
+        .Add(Utils.DisabledCursorDefault)
+        .ToString();
 
-    public static string GetClasses(UiButton component)
+    private static readonly string[] CoreClassesByColorAndSize = BuildCoreClasses();
+
+    private static string[] BuildCoreClasses()
     {
-        return CssClassBuilder.Empty()
-            .Add(Base)
-            .Add(Background[component.Color])
-            .Add(HoverBackground[component.Color])
-            .Add(ActiveBackground[component.Color])
-            .Add(ColorVariants.Ring.Default)
-            .Add(ColorVariants.Border.Default)
-            .Add(ColorVariants.Ring.Focus[component.Color])
-            .Add(GetSizeStyles(component.Size))
-            .Add(GetDisabled())
-            .Add(component.Class)
-            .ToString();
+        int colorCount = Colors.Length;
+        int sizeCount = SizeClasses.Length;
+        var coreClasses = new string[colorCount * sizeCount];
+
+        for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
+        {
+            var color = (ThemeColor)colorIndex;
+            var colorStyles = Colors[colorIndex];
+
+            for (int sizeIndex = 0; sizeIndex < sizeCount; sizeIndex++)
+            {
+                coreClasses[colorIndex * sizeCount + sizeIndex] = CssClassBuilder.Empty()
+                    .Add(Base)
+                    .Add(colorStyles.Background)
+                    .Add(colorStyles.Hover)
+                    .Add(colorStyles.Active)
+                    .Add(ColorVariants.Ring.Default)
+                    .Add(ColorVariants.Border.Default)
+                    .Add(ColorVariants.Ring.Focus(color))
+                    .Add(SizeClasses[sizeIndex])
+                    .Add(Disabled)
+                    .ToString();
+            }
+        }
+
+        return coreClasses;
+    }
+
+    public static string GetCoreClasses(UiButton component)
+    {
+        int colorIndex = (int)component.Color;
+        int sizeIndex = (int)component.Size;
+        int sizeCount = SizeClasses.Length;
+
+        return CoreClassesByColorAndSize[colorIndex * sizeCount + sizeIndex];
     }
 }

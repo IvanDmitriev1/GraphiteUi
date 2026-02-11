@@ -1,4 +1,5 @@
-﻿using GraphiteUi.Styles;
+using GraphiteUi.Styles;
+using GraphiteUi.Utilities;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 using TailwindMerge;
@@ -14,8 +15,10 @@ public partial class UiCheckbox : UiInputBase<bool>
 
     [Inject] internal TwMerge TwMerge { get; set; } = null!;
 
-    private protected string? RootClass =>
-        TwMerge.Merge(CheckBoxStyles.GetClasses(this));
+    private protected string RootClass => RootClassMergeCache.GetOrAdd(
+        TwMerge,
+        CheckBoxStyles.GetCoreClasses(this),
+        Class);
 
     private protected string WrapperClass = CheckBoxStyles.WrapperClass;
     private protected string InputClass = CheckBoxStyles.InputClass;

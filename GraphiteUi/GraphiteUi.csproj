@@ -17,14 +17,14 @@
 	</PropertyGroup>-->
 
 	<ItemGroup>
-		<None Include="GraphiteUI.targets" Pack="true" PackagePath="buildTransitive\GraphiteUI.targets" />
+		<None Include="GraphiteUi.targets" Pack="true" PackagePath="buildTransitive\GraphiteUi.targets" />
 		<None Include="Styles\*.cs" Pack="true" PackagePath="theme\components\%(Filename)%(Extension)" />
 		<None Include="Styles\_theme.css" Pack="true" PackagePath="theme\theme.css" />
+		<None Include="Styles\_dark.css" Pack="true" PackagePath="theme\_dark.css" />
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
-    <PackageReference Include="LinkDotNet.StringBuilder" Version="2.4.1" />
+    <PackageReference Include="LinkDotNet.StringBuilder" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.3" />
     <PackageReference Include="TwMerge" Version="1.0.7" />
   </ItemGroup>

@@ -40,27 +40,33 @@ internal static class ColorVariants
             .Add("ring:primary-5")
             .ToString();
 
-        public static readonly IReadOnlyDictionary<ThemeColor, string> Focus = new Dictionary<ThemeColor, string>()
-        {
-            [ThemeColor.Inherit] = string.Empty,
-            [ThemeColor.Primary] = "focus:ring-primary-5",
-            [ThemeColor.Secondary] = "focus:ring-primary-5",
-            [ThemeColor.Success] = "focus:ring-success-600/20",
-            [ThemeColor.Warning] = "focus:ring-warning-600/20",
-            [ThemeColor.Danger] = "focus:ring-danger-600/20",
-            [ThemeColor.Info] = string.Empty
-        };
+        private static readonly string[] FocusByThemeColor =
+        [
+            string.Empty,
+            "focus:ring-primary-5",
+            "focus:ring-primary-5",
+            "focus:ring-success-600/20",
+            "focus:ring-warning-600/20",
+            "focus:ring-danger-600/20",
+            string.Empty
+        ];
 
-        public static readonly IReadOnlyDictionary<ThemeColor, string> FocusWithin = new Dictionary<ThemeColor, string>()
-        {
-            [ThemeColor.Inherit] = string.Empty,
-            [ThemeColor.Primary] = "focus-within:ring-primary-5",
-            [ThemeColor.Secondary] = "focus-within:ring-primary-5",
-            [ThemeColor.Success] = "focus-within:ring-success-600/20",
-            [ThemeColor.Warning] = "focus-within:ring-warning-600/20",
-            [ThemeColor.Danger] = "focus-within:ring-danger-600/20",
-            [ThemeColor.Info] = string.Empty
-        };
+        private static readonly string[] FocusWithinByThemeColor =
+        [
+            string.Empty,
+            "focus-within:ring-primary-5",
+            "focus-within:ring-primary-5",
+            "focus-within:ring-success-600/20",
+            "focus-within:ring-warning-600/20",
+            "focus-within:ring-danger-600/20",
+            string.Empty
+        ];
+
+        public static string Focus(ThemeColor color) =>
+            GetByThemeColor(FocusByThemeColor, color, nameof(Focus));
+
+        public static string FocusWithin(ThemeColor color) =>
+            GetByThemeColor(FocusWithinByThemeColor, color, nameof(FocusWithin));
     }
 
     public static class Disabled
@@ -75,5 +81,20 @@ internal static class ColorVariants
     public static class Placeholder
     {
         public const string Foreground = "placeholder:text-primary-30";
+    }
+
+    private static string GetByThemeColor(string[] values, ThemeColor color, string mapName)
+    {
+        int index = (int)color;
+
+        if ((uint)index >= (uint)values.Length)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(color),
+                color,
+                $"ThemeColor '{color}' is outside of {mapName} map bounds ({values.Length}).");
+        }
+
+        return values[index];
     }
 }

@@ -1,4 +1,3 @@
-﻿using CommunityToolkit.HighPerformance.Buffers;
 using LinkDotNet.StringBuilder;
 
 namespace GraphiteUi.Utilities;
@@ -21,7 +20,7 @@ public ref struct CssClassBuilder
 
     public override string ToString()
     {
-        var value = StringPool.Shared.GetOrAdd(_stringBuilder.AsSpan());
+        var value = _stringBuilder.ToString();
         _stringBuilder.Dispose();
         return value;
     }
