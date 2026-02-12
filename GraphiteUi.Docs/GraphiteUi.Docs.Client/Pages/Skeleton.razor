@@ -1,6 +1,7 @@
 @page "/skeleton"
 @rendermode InteractiveServer
 @using GraphiteUi.Common
+@using GraphiteUi.Styles
 
 <PageTitle>Skeleton</PageTitle>
 
@@ -60,7 +61,7 @@
             </SkeletonContent>
 
             <ChildContent>
-                <div class="rounded-md border border-primary-5 bg-surface1 p-3 text-regular text-surface1-foreground">
+                <div class="@CommonStyles.SurfaceFrameRegularPaddedClass">
                     Loaded profile: <strong>@DisplaySummary</strong>
                 </div>
             </ChildContent>
