@@ -1,4 +1,4 @@
-﻿using GraphiteUi.Components;
+using GraphiteUi.Components;
 using GraphiteUi.Components.Dialog;
 using Microsoft.Extensions.DependencyInjection;
 using TailwindMerge;
@@ -18,7 +18,10 @@ public static class ServiceCollectionExtensions
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddGraphiteUi(this IServiceCollection services, Action<TwConfig>? options = null)
     {
-        services.AddTwMerge();
+        services.AddTwMerge(config =>
+        {
+            config.CacheSize(1);
+        });
 
         services.AddScoped<IDialogService, DialogService>();
 

@@ -1,11 +1,10 @@
 using GraphiteUi.Common;
 using GraphiteUi.Components;
-using GraphiteUi.Components.Bases;
 using GraphiteUi.Utilities;
 
 namespace GraphiteUi.Styles;
 
-public sealed class ButtonStyles : IUiComponentStyle<UiButton>
+public static class ButtonStyles
 {
     private readonly record struct ColorStyles(string Background, string Hover, string Active);
 
@@ -87,7 +86,7 @@ public sealed class ButtonStyles : IUiComponentStyle<UiButton>
         return coreClasses;
     }
 
-    public static string GetCoreClasses(UiButton component)
+    public static string GetRootClasses(UiButton component)
     {
         int colorIndex = (int)component.Color;
         int sizeIndex = (int)component.Size;

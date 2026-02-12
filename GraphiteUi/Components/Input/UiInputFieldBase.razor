@@ -8,19 +8,19 @@
          data-readonly="@ReadOnly"
          data-disabled="@Disabled"
          data-active="@(!string.IsNullOrWhiteSpace(CurrentValueAsString))"
-         class="@_styles.InputWrapperClass"
+         class="@DefaultUiInputFieldStyles.InputWrapperClass"
          @ref="_wrapperReference">
 
         @if (!string.IsNullOrEmpty(Label))
         {
-            <label class="@_styles.LabelClass"
+            <label class="@DefaultUiInputFieldStyles.LabelClass"
                    data-slot="label">
                 @Label
             </label>
         }
 
         <input type="@TypeString"
-               class="@_styles.InputClass"
+               class="@DefaultUiInputFieldStyles.InputClass"
                value="@CurrentValueAsString"
                placeholder="@Placeholder"
                disabled="@Disabled"

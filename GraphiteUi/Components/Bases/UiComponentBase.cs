@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+using GraphiteUi.Utilities;
+using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 using TailwindMerge;
 
@@ -38,8 +39,8 @@ public abstract class UiComponentBase : ComponentBase, IUiComponent
 
     [Inject] internal TwMerge TwMerge { get; set; } = default!;
 
-
-    private protected virtual string? RootClass => Class;
+    private protected string MergeRootClass(string coreClasses) =>
+        RootClassMergeCache.GetOrAdd(TwMerge, coreClasses, Class);
 
     /// <summary>
     /// Triggers a re-render of the component.

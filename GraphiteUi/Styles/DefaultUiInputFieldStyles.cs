@@ -1,14 +1,11 @@
-using GraphiteUi.Components;
-using GraphiteUi.Utilities;
 using GraphiteUi.Common;
+using GraphiteUi.Utilities;
 
 namespace GraphiteUi.Styles;
 
-internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
+internal static class DefaultUiInputFieldStyles
 {
-    public static DefaultUiInputFieldStyles Instance { get; } = new();
-
-    public string InputWrapperClass { get; } = new CssClassBuilder(stackalloc char[256])
+    public static string InputWrapperClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("group")
         .Add("relative")
         .Add(Utils.InlineFlexStart)
@@ -37,7 +34,7 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add("data-disabled:border-none")
         .ToString();
 
-    public string LabelClass { get; } = new CssClassBuilder(stackalloc char[256])
+    public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("absolute")
         .Add("block")
         .Add("origin-top-left")
@@ -60,7 +57,7 @@ internal sealed class DefaultUiInputFieldStyles : IUiInputFieldStyles
         .Add(ColorVariants.Disabled.GroupForeground)
         .ToString();
 
-    public string InputClass { get; } = new CssClassBuilder(stackalloc char[256])
+    public static string InputClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("w-full")
         .Add("outline-none")
         .ToString();

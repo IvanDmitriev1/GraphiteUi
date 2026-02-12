@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace GraphiteUi.Components;
 
-public partial class UiButton : UiComponentBase<UiButton, ButtonStyles>
+public partial class UiButton : UiComponentBase
 {
     /// <summary>
     /// Gets or sets content to be rendered inside the button.
@@ -61,6 +61,8 @@ public partial class UiButton : UiComponentBase<UiButton, ButtonStyles>
     /// Gets or sets a callback that is fired whenever the button is clicked.
     /// </summary>
     [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    private protected string RootClass => MergeRootClass(ButtonStyles.GetRootClasses(this));
 
     public UiButton()
     {

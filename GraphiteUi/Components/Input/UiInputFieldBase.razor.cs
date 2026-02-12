@@ -35,7 +35,6 @@ public abstract partial class UiInputFieldBase<TValue> : UiDebouncedInputBase<TV
 
     protected string TypeString { get; set; } = "text";
 
-    private readonly IUiInputFieldStyles _styles = DefaultUiInputFieldStyles.Instance;
     private ElementReference _wrapperReference;
 
     protected override Task OnAfterRenderAsync(bool firstRender)

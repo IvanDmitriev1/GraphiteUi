@@ -1,10 +1,9 @@
 using GraphiteUi.Components;
-using GraphiteUi.Components.Checkbox;
 using GraphiteUi.Utilities;
 
 namespace GraphiteUi.Styles;
 
-public sealed class CheckBoxStyles : ICheckBoxStyles
+public static class CheckBoxStyles
 {
     private static readonly string BaseClass = new CssClassBuilder(stackalloc char[256])
         .Add("p-1 -m-1")
@@ -17,7 +16,7 @@ public sealed class CheckBoxStyles : ICheckBoxStyles
         .Add(Utils.DataReadonlyCursorDefault)
         .ToString();
 
-    public static string GetCoreClasses(UiCheckbox component) => BaseClass;
+    public static string GetRootClasses(UiCheckbox component) => BaseClass;
 
     public static string WrapperClass { get; } = new CssClassBuilder(stackalloc char[512])
         .Add("relative")
