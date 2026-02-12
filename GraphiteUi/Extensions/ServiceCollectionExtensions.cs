@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IDialogService, DialogService>();
+        services.AddScoped<IToastService, ToastService>();
 
         if (options is not null)
         {

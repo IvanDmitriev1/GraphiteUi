@@ -1,0 +1,109 @@
+@page "/notifications"
+@rendermode InteractiveServer
+@inject IToastService ToastService
+
+<PageTitle>Notifications</PageTitle>
+
+<h1>Notifications</h1>
+
+<p class="text-small text-primary-30">
+    Toast notifications are rendered by <code>UiToastHost</code>. Inline messages use <code>UiAlert</code>.
+</p>
+
+<div class="mt-4 max-w-2xl flex flex-col gap-6">
+    <section class="flex flex-col gap-2">
+        <h2 class="text-medium">Toasts</h2>
+
+        <div class="flex flex-wrap gap-2">
+            <UiButton OnClick="@(() => ShowToast(ThemeColor.Primary))">Primary</UiButton>
+            <UiButton Color="ThemeColor.Success" OnClick="@(() => ShowToast(ThemeColor.Success))">Success</UiButton>
+            <UiButton Color="ThemeColor.Warning" OnClick="@(() => ShowToast(ThemeColor.Warning))">Warning</UiButton>
+            <UiButton Color="ThemeColor.Danger" OnClick="@(() => ShowToast(ThemeColor.Danger))">Danger</UiButton>
+            <UiButton Color="ThemeColor.Info" OnClick="@(() => ShowToast(ThemeColor.Info))">Info</UiButton>
+            <UiButton Color="ThemeColor.Secondary" OnClick="ShowCustomToast">Custom Content</UiButton>
+            <UiButton Color="ThemeColor.Secondary" OnClick="ClearToasts">Clear</UiButton>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2 class="text-medium">Inline Alerts</h2>
+
+        <div class="flex flex-col gap-3">
+            <UiAlert Title="Connection restored"
+                     Color="ThemeColor.Success"
+                     Dismissible="true"
+                     @bind-Visible="_showSuccessAlert">
+                Your session is healthy and everything is synced.
+            </UiAlert>
+
+            <UiAlert Title="Review required"
+                     Color="ThemeColor.Warning"
+                     Dismissible="true"
+                     @bind-Visible="_showWarningAlert">
+                Please verify billing details before saving the form.
+            </UiAlert>
+
+            <UiAlert Title="Save failed"
+                     Color="ThemeColor.Danger"
+                     Dismissible="true"
+                     @bind-Visible="_showDangerAlert">
+                The server rejected the request. Please try again.
+            </UiAlert>
+        </div>
+
+        <div class="flex gap-2">
+            <UiButton Color="ThemeColor.Secondary" OnClick="ResetAlerts">Reset Alerts</UiButton>
+        </div>
+    </section>
+</div>
+
+@code {
+    private bool _showSuccessAlert = true;
+    private bool _showWarningAlert = true;
+    private bool _showDangerAlert = true;
+
+    private void ShowToast(ThemeColor color)
+    {
+        ToastService.Show(new ToastOptions
+        {
+            Color = color,
+            Title = $"{color} notification",
+            Message = color == ThemeColor.Danger
+                ? "Danger notifications are sticky by default."
+                : "This toast will auto-dismiss after 6 seconds."
+        });
+    }
+
+    private void ShowCustomToast()
+    {
+        ToastService.Show(new ToastOptions
+        {
+            Color = ThemeColor.Info,
+            Title = "Background sync",
+            Message = "24 items synced successfully.",
+            Content = SyncDetails,
+            PauseOnHover = true
+        });
+    }
+
+    private void ClearToasts()
+    {
+        ToastService.Clear();
+    }
+
+    private Task ResetAlerts()
+    {
+        _showSuccessAlert = true;
+        _showWarningAlert = true;
+        _showDangerAlert = true;
+        return Task.CompletedTask;
+    }
+
+    private static RenderFragment SyncDetails => builder =>
+    {
+        builder.OpenElement(0, "div");
+        builder.AddAttribute(1, "class", "text-small text-primary-50");
+        builder.AddContent(2, "Last sync: a few seconds ago");
+        builder.CloseElement();
+    };
+}

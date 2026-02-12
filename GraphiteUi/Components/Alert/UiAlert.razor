@@ -1,0 +1,63 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+@if (_isVisible)
+{
+    <UiComponent As="@As"
+                 Class="@RootClass"
+                 role="@ResolvedRole"
+                 @attributes="@AdditionalAttributes">
+        @if (StartContent is not null)
+        {
+            <span class="@AlertStyles.StartContentClass">
+                @StartContent
+            </span>
+        }
+        else
+        {
+            <span class="@IndicatorClass"
+                  aria-hidden="true"></span>
+        }
+
+        <div class="@AlertStyles.ContentClass">
+            @if (!string.IsNullOrWhiteSpace(Title))
+            {
+                <div class="@AlertStyles.TitleClass">@Title</div>
+            }
+
+            @if (ChildContent is not null)
+            {
+                <div class="@AlertStyles.BodyClass">
+                    @ChildContent
+                </div>
+            }
+        </div>
+
+        @if (Dismissible)
+        {
+            <button type="button"
+                    data-slot="@DismissButtonDataSlot"
+                    class="@AlertStyles.DismissButtonClass"
+                    hidden="@(!ShowDismissButton)"
+                    tabindex="@(ShowDismissButton ? 0 : -1)"
+                    aria-hidden="@(!ShowDismissButton).ToAttributeValue()"
+                    aria-label="Dismiss alert"
+                    @onclick="DismissAsync">
+                <svg class="@AlertStyles.DismissIconClass"
+                     viewBox="0 0 16 16"
+                     fill="none"
+                     aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4L12 12"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round" />
+                    <path d="M12 4L4 12"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round" />
+                </svg>
+            </button>
+        }
+    </UiComponent>
+}

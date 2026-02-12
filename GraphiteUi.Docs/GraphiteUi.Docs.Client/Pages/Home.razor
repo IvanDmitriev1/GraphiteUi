@@ -1,6 +1,7 @@
 @page "/"
 @rendermode InteractiveServer
 @inject IDialogService DialogService
+@inject IToastService ToastService
 
 <PageTitle>Home</PageTitle>
 
@@ -10,22 +11,34 @@ Welcome to your new app.
 
 <div class="flex flex-row flex-wrap gap-1">
     <UiButton OnClick="Callback">Primary</UiButton>
+    <UiButton Color="ThemeColor.Info" OnClick="ShowInfoToast">Toast</UiButton>
     <UiButton Disabled="true">Disabled</UiButton>
     <UiButton Color="ThemeColor.Danger">Danger</UiButton>
     <UiButton Color="ThemeColor.Success">Success</UiButton>
     <UiButton Color="ThemeColor.Warning">Warning</UiButton>
     <UiButton As="a" href="/simple-form">Link</UiButton>
     <UiButton As="a" href="/skeleton">Skeleton</UiButton>
+    <UiButton As="a" href="/notifications">Notifications</UiButton>
 </div>
 
 @code {
     private async Task Callback()
     {
-        var result = await DialogService.ShowAsync<TestDialog, bool>(new DialogOptions()
+        _ = await DialogService.ShowAsync<TestDialog, bool>(new DialogOptions()
         {
 			DismissOnOverlayClick = true,
             CloseOnEscape = true,
             Classes = "md:max-w-md"
         }, null);
+    }
+
+    private void ShowInfoToast()
+    {
+        ToastService.Show(new ToastOptions
+        {
+            Color = ThemeColor.Info,
+            Title = "Welcome",
+            Message = "Toast notifications are now available."
+        });
     }
 }

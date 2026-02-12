@@ -1,0 +1,36 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<article class="@RootClass"
+         data-slot="toast-item"
+         data-toast-id="@Id"
+         data-state="@State"
+         data-duration="@DurationMs"
+         data-sticky="@Sticky.ToAttributeValue()"
+         data-pause-hover="@PauseOnHover.ToAttributeValue()"
+         role="@AriaRole"
+         aria-live="@AriaLive"
+         aria-atomic="true"
+         @attributes="@AdditionalAttributes">
+    <UiAlert Color="@Color"
+             Class="@ToastStyles.AlertClass"
+             Title="@Title"
+             Role="@AriaRole"
+             Dismissible="true"
+             ShowDismissButton="@Dismissible"
+             AutoHideOnDismiss="false"
+             DismissButtonDataSlot="toast-dismiss"
+             OnDismiss="DismissAsync">
+        @if (HasMessage)
+        {
+            <div class="@ToastStyles.MessageClass">@Message</div>
+        }
+
+        @if (ChildContent is not null)
+        {
+            <div class="@ToastStyles.ContentClass">
+                @ChildContent
+            </div>
+        }
+    </UiAlert>
+</article>

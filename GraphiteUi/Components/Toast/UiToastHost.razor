@@ -1,0 +1,30 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<div class="@RootClass"
+     data-slot="toast-host"
+     @attributes="@AdditionalAttributes"
+     @ref="_rootReference">
+    <div class="@ToastStyles.StackClass"
+         data-slot="toast-stack"
+         aria-live="polite"
+         aria-atomic="false">
+        @foreach (var entry in _entries)
+        {
+            <UiToast @key="entry.Id"
+                     Id="@entry.Id"
+                     Color="@entry.Color"
+                     Title="@entry.Title"
+                     Message="@entry.Message"
+                     Dismissible="@entry.Dismissible"
+                     Sticky="@entry.Sticky"
+                     PauseOnHover="@entry.PauseOnHover"
+                     DurationMs="@entry.DurationMs"
+                     Closing="@entry.IsClosing"
+                     Class="@entry.Class"
+                     OnDismiss="@(() => DismissAsync(entry.Id))">
+                @entry.Content
+            </UiToast>
+        }
+    </div>
+</div>

@@ -37,13 +37,13 @@
     --graphite-success-500: #2ECE51;
     --graphite-success-600: #00881E;
     --graphite-success: var(--graphite-success-500);
-    --graphite-success-foreground: #FFFFFF;
+    --graphite-success-foreground: #04170A;
     /* Warning */
     --graphite-warning-400: #D9AF20;
     --graphite-warning-500: #FFD234;
     --graphite-warning-600: #CBA112;
     --graphite-warning: var(--graphite-warning-500);
-    --graphite-warning-foreground: #FFFFFF;
+    --graphite-warning-foreground: #2A1D00;
     /* Danger */
     --graphite-danger-400: #FF1515;
     --graphite-danger-500: #BB2200;
