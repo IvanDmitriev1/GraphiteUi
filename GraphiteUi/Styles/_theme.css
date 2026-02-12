@@ -125,3 +125,13 @@
         font-family: var(--font-family-sans);
     }
 }
+
+@keyframes graphite-skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

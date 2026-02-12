@@ -1,0 +1,22 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<UiComponent As="@As"
+             Class="@RootClass"
+             data-loading="@IsLoading.ToAttributeValue()"
+             aria-busy="@IsLoading.ToAttributeValue()"
+             @attributes="@AdditionalAttributes">
+
+    @if (UseCustomSkeleton)
+    {
+        <div class="@SkeletonStyles.ContentClass">
+            @SkeletonContent
+        </div>
+    }
+    else
+    {
+        <div class="@ContentClass">
+            @ChildContent
+        </div>
+    }
+</UiComponent>

@@ -1,0 +1,102 @@
+@page "/skeleton"
+@rendermode InteractiveServer
+@using GraphiteUi.Common
+
+<PageTitle>Skeleton</PageTitle>
+
+<h1>Skeleton</h1>
+
+<p class="text-small text-primary-30">
+    <code>UiSkeleton</code> wraps content and shows placeholder state while data is loading.
+</p>
+
+<div class="mt-4 max-w-md flex flex-col gap-6">
+    <div class="flex items-center gap-2">
+        <UiButton OnClick="ToggleLoading">
+            @(_isLoading ? "Show Content" : "Show Skeleton")
+        </UiButton>
+
+        <UiButton Color="ThemeColor.Secondary"
+                  OnClick="ResetValues">
+            Reset Values
+        </UiButton>
+    </div>
+
+    <section class="flex flex-col gap-2">
+        <h2 class="text-medium">Auto Mimic</h2>
+
+        <UiSkeleton IsLoading="@_isLoading">
+            <div class="flex flex-col gap-2">
+                <UiTextbox Label="Name"
+                           Placeholder="Enter name"
+                           @bind-Value="_name" />
+
+                <UiSelect TValue="string"
+                          Label="Country"
+                          Placeholder="Select country"
+                          @bind-Value="_country">
+                    <UiSelectItem Value="@("Kazakhstan")" Text="Kazakhstan" />
+                    <UiSelectItem Value="@("Kyrgyzstan")" Text="Kyrgyzstan" />
+                    <UiSelectItem Value="@("Korea")" Text="Korea" />
+                </UiSelect>
+
+                <UiButton>Save</UiButton>
+            </div>
+        </UiSkeleton>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2 class="text-medium">Custom Skeleton Template</h2>
+
+        <UiSkeleton IsLoading="@_isLoading">
+            <SkeletonContent>
+                <div class="flex flex-col gap-2">
+                    <UiSkeletonLine Class="h-4 w-28" />
+                    <UiSkeletonBlock Class="h-10 rounded-md" />
+                    <UiSkeletonLine Class="h-4 w-20" />
+                    <UiSkeletonBlock Class="h-12 rounded-md" />
+                    <UiSkeletonBlock Class="h-10 w-28 rounded-md" />
+                </div>
+            </SkeletonContent>
+
+            <ChildContent>
+                <div class="rounded-md border border-primary-5 bg-surface1 p-3 text-regular text-surface1-foreground">
+                    Loaded profile: <strong>@DisplaySummary</strong>
+                </div>
+            </ChildContent>
+        </UiSkeleton>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2 class="text-medium">Primitives Only</h2>
+
+        <div class="flex flex-col gap-2">
+            <UiSkeletonLine Class="h-4 w-40" />
+            <UiSkeletonLine Class="h-4 w-56" />
+            <UiSkeletonBlock Class="h-10 rounded-md" />
+            <UiSkeletonBlock Class="h-16 rounded-lg" />
+        </div>
+    </section>
+</div>
+
+@code {
+    private bool _isLoading = true;
+    private string _name = "Alex";
+    private string _country = "Kazakhstan";
+
+    private string DisplaySummary => $"{_name} ({_country})";
+
+    private Task ToggleLoading()
+    {
+        _isLoading = !_isLoading;
+        return Task.CompletedTask;
+    }
+
+    private Task ResetValues()
+    {
+        _isLoading = true;
+        _name = "Alex";
+        _country = "Kazakhstan";
+        return Task.CompletedTask;
+    }
+}

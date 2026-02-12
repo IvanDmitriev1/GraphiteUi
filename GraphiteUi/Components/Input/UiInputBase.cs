@@ -31,7 +31,7 @@ public abstract class UiInputBase<TValue> : InputBase<TValue>, IUiComponent
 
     [Inject] internal TwMerge TwMerge { get; set; } = default!;
 
-    protected bool IsInvalid => !EditContext.IsValid(FieldIdentifier);
+    protected bool IsInvalid => EditContext is not null && !EditContext.IsValid(FieldIdentifier);
 
     private protected string MergeRootClass(string coreClasses) =>
         RootClassMergeCache.GetOrAdd(TwMerge, coreClasses, Class);
