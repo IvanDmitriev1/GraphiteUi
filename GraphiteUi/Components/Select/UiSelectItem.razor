@@ -1,0 +1,30 @@
+@namespace GraphiteUi.Components
+@typeparam TValue
+@using GraphiteUi.Styles
+
+<button type="button"
+        class="@SelectStyles.ItemClass"
+        data-slot="select-item"
+        data-value="@Parent.GetItemValueString(this)"
+        data-text="@DisplayText"
+        data-selected="@Parent.IsSelected(this).ToAttributeValue()"
+        data-active="false"
+        data-disabled="@IsDisabled.ToAttributeValue()"
+        role="option"
+        aria-selected="@Parent.IsSelected(this).ToAttributeValue()"
+        disabled="@IsDisabled"
+        aria-disabled="@IsDisabled.ToAttributeValue()"
+        @onclick="OnClickAsync">
+    @if (Template is not null)
+    {
+        @Template(Value)
+    }
+    else if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @DisplayText
+    }
+</button>

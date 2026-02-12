@@ -1,8 +1,8 @@
-﻿@namespace GraphiteUi.Components
+@namespace GraphiteUi.Components
 @inherits UiDebouncedInputBase<TValue>
 @typeparam TValue
 
-<div class="@Class" data-slot="main-wrapper">
+<div class="@Class">
     <div data-slot="input-wrapper"
          data-invalid="@IsInvalid"
          data-readonly="@ReadOnly"
@@ -34,15 +34,4 @@
                @attributes="@AdditionalAttributes"
                @oninput="@OnInputAsync"/>
     </div>
-
-    @HelperWrapper
 </div>
-
-@code{
-
-    private RenderFragment HelperWrapper =>
-        @<div>
-            
-        </div>;
-
-}

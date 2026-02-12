@@ -1,7 +1,9 @@
 import { refreshUiInputFields } from './js/uiInputField.js';
+import { refreshUiSelects } from './js/uiSelect.js';
 
 export function beforeWebStart() {
     refreshUiInputFields(document);
+    refreshUiSelects(document);
 }
 
 export function afterWebStarted(blazor) {
@@ -11,4 +13,5 @@ export function afterWebStarted(blazor) {
 
 function onEnhancedLoad() {
     refreshUiInputFields(document);
+    refreshUiSelects(document);
 }

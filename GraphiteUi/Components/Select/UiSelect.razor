@@ -1,0 +1,125 @@
+@namespace GraphiteUi.Components
+@typeparam TValue
+@attribute [CascadingTypeParameter(nameof(TValue))]
+@inherits UiInputFieldBase<TValue>
+
+<div class="@RootClass"
+     data-slot="select-root"
+     data-disabled="@Disabled.ToAttributeValue()"
+     data-invalid="@IsInvalid.ToAttributeValue()"
+     data-readonly="@ReadOnly.ToAttributeValue()"
+     @attributes="@AdditionalAttributes"
+     @ref="_rootReference">
+
+    <div class="@SelectStyles.TriggerClass"
+         data-slot="select-trigger"
+         data-open="false"
+         aria-disabled="@Disabled.ToAttributeValue()"
+         aria-invalid="@IsInvalid.ToAttributeValue()">
+        <input type="text"
+               class="@SelectStyles.TriggerInputClass"
+               data-slot="select-input"
+               value="@SelectedText"
+               placeholder="@Placeholder"
+               disabled="@Disabled"
+               readonly="@ReadOnly"
+               aria-disabled="@Disabled.ToAttributeValue()"
+               aria-invalid="@IsInvalid.ToAttributeValue()"
+               aria-expanded="false"
+               aria-readonly="@ReadOnly.ToAttributeValue()"
+               autocomplete="off" />
+
+        <svg class="@SelectStyles.SearchIconClass"
+             viewBox="0 0 20 20"
+             fill="none"
+             aria-hidden="true"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.5 14.5L18 18"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
+            <circle cx="9"
+                    cy="9"
+                    r="6"
+                    stroke="currentColor"
+                    stroke-width="1.8" />
+        </svg>
+    </div>
+
+    <input type="hidden"
+           data-slot="select-value"
+           name="@NameAttributeValue"
+           value="@HiddenValue" />
+
+    <button type="button"
+            data-slot="select-backdrop"
+            data-state="closed"
+            class="@SelectStyles.BackdropClass"
+            hidden
+            tabindex="-1"
+            aria-hidden="true"></button>
+
+    <div data-slot="select-popup"
+         data-state="closed"
+         class="@SelectStyles.PopupClass"
+         data-invalid="@IsInvalid.ToAttributeValue()"
+         role="listbox"
+         hidden>
+        <CascadingValue Value="this" IsFixed="true">
+            <div class="@SelectStyles.ListClass"
+                 data-slot="select-list">
+                @ChildContent
+            </div>
+        </CascadingValue>
+
+        <div data-slot="select-empty"
+             class="@SelectStyles.EmptyClass"
+             hidden>
+            @NoSuggestionsText
+        </div>
+
+        <div class="@SelectStyles.DividerClass"></div>
+
+        <button type="button"
+                data-slot="select-clear"
+                class="@SelectStyles.ClearButtonClass"
+                disabled="@(!CanClear)"
+                aria-disabled="@(!CanClear).ToAttributeValue()"
+                @onclick="ClearAsync">
+            <svg class="@SelectStyles.ClearIconClass"
+                 viewBox="0 0 20 20"
+                 fill="none"
+                 aria-hidden="true"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 5.5V4.5C7.5 3.95 7.95 3.5 8.5 3.5H11.5C12.05 3.5 12.5 3.95 12.5 4.5V5.5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+                <path d="M4.5 5.5H15.5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+                <path d="M6 7.5L6.5 14.5C6.54 15.05 7 15.5 7.55 15.5H12.45C13 15.5 13.46 15.05 13.5 14.5L14 7.5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+                <path d="M8.5 9V13"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+                <path d="M11.5 9V13"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+            </svg>
+
+            <span>@ClearText</span>
+        </button>
+    </div>
+</div>

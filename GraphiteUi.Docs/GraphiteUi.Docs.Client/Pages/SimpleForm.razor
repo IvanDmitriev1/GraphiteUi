@@ -13,12 +13,21 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
     
-    <div class="flex flex-col gap-1.5">
+    <div class="flex flex-col gap-2">
 	    <UiTextbox Label="Name:"
 	               @bind-Value="FormData!.Name" />
                
 	    <UiNumbox Label="Age:"
 	              @bind-Value="FormData.Age" />
+
+	    <UiSelect TValue="string"
+	              Label="Country:"
+	              Placeholder="Select country"
+	              @bind-Value="FormData.Country">
+		    <UiSelectItem Value="@("Kazakhstan")" Text="Kazakhstan" />
+		    <UiSelectItem Value="@("Kyrgyzstan")" Text="Kyrgyzstan" />
+		    <UiSelectItem Value="@("Korea")" Text="Korea" />
+	    </UiSelect>
     
 	    <UiCheckbox @bind-Value="FormData.Argree">
 		    Agree
@@ -36,7 +45,8 @@
     <p>
         <b>You submitted:</b><br />
         Name: @FormData.Name<br />
-        Age: @FormData.Age
+        Age: @FormData.Age<br />
+        Country: @FormData.Country<br />
         Agree: @FormData.Argree
     </p>
 }
@@ -64,6 +74,9 @@
 
         [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
         public double Age { get; set; } = 1;
+
+        [Required(ErrorMessage = "Country is required.")]
+        public string Country { get; set; } = string.Empty;
 
         [Range(typeof(bool), "true", "true", ErrorMessage = "You have to agree.")]
         public bool Argree { get; set; }

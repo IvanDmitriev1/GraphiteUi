@@ -17,6 +17,11 @@ internal static class ColorVariants
             .Add("text-surface1-foreground")
             .ToString();
 
+        public static readonly string PopupBackground = new CssClassBuilder(stackalloc char[128])
+            .Add("bg-surface2")
+            .Add("text-surface2-foreground")
+            .ToString();
+
         public static readonly string HoverBackground = new CssClassBuilder(stackalloc char[128])
             .Add("hover:bg-focus")
             .Add("text-surface1-foreground")
