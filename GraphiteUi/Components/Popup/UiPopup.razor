@@ -1,0 +1,42 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<div class="@_rootClassValue"
+     data-slot="popup-root"
+     data-disabled="@Disabled.ToAttributeValue()"
+     data-close-outside="@CloseOnOutsideClick.ToAttributeValue()"
+     data-close-escape="@CloseOnEscape.ToAttributeValue()"
+     data-show-backdrop="@ShowBackdrop.ToAttributeValue()"
+     data-trigger-mode="@_triggerModeValue"
+     @attributes="@AdditionalAttributes"
+     @ref="_rootReference">
+
+    <UiComponent As="@_triggerAsValue"
+            class="@_triggerClassValue"
+            data-slot="popup-trigger"
+            data-open="false"
+            aria-disabled="@Disabled.ToAttributeValue()"
+            aria-expanded="false"
+            disabled="@(IsButtonTrigger ? Disabled : null)"
+            @attributes="@TriggerAttributes">
+        @TriggerContent
+    </UiComponent>
+
+    <button type="button"
+            data-slot="popup-backdrop"
+            data-state="closed"
+            class="@_backdropClassValue"
+            hidden
+            tabindex="-1"
+            @attributes="@BackdropAttributes"
+            aria-hidden="true"></button>
+
+    <div data-slot="popup-content"
+         data-state="closed"
+         class="@_contentClassValue"
+         role="dialog"
+         @attributes="@ContentAttributes"
+         hidden>
+        @ChildContent
+    </div>
+</div>

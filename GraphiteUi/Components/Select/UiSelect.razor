@@ -3,19 +3,19 @@
 @attribute [CascadingTypeParameter(nameof(TValue))]
 @inherits UiInputFieldBase<TValue>
 
-<div class="@RootClass"
-     data-slot="select-root"
-     data-disabled="@Disabled.ToAttributeValue()"
-     data-invalid="@IsInvalid.ToAttributeValue()"
-     data-readonly="@ReadOnly.ToAttributeValue()"
-     @attributes="@AdditionalAttributes"
-     @ref="_rootReference">
+<UiPopup Class="@RootClass"
+         Disabled="@(Disabled || ReadOnly)"
+         TriggerMode="open"
+         TriggerAs="div"
+         TriggerClass="@SelectStyles.TriggerClass"
+         ContentClass="@SelectStyles.PopupClass"
+         BackdropClass="@SelectStyles.BackdropClass"
+         TriggerAttributes="@TriggerAttributes"
+         data-select-root="true"
+         @attributes="@AdditionalAttributes"
+         @ref="_popup">
 
-    <div class="@SelectStyles.TriggerClass"
-         data-slot="select-trigger"
-         data-open="false"
-         aria-disabled="@Disabled.ToAttributeValue()"
-         aria-invalid="@IsInvalid.ToAttributeValue()">
+    <TriggerContent>
         <input type="text"
                class="@SelectStyles.TriggerInputClass"
                data-slot="select-input"
@@ -45,27 +45,14 @@
                     stroke="currentColor"
                     stroke-width="1.8" />
         </svg>
-    </div>
+    </TriggerContent>
 
-    <input type="hidden"
-           data-slot="select-value"
-           name="@NameAttributeValue"
-           value="@HiddenValue" />
+    <ChildContent>
+        <input type="hidden"
+               data-slot="select-value"
+               name="@NameAttributeValue"
+               value="@HiddenValue" />
 
-    <button type="button"
-            data-slot="select-backdrop"
-            data-state="closed"
-            class="@SelectStyles.BackdropClass"
-            hidden
-            tabindex="-1"
-            aria-hidden="true"></button>
-
-    <div data-slot="select-popup"
-         data-state="closed"
-         class="@SelectStyles.PopupClass"
-         data-invalid="@IsInvalid.ToAttributeValue()"
-         role="listbox"
-         hidden>
         <CascadingValue Value="this" IsFixed="true">
             <div class="@SelectStyles.ListClass"
                  data-slot="select-list">
@@ -121,5 +108,5 @@
 
             <span>@ClearText</span>
         </button>
-    </div>
-</div>
+    </ChildContent>
+</UiPopup>

@@ -37,7 +37,7 @@ public abstract class UiComponentBase : ComponentBase, IUiComponent
     [DisallowNull]
     public ElementReference? ElementReference { get; protected set; }
 
-    [Inject] internal TwMerge TwMerge { get; set; } = default!;
+    [Inject] internal TwMerge TwMerge { get; set; } = null!;
 
     private protected string MergeRootClass(string coreClasses) =>
         RootClassMergeCache.GetOrAdd(TwMerge, coreClasses, Class);

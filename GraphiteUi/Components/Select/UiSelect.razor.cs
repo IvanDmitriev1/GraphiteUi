@@ -10,7 +10,7 @@ namespace GraphiteUi.Components;
 public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 {
     private readonly List<UiSelectItem<TValue>> _items = [];
-    private ElementReference _rootReference;
+    private UiPopup? _popup;
     private UiSelectItem<TValue>? _selectedItem;
     private string? _lastValueAsString;
 
@@ -27,6 +27,12 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
     private string SelectedText => _selectedItem?.DisplayText ?? string.Empty;
 
     private bool CanClear => !Disabled && !ReadOnly && HasSelectedItem;
+
+    private IReadOnlyDictionary<string, object> TriggerAttributes =>
+        new Dictionary<string, object>
+        {
+            ["aria-invalid"] = IsInvalid.ToAttributeValue()
+        };
 
     protected override void OnParametersSet()
     {
@@ -53,8 +59,8 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 
     private async Task SetUpJsAsync()
     {
-        await using var module = await JsRuntime.LoadModule("js/uiSelect.js");
-        await module.InvokeVoidAsync("refreshUiSelectBlazor", _rootReference);
+        await using var selectModule = await JsRuntime.LoadModule("js/uiSelect.js");
+        await selectModule.InvokeVoidAsync("refreshUiSelectBlazor", _popup!.ElementReference);
     }
 
     internal void RegisterItem(UiSelectItem<TValue> item)
@@ -77,15 +83,15 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 
     internal void UnregisterItem(UiSelectItem<TValue> item)
     {
-        if (_items.Remove(item))
-        {
-            if (ReferenceEquals(_selectedItem, item))
-            {
-                _selectedItem = null;
-            }
+        if (!_items.Remove(item))
+            return;
 
-            _ = InvokeAsync(StateHasChanged);
+        if (ReferenceEquals(_selectedItem, item))
+        {
+            _selectedItem = null;
         }
+
+        _ = InvokeAsync(StateHasChanged);
     }
 
     internal bool IsSelected(UiSelectItem<TValue> item)

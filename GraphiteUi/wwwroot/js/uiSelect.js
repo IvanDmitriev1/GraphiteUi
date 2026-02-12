@@ -1,6 +1,6 @@
-const SELECT_ROOT_SELECTOR = '[data-slot="select-root"]';
+const SELECT_ROOT_SELECTOR = '[data-select-root="true"]';
 const ITEM_SELECTOR = '[data-slot="select-item"]';
-const CLOSE_ANIMATION_MS = 160;
+const POPUP_READY_EVENT = 'graphite:popup-ready';
 
 let selectIdSequence = 0;
 
@@ -15,33 +15,34 @@ function setupSelect(root) {
         return;
     }
 
-    const trigger = root.querySelector('[data-slot="select-trigger"]');
+    const trigger = root.querySelector('[data-slot="popup-trigger"]');
     const input = root.querySelector('[data-slot="select-input"]');
     const valueInput = root.querySelector('[data-slot="select-value"]');
-    const backdrop = root.querySelector('[data-slot="select-backdrop"]');
-    const popup = root.querySelector('[data-slot="select-popup"]');
     const list = root.querySelector('[data-slot="select-list"]');
     const clearButton = root.querySelector('[data-slot="select-clear"]');
     const empty = root.querySelector('[data-slot="select-empty"]');
 
-    if (!trigger || !input || !valueInput || !backdrop || !popup || !list || !clearButton || !empty)
+    if (!trigger || !input || !valueInput || !list || !clearButton || !empty)
         return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let closeTimerId = 0;
+    const popup = root.__graphiteUiPopup;
+
+    if (!popup || typeof popup.open !== 'function' || typeof popup.close !== 'function') {
+        if (!root.__graphiteUiSelectAwaitPopupReady) {
+            root.__graphiteUiSelectAwaitPopupReady = true;
+            root.addEventListener(POPUP_READY_EVENT, () => {
+                root.__graphiteUiSelectAwaitPopupReady = false;
+                setupSelect(root);
+            }, { once: true });
+        }
+        return;
+    }
 
     const selectId = root.dataset.selectId || `ui-select-${++selectIdSequence}`;
     root.dataset.selectId = selectId;
 
-    if (!popup.id)
-        popup.id = `${selectId}-popup`;
-
-    input.setAttribute('role', 'combobox');
-    input.setAttribute('aria-autocomplete', 'list');
-    input.setAttribute('aria-controls', popup.id);
-
     const getItems = () => Array.from(root.querySelectorAll(ITEM_SELECTOR));
-    const getOpen = () => isTrue(trigger.getAttribute('data-open'));
+    const getOpen = () => popup.isOpen();
 
     const ensureItemIds = () => {
         const items = getItems();
@@ -53,32 +54,12 @@ function setupSelect(root) {
         }
     };
 
+    const canInteract = () => popup.canInteract();
+
     const isItemDisabled = (item) => isTrue(item.getAttribute('data-disabled')) || item.disabled;
-
-    const canInteract = () => {
-        const disabled = isTrue(root.getAttribute('data-disabled')) || input.disabled;
-        const readOnly = isTrue(root.getAttribute('data-readonly')) || input.readOnly;
-        return !disabled && !readOnly;
-    };
-
     const getActiveItem = () => getItems().find(item => isTrue(item.getAttribute('data-active')));
-
     const getSelectedItem = () => getItems().find(item => isTrue(item.getAttribute('data-selected')));
-
     const getVisibleEnabledItems = () => getItems().filter(item => !item.hidden && !isItemDisabled(item));
-
-    const clearCloseTimer = () => {
-        if (closeTimerId === 0)
-            return;
-
-        clearTimeout(closeTimerId);
-        closeTimerId = 0;
-    };
-
-    const hidePopupImmediately = () => {
-        popup.hidden = true;
-        backdrop.hidden = true;
-    };
 
     const setActive = (item) => {
         for (const option of getItems()) {
@@ -135,41 +116,8 @@ function setupSelect(root) {
         setActive(visible[nextIndex]);
     };
 
-    const setOpen = (open, animate = true) => {
-        const shouldOpen = open && canInteract();
-
-        trigger.setAttribute('data-open', shouldOpen ? 'true' : 'false');
-        input.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
-
-        if (shouldOpen) {
-            clearCloseTimer();
-            popup.hidden = false;
-            backdrop.hidden = false;
-            popup.setAttribute('data-state', 'open');
-            backdrop.setAttribute('data-state', 'open');
-
-            if (!getActiveItem())
-                activateDefaultItem();
-
-            return;
-        }
-
-        setActive(null);
-        popup.setAttribute('data-state', 'closed');
-        backdrop.setAttribute('data-state', 'closed');
-
-        clearCloseTimer();
-
-        if (!animate || prefersReducedMotion) {
-            hidePopupImmediately();
-            return;
-        }
-
-        closeTimerId = window.setTimeout(() => {
-            hidePopupImmediately();
-            closeTimerId = 0;
-        }, CLOSE_ANIMATION_MS);
-    };
+    const openPopup = () => popup.open();
+    const closePopup = (animate = true) => popup.close(animate);
 
     const updateClearState = () => {
         const hasValue = (valueInput.value || '').trim().length > 0;
@@ -188,7 +136,8 @@ function setupSelect(root) {
         if (item) {
             valueInput.value = item.getAttribute('data-value') || '';
             input.value = item.getAttribute('data-text') || '';
-        } else {
+        }
+        else {
             valueInput.value = '';
         }
 
@@ -215,7 +164,7 @@ function setupSelect(root) {
     };
 
     const openAndPrepare = (preferLast = false) => {
-        setOpen(true);
+        openPopup();
         filterItems();
         activateDefaultItem(preferLast);
     };
@@ -225,7 +174,7 @@ function setupSelect(root) {
             return;
 
         setSelected(item);
-        setOpen(false);
+        closePopup();
     };
 
     const syncInitialSelection = () => {
@@ -283,7 +232,7 @@ function setupSelect(root) {
 
         switch (event.key) {
             case 'Escape':
-                setOpen(false);
+                closePopup();
                 break;
 
             case 'ArrowDown':
@@ -322,7 +271,7 @@ function setupSelect(root) {
             }
 
             case 'Tab':
-                setOpen(false, false);
+                closePopup(false);
                 break;
         }
     };
@@ -344,13 +293,18 @@ function setupSelect(root) {
         input.value = '';
         setSelected(null);
         filterItems();
-        setOpen(false);
+        closePopup();
         queueMicrotask(() => input.focus());
     };
 
-    const handleOutsideClick = (event) => {
-        if (!root.contains(event.target))
-            setOpen(false);
+    const handlePopupOpenChange = (event) => {
+        if (event.detail?.open) {
+            if (!getActiveItem())
+                activateDefaultItem();
+            return;
+        }
+
+        setActive(null);
     };
 
     trigger.addEventListener('click', handleTriggerClick);
@@ -359,14 +313,13 @@ function setupSelect(root) {
     input.addEventListener('keydown', handleInputKeyDown);
     list.addEventListener('click', handleListClick);
     clearButton.addEventListener('click', handleClearClick);
-    backdrop.addEventListener('click', () => setOpen(false));
-    document.addEventListener('click', handleOutsideClick, true);
+    root.addEventListener('graphite:popup-open-change', handlePopupOpenChange);
 
     const refresh = () => {
         syncInitialSelection();
         filterItems();
         updateClearState();
-        setOpen(false, false);
+        closePopup(false);
     };
 
     root.__graphiteUiSelectRefresh = refresh;
