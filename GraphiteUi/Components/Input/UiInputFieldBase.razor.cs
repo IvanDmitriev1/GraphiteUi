@@ -1,8 +1,6 @@
 using GraphiteUi.Common;
-using GraphiteUi.Extensions;
 using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace GraphiteUi.Components;
 
@@ -31,30 +29,10 @@ public abstract partial class UiInputFieldBase<TValue> : UiDebouncedInputBase<TV
     /// </remarks>
     [Parameter] public Size Size { get; set; } = Size.Medium;
 
-    [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
-
     protected string TypeString { get; set; } = "text";
     protected virtual bool IsMultiline => false;
     protected virtual int TextareaRows => 4;
     protected virtual string InputWrapperClass => DefaultUiInputFieldStyles.InputWrapperClass;
     protected virtual string InputElementClass => DefaultUiInputFieldStyles.InputClass;
     protected virtual RenderFragment? TrailingContent => null;
-
-    private ElementReference _wrapperReference;
-
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender)
-        {
-            return Task.CompletedTask;
-        }
-
-        return SetUpJs();
-    }
-
-    private async Task SetUpJs()
-    {
-        await using var module = await JsRuntime.LoadModule("js/uiInputField.js");
-        await module.InvokeVoidAsync("refreshUiInputFieldsBlazor", _wrapperReference);
-    }
 }

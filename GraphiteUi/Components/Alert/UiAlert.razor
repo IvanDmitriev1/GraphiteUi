@@ -1,7 +1,7 @@
 @namespace GraphiteUi.Components
 @inherits UiComponentBase
 
-@if (_isVisible)
+@if (Visible)
 {
     <UiComponent As="@As"
                  Class="@RootClass"
@@ -12,11 +12,6 @@
             <span class="@AlertStyles.StartContentClass">
                 @StartContent
             </span>
-        }
-        else
-        {
-            <span class="@IndicatorClass"
-                  aria-hidden="true"></span>
         }
 
         <div class="@AlertStyles.ContentClass">
@@ -36,11 +31,11 @@
         @if (Dismissible)
         {
             <button type="button"
-                    data-slot="@DismissButtonDataSlot"
+                    data-slot="alert-dismissButton"
                     class="@AlertStyles.DismissButtonClass"
                     hidden="@(!ShowDismissButton)"
                     tabindex="@(ShowDismissButton ? 0 : -1)"
-                    aria-hidden="@(!ShowDismissButton).ToAttributeValue()"
+                    aria-hidden="@((!ShowDismissButton).ToAttributeValue())"
                     aria-label="Dismiss alert"
                     @onclick="DismissAsync">
                 <svg class="@AlertStyles.DismissIconClass"

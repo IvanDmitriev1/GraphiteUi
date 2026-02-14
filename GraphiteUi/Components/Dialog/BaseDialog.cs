@@ -27,7 +27,7 @@ public abstract class BaseDialog : ComponentBase
         await using var module = await JsRuntime.LoadModule("js/dialogInterop.js");
 
         await module.InvokeVoidAsync(
-            "OpenModalDialog",
+            "openModalDialog",
             DialogInstance.DialogElementRef,
             DialogInstance.Options.DismissOnOverlayClick,
             DialogInstance.Options.CloseOnEscape);

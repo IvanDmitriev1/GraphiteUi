@@ -5,8 +5,6 @@ namespace GraphiteUi.Styles;
 
 public static class ToastStyles
 {
-    public const int CloseAnimationMs = 160;
-
     private static readonly string HostBaseClass = new CssClassBuilder(stackalloc char[256])
         .Add("fixed")
         .Add("z-[120]")
@@ -30,18 +28,8 @@ public static class ToastStyles
         .Add("relative")
         .Add("pointer-events-auto")
         .Add("w-full")
-        .Add("[&_[data-slot=toast-dismiss]]:size-10")
-        .Add("sm:[&_[data-slot=toast-dismiss]]:size-7")
-        .Add("transition-[opacity,transform]")
-        .Add("duration-150")
-        .Add("ease-out")
-        .Add(Utils.MotionReduceTransitionNone)
-        .Add("data-[state=open]:opacity-100")
-        .Add("data-[state=open]:translate-y-0")
-        .Add("data-[state=open]:scale-100")
-        .Add("data-[state=closing]:opacity-0")
-        .Add("data-[state=closing]:translate-y-2")
-        .Add("data-[state=closing]:scale-[0.98]")
+        .Add("[&_[data-slot=alert-dismissButton]]:size-10")
+        .Add("sm:[&_[data-slot=alert-dismissButton]]:size-7")
         .ToString();
 
     public static string StackClass { get; } = new CssClassBuilder(stackalloc char[256])
@@ -52,20 +40,7 @@ public static class ToastStyles
         .Add("flex-col")
         .Add("gap-2")
         .Add("[&>[data-slot=toast-item]:nth-child(n+3)]:hidden")
-        .Add("sm:[&>[data-slot=toast-item]:nth-child(n+3)]:block")
-        .ToString();
-
-    public static string AlertClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("w-full")
-        .ToString();
-
-    public static string MessageClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-small")
-        .Add("text-primary-60")
-        .ToString();
-
-    public static string ContentClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-small")
+        .Add("sm:[&>[data-slot=toast-item]:nth-child(n+3)]:flex")
         .ToString();
 
     public static string GetHostRootClasses(UiToastHost host)

@@ -1,54 +1,101 @@
-export function OpenModalDialog(dialog, dismissOnOverlayClick, closeOnEscape) {
-    if (dialog.open)
-        return;
+const OVERLAY_DISMISS_DELAY_MS = 800;
 
-    const onKeyDown = (e) => {
-        if (e.key === 'Escape' && closeOnEscape === false) {
-            e.stopPropagation();
-            e.preventDefault();
+let activeScrollLocks = 0;
+let previousBodyOverflow = '';
+
+const dialogStateByDialog = new WeakMap();
+
+function lockScroll() {
+    if (activeScrollLocks === 0) {
+        previousBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+    }
+
+    activeScrollLocks++;
+}
+
+function unlockScroll() {
+    if (activeScrollLocks === 0) {
+        return;
+    }
+
+    activeScrollLocks--;
+
+    if (activeScrollLocks === 0) {
+        document.body.style.overflow = previousBodyOverflow;
+        previousBodyOverflow = '';
+    }
+}
+
+function isOutsideDialog(dialog, event) {
+    const bounds = dialog.getBoundingClientRect();
+
+    return (
+        event.clientX < bounds.left ||
+        event.clientX > bounds.right ||
+        event.clientY < bounds.top ||
+        event.clientY > bounds.bottom
+    );
+}
+
+function cleanupDialog(dialog) {
+    const state = dialogStateByDialog.get(dialog);
+    if (!state) {
+        return;
+    }
+
+    clearTimeout(state.overlayTimerId);
+    dialog.removeEventListener('keydown', state.onKeyDown);
+    dialog.removeEventListener('click', state.onOverlayClick);
+
+    dialogStateByDialog.delete(dialog);
+    unlockScroll();
+}
+
+export function openModalDialog(dialog, dismissOnOverlayClick, closeOnEscape) {
+    if (!dialog || dialog.open) {
+        return;
+    }
+
+    cleanupDialog(dialog);
+
+    const state = {
+        overlayTimerId: 0,
+        onKeyDown: (event) => {
+            if (event.key === 'Escape' && closeOnEscape === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        },
+        onOverlayClick: (event) => {
+            if (isOutsideDialog(dialog, event)) {
+                dialog.close();
+            }
         }
     };
-    dialog.addEventListener('keydown', onKeyDown);
 
-    dialog.addEventListener("close", (e) => {
-        UnlockScroll();
-        dialog.removeEventListener("keydown", onKeyDown);
-    }, { once: true });
+    dialogStateByDialog.set(dialog, state);
+    dialog.addEventListener('keydown', state.onKeyDown);
+    dialog.addEventListener(
+        'close',
+        () => {
+            cleanupDialog(dialog);
+        },
+        { once: true }
+    );
 
     if (dismissOnOverlayClick) {
-        EnableOverlayDismiss(dialog);
+        state.overlayTimerId = window.setTimeout(() => {
+            dialog.addEventListener('click', state.onOverlayClick);
+            state.overlayTimerId = 0;
+        }, OVERLAY_DISMISS_DELAY_MS);
     }
 
     dialog.showModal();
-    LockScroll();
+    lockScroll();
 }
 
-function LockScroll() {
-    document.body.style.overflow = "hidden";
-}
-
-function UnlockScroll() {
-    document.body.style.overflow = "auto";
-}
-
-function EnableOverlayDismiss(dialog, delayMs = 800) {
-    const onClick = (e) => {
-        const r = dialog.getBoundingClientRect();
-        const outside =
-            e.clientX < r.left || e.clientX > r.right ||
-            e.clientY < r.top || e.clientY > r.bottom;
-
-        if (outside) {
-            dialog.close();
-        }
-    };
-
-    const timeoutId = setTimeout(() => {
-        dialog.addEventListener("click", onClick);
-    }, delayMs);
-
-    dialog.addEventListener("close", () => {
-        clearTimeout(timeoutId);
-        dialog.removeEventListener("click", onClick);
-    }, { once: true });
+// Compatibility alias for existing C# interop calls.
+export function OpenModalDialog(dialog, dismissOnOverlayClick, closeOnEscape) {
+    openModalDialog(dialog, dismissOnOverlayClick, closeOnEscape);
 }

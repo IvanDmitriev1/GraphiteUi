@@ -55,6 +55,7 @@ public static class PopupStyles
         .Add("left-0")
         .Add("top-[calc(100%+0.5rem)]")
         .Add("z-50")
+        .Add("w-full")
         .Add("min-w-40")
         .Add("rounded-lg")
         .Add("border")

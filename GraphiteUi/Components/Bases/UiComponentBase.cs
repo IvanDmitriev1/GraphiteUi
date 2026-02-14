@@ -42,6 +42,9 @@ public abstract class UiComponentBase : ComponentBase, IUiComponent
     private protected string MergeRootClass(string coreClasses) =>
         RootClassMergeCache.GetOrAdd(TwMerge, coreClasses, Class);
 
+    private protected string Merge(string first, string? second) =>
+        RootClassMergeCache.GetOrAdd(TwMerge, first, second);
+
     /// <summary>
     /// Triggers a re-render of the component.
     /// </summary>

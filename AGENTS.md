@@ -69,6 +69,13 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - Guard long-lived JS object disposal/invocation for disconnect scenarios (`JSDisconnectedException`).
 - Static SSR should always produce usable markup; client JS enhances behavior after load.
 
+## JS Code Style Standard
+- Follow `GraphiteUi/wwwroot/js/JS_CODE_STYLE.md` for all JS interop modules.
+- Keep export names verb-first (`refresh*`, `setup*`, `destroy*`) and prefer camelCase for canonical APIs.
+- JS modules own listener/timer lifecycle and must remain idempotent across rerender/enhanced navigation.
+- For JS interop element state, prefer module `WeakMap` storage over custom DOM properties.
+- Compatibility aliases are allowed when renaming interop exports.
+
 ## Performance and Allocation Discipline
 - Avoid per-render string interpolation for classes.
 - Prefer stackalloc + `CssClassBuilder`/`ValueStringBuilder` patterns.
@@ -94,6 +101,7 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 ## PR Checklist
 - [ ] Run `dotnet build GraphiteUi.sln`
 - [ ] If JS/interop changed, verify static SSR + Interactive Server + Interactive WebAssembly behavior.
+- [ ] If JS changed, verify `GraphiteUi/wwwroot/js/JS_CODE_STYLE.md` compliance and lifecycle/idempotence behavior.
 - [ ] Ensure accessibility and keyboard behavior remains correct.
 - [ ] Update docs/examples when useful (optional).
 

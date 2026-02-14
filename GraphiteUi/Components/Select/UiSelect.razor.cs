@@ -14,6 +14,8 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
     private UiSelectItem<TValue>? _selectedItem;
     private string? _lastValueAsString;
 
+    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string ClearText { get; set; } = "Clear value";
     [Parameter] public string NoSuggestionsText { get; set; } = "No suggestions";

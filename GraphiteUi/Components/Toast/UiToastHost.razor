@@ -9,21 +9,13 @@
          data-slot="toast-stack"
          aria-live="polite"
          aria-atomic="false">
-        @foreach (var entry in _entries)
+        @foreach (var entry in _toastItems)
         {
             <UiToast @key="entry.Id"
                      Id="@entry.Id"
-                     Color="@entry.Color"
-                     Title="@entry.Title"
-                     Message="@entry.Message"
-                     Dismissible="@entry.Dismissible"
+                     Options="@entry.Options"
                      Sticky="@entry.Sticky"
-                     PauseOnHover="@entry.PauseOnHover"
-                     DurationMs="@entry.DurationMs"
-                     Closing="@entry.IsClosing"
-                     Class="@entry.Class"
-                     OnDismiss="@(() => DismissAsync(entry.Id))">
-                @entry.Content
+                     OnDismiss="@(() => RemoveToast(entry.Id))">
             </UiToast>
         }
     </div>

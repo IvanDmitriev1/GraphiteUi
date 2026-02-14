@@ -13,6 +13,7 @@
     
     <div class="flex flex-col gap-2">
 	    <UiTextbox Label="Name:"
+                   Placeholder="Some text"
 	               @bind-Value="FormData!.Name" />
                
 	    <UiNumbox Label="Age:"
@@ -67,8 +68,8 @@
 
     public class FormModel
     {
-        [Required(ErrorMessage = "Name is required.")]
-        public string Name { get; set; } = string.Empty;
+	    [Required(ErrorMessage = "Name is required.")]
+	    public string Name { get; set; } = string.Empty;
 
         [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
         public double Age { get; set; } = 1;

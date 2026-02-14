@@ -48,13 +48,6 @@ public static class AlertStyles
         .Add("shrink-0")
         .ToString();
 
-    public static string IndicatorClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("mt-1")
-        .Add("size-2")
-        .Add("shrink-0")
-        .Add("rounded-full")
-        .ToString();
-
     public static string ContentClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("flex")
         .Add("min-w-0")
@@ -147,7 +140,6 @@ public static class AlertStyles
         for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
         {
             indicatorClasses[colorIndex] = CssClassBuilder.Empty()
-                .Add(IndicatorClass)
                 .Add(IndicatorByColor[colorIndex])
                 .ToString();
         }

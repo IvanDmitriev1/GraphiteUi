@@ -72,7 +72,7 @@
                 data-slot="select-clear"
                 class="@SelectStyles.ClearButtonClass"
                 disabled="@(!CanClear)"
-                aria-disabled="@(!CanClear).ToAttributeValue()"
+                aria-disabled="@((!CanClear).ToAttributeValue())"
                 @onclick="ClearAsync">
             <svg class="@SelectStyles.ClearIconClass"
                  viewBox="0 0 20 20"

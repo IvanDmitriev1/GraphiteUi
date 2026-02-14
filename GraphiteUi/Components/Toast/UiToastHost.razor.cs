@@ -9,7 +9,8 @@ namespace GraphiteUi.Components;
 
 public partial class UiToastHost : UiComponentBase, IAsyncDisposable
 {
-    private readonly List<ToastItem> _entries = [];
+    private const int DefaultDurationMs = 4000;
+    private readonly List<ToastEntry> _toastItems = [];
     private ElementReference _rootReference;
     private IJSObjectReference? _module;
     private int _nextToastId;
@@ -19,9 +20,7 @@ public partial class UiToastHost : UiComponentBase, IAsyncDisposable
 
     [Parameter] public ToastPlacement Placement { get; set; } = ToastPlacement.TopRight;
     [Parameter] public int MaxVisible { get; set; } = 4;
-    [Parameter] public int DefaultDurationMs { get; set; } = 6000;
     [Parameter] public bool DangerStickyByDefault { get; set; } = true;
-    [Parameter] public bool PauseOnHover { get; set; } = true;
     [Parameter] public bool NewestOnTop { get; set; } = true;
 
     private protected string RootClass => MergeRootClass(ToastStyles.GetHostRootClasses(this));
@@ -44,22 +43,13 @@ public partial class UiToastHost : UiComponentBase, IAsyncDisposable
     {
         _ = InvokeAsync(() =>
         {
-            var ids = new List<int>();
-
-            foreach (ToastItem entry in _entries)
+            if (_toastItems.Count == 0)
             {
-                if (!entry.IsClosing)
-                {
-                    ids.Add(entry.Id);
-                }
+                return;
             }
 
-            foreach (int id in ids)
-            {
-                _ = DismissAsync(id);
-            }
-
-            return Task.CompletedTask;
+            _toastItems.Clear();
+            StateHasChanged();
         });
     }
 
@@ -94,51 +84,24 @@ public partial class UiToastHost : UiComponentBase, IAsyncDisposable
         _module = null;
     }
 
-    private async Task DismissAsync(int id)
-    {
-        if (!SetEntryClosing(id))
-        {
-            return;
-        }
-
-        StateHasChanged();
-
-        await Task.Delay(ToastStyles.CloseAnimationMs);
-
-        if (RemoveEntry(id))
-        {
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
     private void AddToast(ToastOptions options)
     {
         EnsureCapacity();
 
-        ThemeColor color = NormalizeColor(options.Color);
-        int durationMs = ResolveDuration(color, options, out bool sticky);
-        bool dismissible = options.Dismissible ?? true;
-        bool pauseOnHover = options.PauseOnHover ?? PauseOnHover;
+        (ToastOptions normalizedOptions, bool sticky) = NormalizeOptions(options);
 
-        var entry = new ToastItem(
+        var entry = new ToastEntry(
             Id: Interlocked.Increment(ref _nextToastId),
-            Color: color,
-            Title: options.Title,
-            Message: options.Message,
-            Content: options.Content,
-            Class: options.Class,
-            DurationMs: durationMs,
-            Sticky: sticky,
-            Dismissible: dismissible,
-            PauseOnHover: pauseOnHover);
+            Options: normalizedOptions,
+            Sticky: sticky);
 
         if (NewestOnTop)
         {
-            _entries.Insert(0, entry);
+            _toastItems.Insert(0, entry);
         }
         else
         {
-            _entries.Add(entry);
+            _toastItems.Add(entry);
         }
     }
 
@@ -146,74 +109,62 @@ public partial class UiToastHost : UiComponentBase, IAsyncDisposable
     {
         int maxVisible = Math.Max(1, MaxVisible);
 
-        while (_entries.Count >= maxVisible)
+        while (_toastItems.Count >= maxVisible)
         {
-            int oldestIndex = NewestOnTop ? _entries.Count - 1 : 0;
-            _entries.RemoveAt(oldestIndex);
+            int oldestIndex = NewestOnTop ? _toastItems.Count - 1 : 0;
+            _toastItems.RemoveAt(oldestIndex);
         }
     }
 
-    private int ResolveDuration(ThemeColor color, ToastOptions options, out bool sticky)
+    private (ToastOptions Options, bool Sticky) NormalizeOptions(ToastOptions raw)
     {
-        if (options.DurationMs is { } explicitDuration)
-        {
-            int duration = Math.Max(0, explicitDuration);
-            sticky = duration == 0;
-            return duration;
-        }
+        ThemeColor color = NormalizeColor(raw.Color);
+        int durationMs;
+        bool sticky;
 
-        if (DangerStickyByDefault && color == ThemeColor.Danger)
+        if (raw.DurationMs is { } explicitDuration)
+        {
+            durationMs = Math.Max(0, explicitDuration);
+            sticky = durationMs == 0;
+        }
+        else if (DangerStickyByDefault && color == ThemeColor.Danger)
         {
             sticky = true;
-            return 0;
+            durationMs = 0;
         }
-
-        sticky = false;
-        return Math.Max(1, DefaultDurationMs);
-    }
-
-    private bool SetEntryClosing(int id)
-    {
-        for (int i = 0; i < _entries.Count; i++)
+        else
         {
-            ToastItem entry = _entries[i];
-
-            if (entry.Id != id)
-            {
-                continue;
-            }
-
-            if (entry.IsClosing)
-            {
-                return false;
-            }
-
-            _entries[i] = entry with { IsClosing = true };
-            return true;
+            sticky = false;
+            durationMs = DefaultDurationMs;
         }
 
-        return false;
+        var normalized = new ToastOptions
+        {
+            Color = color,
+            Title = raw.Title,
+            Content = raw.Content,
+            DurationMs = durationMs,
+            Class = raw.Class
+        };
+
+        return (normalized, sticky);
     }
 
-    private bool RemoveEntry(int id)
+    private void RemoveToast(int id)
     {
-        int removedCount = _entries.RemoveAll(entry => entry.Id == id);
-        return removedCount > 0;
+        if (_toastItems.RemoveAll(item => item.Id == id) == 0)
+        {
+            return;
+        }
+
+        StateHasChanged();
     }
 
     private static ThemeColor NormalizeColor(ThemeColor color) =>
         color == ThemeColor.Inherit ? ThemeColor.Primary : color;
 
-    private sealed record ToastItem(
+    private sealed record ToastEntry(
         int Id,
-        ThemeColor Color,
-        string? Title,
-        string? Message,
-        RenderFragment? Content,
-        string? Class,
-        int DurationMs,
-        bool Sticky,
-        bool Dismissible,
-        bool PauseOnHover,
-        bool IsClosing = false);
+        ToastOptions Options,
+        bool Sticky);
 }

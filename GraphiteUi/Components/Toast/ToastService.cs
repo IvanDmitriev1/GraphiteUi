@@ -12,11 +12,6 @@ internal sealed class ToastService : IToastService
 
     public void Show(ToastOptions options)
     {
-        if (options is null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
-
         Host.Show(options);
     }
 

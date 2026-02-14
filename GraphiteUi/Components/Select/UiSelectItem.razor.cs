@@ -22,7 +22,7 @@ public partial class UiSelectItem<TValue> : ComponentBase, IDisposable
     {
         if (Parent is null)
         {
-            throw new InvalidOperationException($"{nameof(UiSelectItem<TValue>)} must be placed inside {nameof(UiSelect<TValue>)}.");
+            throw new InvalidOperationException($"{nameof(UiSelectItem<>)} must be placed inside {nameof(UiSelect<>)}.");
         }
 
         Parent.RegisterItem(this);

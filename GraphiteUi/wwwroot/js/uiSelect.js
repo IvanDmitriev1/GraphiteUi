@@ -1,65 +1,153 @@
+import { getUiPopupController } from './uiPopup.js';
+
 const SELECT_ROOT_SELECTOR = '[data-select-root="true"]';
 const ITEM_SELECTOR = '[data-slot="select-item"]';
 const POPUP_READY_EVENT = 'graphite:popup-ready';
+const POPUP_OPEN_CHANGE_EVENT = 'graphite:popup-open-change';
 
 let selectIdSequence = 0;
+let dynamicItemIdSequence = 0;
+
+const selectStateByRoot = new WeakMap();
+const awaitPopupReadyByRoot = new WeakMap();
 
 const isTrue = (value) => value === 'true';
 
+function clearAwaitPopupReady(root) {
+    if (!root) {
+        return;
+    }
+
+    const awaitState = awaitPopupReadyByRoot.get(root);
+    if (awaitState?.handler) {
+        root.removeEventListener(POPUP_READY_EVENT, awaitState.handler);
+    }
+
+    awaitPopupReadyByRoot.delete(root);
+}
+
+function registerAwaitPopupReady(root) {
+    const awaitState = awaitPopupReadyByRoot.get(root);
+    if (awaitState?.awaiting) {
+        return;
+    }
+
+    const onPopupReady = () => {
+        clearAwaitPopupReady(root);
+        setupSelect(root);
+    };
+
+    awaitPopupReadyByRoot.set(root, { awaiting: true, handler: onPopupReady });
+    root.addEventListener(POPUP_READY_EVENT, onPopupReady);
+}
+
+function getPopupApi(root) {
+    const popup = getUiPopupController(root);
+
+    if (
+        popup &&
+        typeof popup.open === 'function' &&
+        typeof popup.close === 'function' &&
+        typeof popup.isOpen === 'function' &&
+        typeof popup.canInteract === 'function'
+    ) {
+        return popup;
+    }
+
+    return null;
+}
+
+function queryElements(root) {
+    return {
+        trigger: root.querySelector('[data-slot="popup-trigger"]'),
+        input: root.querySelector('[data-slot="select-input"]'),
+        valueInput: root.querySelector('[data-slot="select-value"]'),
+        list: root.querySelector('[data-slot="select-list"]'),
+        clearButton: root.querySelector('[data-slot="select-clear"]'),
+        empty: root.querySelector('[data-slot="select-empty"]')
+    };
+}
+
+function ensureSelectId(root) {
+    if (!root.dataset.selectId) {
+        root.dataset.selectId = `ui-select-${++selectIdSequence}`;
+    }
+
+    return root.dataset.selectId;
+}
+
+function destroySelect(root) {
+    if (!root) {
+        return;
+    }
+
+    clearAwaitPopupReady(root);
+
+    const state = selectStateByRoot.get(root);
+    if (!state) {
+        return;
+    }
+
+    state.closePopup(false);
+    state.setActive(null);
+
+    state.trigger.removeEventListener('click', state.handleTriggerClick);
+    state.input.removeEventListener('focus', state.handleInputFocus);
+    state.input.removeEventListener('input', state.handleInput);
+    state.input.removeEventListener('keydown', state.handleInputKeyDown);
+    state.list.removeEventListener('click', state.handleListClick);
+    state.clearButton.removeEventListener('click', state.handleClearClick);
+    root.removeEventListener(POPUP_OPEN_CHANGE_EVENT, state.handlePopupOpenChange);
+
+    selectStateByRoot.delete(root);
+}
+
 function setupSelect(root) {
-    if (!root)
-        return;
-
-    if (root.__graphiteUiSelectInit) {
-        root.__graphiteUiSelectRefresh?.();
+    if (!root) {
         return;
     }
 
-    const trigger = root.querySelector('[data-slot="popup-trigger"]');
-    const input = root.querySelector('[data-slot="select-input"]');
-    const valueInput = root.querySelector('[data-slot="select-value"]');
-    const list = root.querySelector('[data-slot="select-list"]');
-    const clearButton = root.querySelector('[data-slot="select-clear"]');
-    const empty = root.querySelector('[data-slot="select-empty"]');
-
-    if (!trigger || !input || !valueInput || !list || !clearButton || !empty)
-        return;
-
-    const popup = root.__graphiteUiPopup;
-
-    if (!popup || typeof popup.open !== 'function' || typeof popup.close !== 'function') {
-        if (!root.__graphiteUiSelectAwaitPopupReady) {
-            root.__graphiteUiSelectAwaitPopupReady = true;
-            root.addEventListener(POPUP_READY_EVENT, () => {
-                root.__graphiteUiSelectAwaitPopupReady = false;
-                setupSelect(root);
-            }, { once: true });
-        }
+    const existingState = selectStateByRoot.get(root);
+    if (existingState) {
+        existingState.refresh();
         return;
     }
 
-    const selectId = root.dataset.selectId || `ui-select-${++selectIdSequence}`;
-    root.dataset.selectId = selectId;
+    const { trigger, input, valueInput, list, clearButton, empty } = queryElements(root);
+
+    if (!trigger || !input || !valueInput || !list || !clearButton || !empty) {
+        return;
+    }
+
+    const popup = getPopupApi(root);
+    if (!popup) {
+        registerAwaitPopupReady(root);
+        return;
+    }
+
+    clearAwaitPopupReady(root);
+
+    const selectId = ensureSelectId(root);
 
     const getItems = () => Array.from(root.querySelectorAll(ITEM_SELECTOR));
     const getOpen = () => popup.isOpen();
+    const canInteract = () => popup.canInteract();
+
+    const isItemDisabled = (item) => isTrue(item.getAttribute('data-disabled')) || item.disabled;
+    const getActiveItem = () => getItems().find((item) => isTrue(item.getAttribute('data-active')));
+    const getSelectedItem = () => getItems().find((item) => isTrue(item.getAttribute('data-selected')));
+    const getVisibleEnabledItems = () => getItems().filter((item) => !item.hidden && !isItemDisabled(item));
 
     const ensureItemIds = () => {
         const items = getItems();
 
         for (let index = 0; index < items.length; index++) {
             const item = items[index];
-            if (!item.id)
+            if (!item.id) {
                 item.id = `${selectId}-item-${index + 1}`;
+            }
         }
     };
-
-    const canInteract = () => popup.canInteract();
-
-    const isItemDisabled = (item) => isTrue(item.getAttribute('data-disabled')) || item.disabled;
-    const getActiveItem = () => getItems().find(item => isTrue(item.getAttribute('data-active')));
-    const getSelectedItem = () => getItems().find(item => isTrue(item.getAttribute('data-selected')));
-    const getVisibleEnabledItems = () => getItems().filter(item => !item.hidden && !isItemDisabled(item));
 
     const setActive = (item) => {
         for (const option of getItems()) {
@@ -71,8 +159,9 @@ function setupSelect(root) {
             return;
         }
 
-        if (!item.id)
-            item.id = `${selectId}-item-${Date.now()}`;
+        if (!item.id) {
+            item.id = `${selectId}-item-dynamic-${++dynamicItemIdSequence}`;
+        }
 
         input.setAttribute('aria-activedescendant', item.id);
         item.scrollIntoView({ block: 'nearest' });
@@ -86,8 +175,7 @@ function setupSelect(root) {
             return;
         }
 
-        const selected = visible.find(item => isTrue(item.getAttribute('data-selected')));
-
+        const selected = visible.find((item) => isTrue(item.getAttribute('data-selected')));
         if (selected) {
             setActive(selected);
             return;
@@ -122,6 +210,7 @@ function setupSelect(root) {
     const updateClearState = () => {
         const hasValue = (valueInput.value || '').trim().length > 0;
         const disabled = !canInteract() || !hasValue;
+
         clearButton.disabled = disabled;
         clearButton.setAttribute('aria-disabled', disabled ? 'true' : 'false');
     };
@@ -136,8 +225,7 @@ function setupSelect(root) {
         if (item) {
             valueInput.value = item.getAttribute('data-value') || '';
             input.value = item.getAttribute('data-text') || '';
-        }
-        else {
+        } else {
             valueInput.value = '';
         }
 
@@ -151,16 +239,20 @@ function setupSelect(root) {
         for (const item of getItems()) {
             const text = (item.getAttribute('data-text') || item.textContent || '').trim().toLocaleLowerCase();
             const match = query.length === 0 || text.includes(query);
+
             item.hidden = !match;
-            if (match)
+
+            if (match) {
                 visibleCount++;
+            }
         }
 
         empty.hidden = visibleCount > 0;
 
         const active = getActiveItem();
-        if (active && (active.hidden || isItemDisabled(active)))
+        if (active && (active.hidden || isItemDisabled(active))) {
             setActive(null);
+        }
     };
 
     const openAndPrepare = (preferLast = false) => {
@@ -170,8 +262,9 @@ function setupSelect(root) {
     };
 
     const selectItem = (item) => {
-        if (!item || item.hidden || isItemDisabled(item) || !canInteract())
+        if (!item || item.hidden || isItemDisabled(item) || !canInteract()) {
             return;
+        }
 
         setSelected(item);
         closePopup();
@@ -180,17 +273,20 @@ function setupSelect(root) {
     const syncInitialSelection = () => {
         ensureItemIds();
 
-        const byAttr = getSelectedItem();
-        if (byAttr) {
-            setSelected(byAttr);
+        const selectedByAttribute = getSelectedItem();
+        if (selectedByAttribute) {
+            setSelected(selectedByAttribute);
             return;
         }
 
-        const value = valueInput.value || '';
-        if (value.length > 0) {
-            const byValue = getItems().find(item => (item.getAttribute('data-value') || '') === value);
-            if (byValue) {
-                setSelected(byValue);
+        const currentValue = valueInput.value || '';
+        if (currentValue.length > 0) {
+            const selectedByValue = getItems().find(
+                (item) => (item.getAttribute('data-value') || '') === currentValue
+            );
+
+            if (selectedByValue) {
+                setSelected(selectedByValue);
                 return;
             }
         }
@@ -199,36 +295,41 @@ function setupSelect(root) {
     };
 
     const handleTriggerClick = () => {
-        if (!canInteract())
+        if (!canInteract()) {
             return;
+        }
 
         openAndPrepare();
         queueMicrotask(() => input.focus());
     };
 
     const handleInputFocus = () => {
-        if (!canInteract())
+        if (!canInteract()) {
             return;
+        }
 
         openAndPrepare();
     };
 
     const handleInput = (event) => {
-        if (!canInteract())
+        if (!canInteract()) {
             return;
+        }
 
         const currentText = event.target.value || '';
         const selected = getSelectedItem();
 
-        if (selected && (selected.getAttribute('data-text') || '') !== currentText)
+        if (selected && (selected.getAttribute('data-text') || '') !== currentText) {
             setSelected(null);
+        }
 
         openAndPrepare();
     };
 
     const handleInputKeyDown = (event) => {
-        if (!canInteract())
+        if (!canInteract()) {
             return;
+        }
 
         switch (event.key) {
             case 'Escape':
@@ -237,6 +338,7 @@ function setupSelect(root) {
 
             case 'ArrowDown':
                 event.preventDefault();
+
                 if (!getOpen()) {
                     openAndPrepare();
                     return;
@@ -247,6 +349,7 @@ function setupSelect(root) {
 
             case 'ArrowUp':
                 event.preventDefault();
+
                 if (!getOpen()) {
                     openAndPrepare(true);
                     return;
@@ -277,9 +380,15 @@ function setupSelect(root) {
     };
 
     const handleListClick = (event) => {
-        const item = event.target.closest(ITEM_SELECTOR);
-        if (!item)
+        const target = event.target;
+        if (!(target instanceof Element)) {
             return;
+        }
+
+        const item = target.closest(ITEM_SELECTOR);
+        if (!item) {
+            return;
+        }
 
         selectItem(item);
     };
@@ -287,33 +396,29 @@ function setupSelect(root) {
     const handleClearClick = (event) => {
         event.preventDefault();
 
-        if (!canInteract())
+        if (!canInteract()) {
             return;
+        }
 
         input.value = '';
         setSelected(null);
         filterItems();
         closePopup();
+
         queueMicrotask(() => input.focus());
     };
 
     const handlePopupOpenChange = (event) => {
         if (event.detail?.open) {
-            if (!getActiveItem())
+            if (!getActiveItem()) {
                 activateDefaultItem();
+            }
+
             return;
         }
 
         setActive(null);
     };
-
-    trigger.addEventListener('click', handleTriggerClick);
-    input.addEventListener('focus', handleInputFocus);
-    input.addEventListener('input', handleInput);
-    input.addEventListener('keydown', handleInputKeyDown);
-    list.addEventListener('click', handleListClick);
-    clearButton.addEventListener('click', handleClearClick);
-    root.addEventListener('graphite:popup-open-change', handlePopupOpenChange);
 
     const refresh = () => {
         syncInitialSelection();
@@ -322,16 +427,46 @@ function setupSelect(root) {
         closePopup(false);
     };
 
-    root.__graphiteUiSelectRefresh = refresh;
-    root.__graphiteUiSelectInit = true;
+    trigger.addEventListener('click', handleTriggerClick);
+    input.addEventListener('focus', handleInputFocus);
+    input.addEventListener('input', handleInput);
+    input.addEventListener('keydown', handleInputKeyDown);
+    list.addEventListener('click', handleListClick);
+    clearButton.addEventListener('click', handleClearClick);
+    root.addEventListener(POPUP_OPEN_CHANGE_EVENT, handlePopupOpenChange);
+
+    selectStateByRoot.set(root, {
+        trigger,
+        input,
+        list,
+        clearButton,
+        handleTriggerClick,
+        handleInputFocus,
+        handleInput,
+        handleInputKeyDown,
+        handleListClick,
+        handleClearClick,
+        handlePopupOpenChange,
+        closePopup,
+        setActive,
+        refresh
+    });
 
     refresh();
 }
 
 export function refreshUiSelects(root = document) {
+    if (!root) {
+        return;
+    }
+
     root.querySelectorAll(SELECT_ROOT_SELECTOR).forEach(setupSelect);
 }
 
 export function refreshUiSelectBlazor(root) {
     setupSelect(root);
+}
+
+export function destroyUiSelectBlazor(root) {
+    destroySelect(root);
 }

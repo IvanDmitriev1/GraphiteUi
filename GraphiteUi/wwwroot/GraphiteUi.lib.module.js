@@ -3,21 +3,28 @@ import { refreshUiPopups } from './js/uiPopup.js';
 import { refreshUiRadios } from './js/uiRadio.js';
 import { refreshUiSelects } from './js/uiSelect.js';
 
+let enhancedLoadRegistered = false;
+
+function refreshAll(root = document) {
+    refreshUiInputFields(root);
+    refreshUiPopups(root);
+    refreshUiRadios(root);
+    refreshUiSelects(root);
+}
+
 export function beforeWebStart() {
-    refreshUiInputFields(document);
-    refreshUiPopups(document);
-    refreshUiRadios(document);
-    refreshUiSelects(document);
+    refreshAll(document);
 }
 
 export function afterWebStarted(blazor) {
-    window.previousPathName = window.location.pathname;
+    if (enhancedLoadRegistered || !blazor || typeof blazor.addEventListener !== 'function') {
+        return;
+    }
+
+    enhancedLoadRegistered = true;
     blazor.addEventListener('enhancedload', onEnhancedLoad);
 }
 
 function onEnhancedLoad() {
-    refreshUiInputFields(document);
-    refreshUiPopups(document);
-    refreshUiRadios(document);
-    refreshUiSelects(document);
+    refreshAll(document);
 }

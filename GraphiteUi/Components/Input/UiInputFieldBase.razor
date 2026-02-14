@@ -8,9 +8,8 @@
          data-readonly="@ReadOnly"
          data-disabled="@Disabled"
          data-trailing="@((TrailingContent is not null).ToAttributeValue())"
-         data-active="@(!string.IsNullOrWhiteSpace(CurrentValueAsString))"
-         class="@InputWrapperClass"
-         @ref="_wrapperReference">
+         data-active="@(!string.IsNullOrWhiteSpace(CurrentValueAsString) || !string.IsNullOrWhiteSpace(Placeholder))"
+         class="@InputWrapperClass">
 
         @if (!string.IsNullOrEmpty(Label))
         {

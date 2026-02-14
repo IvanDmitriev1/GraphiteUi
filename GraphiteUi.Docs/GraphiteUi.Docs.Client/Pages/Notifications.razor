@@ -64,13 +64,15 @@
 
     private void ShowToast(ThemeColor color)
     {
+        string message = color == ThemeColor.Danger
+            ? "Danger notifications are sticky by default."
+            : "This toast will auto-dismiss after 4 seconds.";
+
         ToastService.Show(new ToastOptions
         {
             Color = color,
             Title = $"{color} notification",
-            Message = color == ThemeColor.Danger
-                ? "Danger notifications are sticky by default."
-                : "This toast will auto-dismiss after 6 seconds."
+            Content = builder => builder.AddContent(0, message),
         });
     }
 
@@ -80,9 +82,7 @@
         {
             Color = ThemeColor.Info,
             Title = "Background sync",
-            Message = "24 items synced successfully.",
-            Content = SyncDetails,
-            PauseOnHover = true
+            Content = CustomToastContent
         });
     }
 
@@ -104,6 +104,14 @@
         builder.OpenElement(0, "div");
         builder.AddAttribute(1, "class", "text-small text-primary-50");
         builder.AddContent(2, "Last sync: a few seconds ago");
+        builder.CloseElement();
+    };
+
+    private static RenderFragment CustomToastContent => builder =>
+    {
+        builder.OpenElement(0, "div");
+        builder.AddContent(1, "24 items synced successfully.");
+        builder.AddContent(2, SyncDetails);
         builder.CloseElement();
     };
 }

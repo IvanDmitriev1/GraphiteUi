@@ -1,18 +1,18 @@
 @namespace GraphiteUi.Components
 @inherits UiComponentBase
 
-<div class="@_rootClassValue"
+<div class="@RootClassValue"
      data-slot="popup-root"
      data-disabled="@Disabled.ToAttributeValue()"
      data-close-outside="@CloseOnOutsideClick.ToAttributeValue()"
      data-close-escape="@CloseOnEscape.ToAttributeValue()"
      data-show-backdrop="@ShowBackdrop.ToAttributeValue()"
-     data-trigger-mode="@_triggerModeValue"
+     data-trigger-mode="@TriggerModeValue"
      @attributes="@AdditionalAttributes"
      @ref="_rootReference">
 
-    <UiComponent As="@_triggerAsValue"
-            class="@_triggerClassValue"
+    <UiComponent As="@TriggerAsValue"
+            class="@TriggerClassValue"
             data-slot="popup-trigger"
             data-open="false"
             aria-disabled="@Disabled.ToAttributeValue()"
@@ -25,17 +25,15 @@
     <button type="button"
             data-slot="popup-backdrop"
             data-state="closed"
-            class="@_backdropClassValue"
+            class="@PopupStyles.BackdropClass"
             hidden
             tabindex="-1"
-            @attributes="@BackdropAttributes"
             aria-hidden="true"></button>
 
     <div data-slot="popup-content"
          data-state="closed"
-         class="@_contentClassValue"
+         class="@PopupStyles.ContentClass"
          role="dialog"
-         @attributes="@ContentAttributes"
          hidden>
         @ChildContent
     </div>
