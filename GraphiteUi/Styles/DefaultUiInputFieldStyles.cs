@@ -57,5 +57,12 @@ internal static class DefaultUiInputFieldStyles
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("w-full")
         .Add("outline-none")
+        .Add("group-data-[trailing=true]:pe-8")
+        .ToString();
+
+    public static string InputTrailingClass { get; } = new CssClassBuilder(stackalloc char[192])
+        .Add("inline-flex")
+        .Add("items-center")
+        .Add("shrink-0")
         .ToString();
 }

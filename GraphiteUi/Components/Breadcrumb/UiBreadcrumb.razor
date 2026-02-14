@@ -1,0 +1,11 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<UiComponent As="@As"
+             Class="@RootClass"
+             aria-label="@AriaLabel"
+             @attributes="@AdditionalAttributes">
+    <ol class="@BreadcrumbStyles.ListClass">
+        @ChildContent
+    </ol>
+</UiComponent>

@@ -1,0 +1,31 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<UiComponent As="@As"
+             Class="@RootClass"
+             @attributes="@AdditionalAttributes">
+    @if (HeaderContent is not null || !string.IsNullOrWhiteSpace(Title))
+    {
+        <div class="@CardStyles.HeaderClass">
+            @if (HeaderContent is not null)
+            {
+                @HeaderContent
+            }
+            else
+            {
+                <div class="@CardStyles.TitleClass">@Title</div>
+            }
+        </div>
+    }
+
+    <div class="@CardStyles.BodyClass">
+        @ChildContent
+    </div>
+
+    @if (FooterContent is not null)
+    {
+        <div class="@CardStyles.FooterClass">
+            @FooterContent
+        </div>
+    }
+</UiComponent>

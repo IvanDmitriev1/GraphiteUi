@@ -1,0 +1,15 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+@if (Vertical)
+{
+    <div class="@RootClass"
+         role="separator"
+         aria-orientation="vertical"
+         @attributes="@AdditionalAttributes"></div>
+}
+else
+{
+    <hr class="@RootClass"
+        @attributes="@AdditionalAttributes" />
+}

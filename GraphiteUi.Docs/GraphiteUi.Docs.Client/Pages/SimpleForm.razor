@@ -1,5 +1,4 @@
 @page "/simple-form"
-@rendermode  InteractiveServer
 @using System.ComponentModel.DataAnnotations
 
 <PageTitle>Simple Form</PageTitle>
@@ -74,10 +73,10 @@
         [Range(1, 120, ErrorMessage = "Age must be between 1 and 120.")]
         public double Age { get; set; } = 1;
 
-        [Required(ErrorMessage = "Country is required.")]
+        
         public string Country { get; set; } = string.Empty;
 
-        [Range(typeof(bool), "true", "true", ErrorMessage = "You have to agree.")]
+        
         public bool Argree { get; set; }
     }
 }

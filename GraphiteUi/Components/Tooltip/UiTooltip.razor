@@ -1,0 +1,17 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<UiComponent As="@As"
+             Class="@RootClass"
+             tabindex="0"
+             @attributes="@AdditionalAttributes">
+    @ChildContent
+
+    @if (!string.IsNullOrWhiteSpace(Text))
+    {
+        <span role="tooltip"
+              class="@BubbleClass">
+            @Text
+        </span>
+    }
+</UiComponent>

@@ -1,0 +1,16 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<UiComponent As="@ResolvedAs"
+             Class="@RootClass"
+             disabled="@(ResolvedAs == "button" ? Disabled : null)"
+             href="@ResolvedHref"
+             target="@Target"
+             rel="@Rel"
+             aria-disabled="@Disabled.ToAttributeValue()"
+             @onclick="OnClickAsync"
+             @attributes="@AdditionalAttributes">
+    @StartContent
+    @ChildContent
+    @EndContent
+</UiComponent>

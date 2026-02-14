@@ -1,0 +1,31 @@
+@namespace GraphiteUi.Components
+@inherits UiInputBase<bool>
+
+<label class="@RootClass"
+       data-checked="@CurrentValue.ToAttributeValue()"
+       data-disabled="@Disabled.ToAttributeValue()"
+       data-invalid="@IsInvalid.ToAttributeValue()"
+       data-readonly="@ReadOnly.ToAttributeValue()"
+       @attributes="@AdditionalAttributes">
+
+	<input type="checkbox"
+	       class="@SwitchStyles.InputClass"
+	       value="true"
+	       checked="@CurrentValue"
+	       disabled="@Disabled"
+	       aria-disabled="@Disabled"
+	       aria-invalid="@IsInvalid"
+	       aria-readonly="@ReadOnly"
+	       name="@NameAttributeValue"
+	       @onchange="@OnChangeAsync"/>
+
+	<span class="@SwitchStyles.TrackClass"
+	      data-invalid="@IsInvalid.ToAttributeValue()">
+		<span class="@SwitchStyles.ThumbClass"></span>
+	</span>
+
+	@if (ChildContent is not null)
+	{
+		<span class="@SwitchStyles.LabelClass">@ChildContent</span>
+	}
+</label>

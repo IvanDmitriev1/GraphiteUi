@@ -1,0 +1,26 @@
+@namespace GraphiteUi.Components
+
+<li class="@BreadcrumbStyles.ItemClass">
+    @if (!Current && !string.IsNullOrWhiteSpace(Href))
+    {
+        <a href="@Href"
+           class="@BreadcrumbStyles.LinkClass"
+           target="@Target"
+           rel="@Rel">
+            @ChildContent
+        </a>
+    }
+    else
+    {
+        <span class="@BreadcrumbStyles.CurrentClass"
+              aria-current="@(Current ? "page" : null)">
+            @ChildContent
+        </span>
+    }
+
+    @if (!Current)
+    {
+        <span class="@BreadcrumbStyles.SeparatorClass"
+              aria-hidden="true">/</span>
+    }
+</li>

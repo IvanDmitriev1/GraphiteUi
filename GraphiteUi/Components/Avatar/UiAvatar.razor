@@ -1,0 +1,17 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<UiComponent As="@As"
+             Class="@RootClass"
+             @attributes="@AdditionalAttributes">
+    @if (!string.IsNullOrWhiteSpace(Src))
+    {
+        <img src="@Src"
+             alt="@Alt"
+             class="@AvatarStyles.ImageClass" />
+    }
+    else
+    {
+        @Initials
+    }
+</UiComponent>

@@ -7,8 +7,9 @@
          data-invalid="@IsInvalid"
          data-readonly="@ReadOnly"
          data-disabled="@Disabled"
+         data-trailing="@((TrailingContent is not null).ToAttributeValue())"
          data-active="@(!string.IsNullOrWhiteSpace(CurrentValueAsString))"
-         class="@DefaultUiInputFieldStyles.InputWrapperClass"
+         class="@InputWrapperClass"
          @ref="_wrapperReference">
 
         @if (!string.IsNullOrEmpty(Label))
@@ -19,19 +20,46 @@
             </label>
         }
 
-        <input type="@TypeString"
-               class="@DefaultUiInputFieldStyles.InputClass"
-               value="@CurrentValueAsString"
-               placeholder="@Placeholder"
-               disabled="@Disabled"
-               readonly="@ReadOnly"
-               required="@Required"
-               aria-disabled="@Disabled"
-               aria-readonly="@ReadOnly"
-               aria-label="@Label"
-               name="@NameAttributeValue"
-               data-slot="input"
-               @attributes="@AdditionalAttributes"
-               @oninput="@OnInputAsync"/>
+        @if (IsMultiline)
+        {
+            <textarea class="@InputElementClass"
+                      placeholder="@Placeholder"
+                      disabled="@Disabled"
+                      readonly="@ReadOnly"
+                      required="@Required"
+                      aria-disabled="@Disabled"
+                      aria-readonly="@ReadOnly"
+                      aria-label="@Label"
+                      name="@NameAttributeValue"
+                      rows="@TextareaRows"
+                      data-slot="input"
+                      @attributes="@AdditionalAttributes"
+                      @oninput="@OnInputAsync">@CurrentValueAsString</textarea>
+        }
+        else
+        {
+            <input type="@TypeString"
+                   class="@InputElementClass"
+                   value="@CurrentValueAsString"
+                   placeholder="@Placeholder"
+                   disabled="@Disabled"
+                   readonly="@ReadOnly"
+                   required="@Required"
+                   aria-disabled="@Disabled"
+                   aria-readonly="@ReadOnly"
+                   aria-label="@Label"
+                   name="@NameAttributeValue"
+                   data-slot="input"
+                   @attributes="@AdditionalAttributes"
+                   @oninput="@OnInputAsync"/>
+        }
+
+        @if (TrailingContent is not null)
+        {
+            <span data-slot="input-trailing"
+                  class="@DefaultUiInputFieldStyles.InputTrailingClass">
+                @TrailingContent
+            </span>
+        }
     </div>
 </div>

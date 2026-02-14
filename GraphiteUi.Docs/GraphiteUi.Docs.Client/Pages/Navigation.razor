@@ -1,0 +1,55 @@
+@page "/navigation"
+
+<PageTitle>Navigation</PageTitle>
+
+<h1>Navigation</h1>
+
+<div class="mt-4 max-w-3xl flex flex-col gap-6">
+    <section class="flex flex-col gap-2">
+        <h2 class="text-medium">Breadcrumb</h2>
+        <UiBreadcrumb>
+            <UiBreadcrumbItem Href="/">Home</UiBreadcrumbItem>
+            <UiBreadcrumbItem Href="/navigation">Library</UiBreadcrumbItem>
+            <UiBreadcrumbItem Current="true">Navigation</UiBreadcrumbItem>
+        </UiBreadcrumb>
+    </section>
+
+    <section class="flex items-center gap-3">
+        <UiMenu>
+            <TriggerContent>
+                <span>Open Menu</span>
+            </TriggerContent>
+            <ChildContent>
+                <UiMenuItem OnClick="OnMenuClick">Profile</UiMenuItem>
+                <UiMenuItem OnClick="OnMenuClick">Settings</UiMenuItem>
+                <UiMenuItem Href="/" OnClick="OnMenuClick">Go Home</UiMenuItem>
+            </ChildContent>
+        </UiMenu>
+
+        <UiDrawer @bind-Open="_drawerOpen"
+                  Title="Drawer Navigation">
+            <TriggerContent>
+                <span>Open Drawer</span>
+            </TriggerContent>
+            <ChildContent>
+                <UiButton As="a" href="/" Color="ThemeColor.Secondary">Home</UiButton>
+                <UiButton As="a" href="/simple-form" Color="ThemeColor.Secondary">Simple Form</UiButton>
+                <UiButton As="a" href="/notifications" Color="ThemeColor.Secondary">Notifications</UiButton>
+            </ChildContent>
+        </UiDrawer>
+    </section>
+
+    <p class="text-small text-primary-50">Last menu action: @_lastMenuAction</p>
+</div>
+
+@code {
+    private bool _drawerOpen;
+    private string? _tabValue = "overview";
+    private string _lastMenuAction = "None";
+
+    private Task OnMenuClick()
+    {
+        _lastMenuAction = $"Clicked at {DateTime.Now:HH:mm:ss}";
+        return Task.CompletedTask;
+    }
+}

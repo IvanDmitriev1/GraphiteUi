@@ -1,0 +1,19 @@
+@namespace GraphiteUi.Components
+@inherits UiInputBase<TValue>
+@typeparam TValue
+
+<div class="@RootClass"
+     role="radiogroup"
+     aria-invalid="@IsInvalid.ToAttributeValue()"
+     data-slot="radio-group"
+     @attributes="@AdditionalAttributes">
+	 
+	<input type="hidden"
+	       data-slot="radio-value"
+	       name="@FormFieldName"
+	       value="@FormFieldValue"/>
+
+	<CascadingValue Value="this" IsFixed="true">
+		@ChildContent
+	</CascadingValue>
+</div>

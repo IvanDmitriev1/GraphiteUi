@@ -1,0 +1,23 @@
+@namespace GraphiteUi.Components
+@inherits UiInputBase<IReadOnlyList<IBrowserFile>>
+
+<div class="@RootClass">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label class="@FileInputStyles.LabelClass">@Label</label>
+    }
+
+    <InputFile class="@FileInputStyles.InputClass"
+               multiple="@Multiple"
+               disabled="@Disabled"
+               aria-invalid="@IsInvalid"
+               @attributes="@AdditionalAttributes"
+               OnChange="OnFilesChangedAsync" />
+
+    @if ((CurrentValue?.Count ?? 0) > 0)
+    {
+        <div class="@FileInputStyles.InfoClass">
+            @($"{CurrentValue!.Count} file(s) selected")
+        </div>
+    }
+</div>

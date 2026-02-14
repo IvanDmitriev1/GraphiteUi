@@ -1,0 +1,42 @@
+@namespace GraphiteUi.Components
+@inherits UiComponentBase
+
+<input id="@ToggleId"
+       type="checkbox"
+       class="@DrawerStyles.ToggleInputClass"
+       disabled="@Disabled" />
+
+@if (TriggerContent is not null)
+{
+    <label for="@ToggleId"
+           data-slot="drawer-trigger"
+           class="@DrawerStyles.TriggerClass">
+        @TriggerContent
+    </label>
+}
+
+<div class="@RootClass"
+     data-slot="drawer-root"
+     @attributes="@AdditionalAttributes">
+    @if (ShowBackdrop)
+    {
+        <label for="@ToggleId"
+               data-slot="drawer-backdrop"
+               class="@DrawerStyles.BackdropClass"
+               aria-hidden="true"></label>
+    }
+
+    <aside class="@PanelClass"
+           data-slot="drawer-panel"
+           tabindex="-1"
+           role="dialog">
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            <div class="@DrawerStyles.HeaderClass">@Title</div>
+        }
+
+        <div class="@DrawerStyles.ContentClass">
+            @ChildContent
+        </div>
+    </aside>
+</div>

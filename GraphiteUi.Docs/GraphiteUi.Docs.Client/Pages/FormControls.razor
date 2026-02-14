@@ -1,0 +1,66 @@
+@page "/form-controls"
+
+<PageTitle>Form Controls</PageTitle>
+
+<h1>Form Controls</h1>
+
+<EditForm Model="@Model" 
+          OnValidSubmit="OnValidSubmit"
+          class="mt-4 max-w-xl flex flex-col gap-3"
+          FormName="two">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <UiSwitch @bind-Value="Model.NotificationsEnabled">
+        Enable notifications
+    </UiSwitch>
+
+    <UiRadioGroup TValue="string"
+                  Name="plan"
+                  @bind-Value="Model.Plan">
+        <UiRadio Value="@("free")">Free plan</UiRadio>
+        <UiRadio Value="@("pro")">Pro plan</UiRadio>
+        <UiRadio Value="@("enterprise")">Enterprise plan</UiRadio>
+    </UiRadioGroup>
+
+    <UiFileInput Label="Attachments"
+                 Multiple="true"
+                 @bind-Value="Model.Files" />
+
+    <UiButton Type="ButtonType.Submit">Submit</UiButton>
+</EditForm>
+
+@if (_submitted)
+{
+	<div class="mt-3 text-small text-success-foreground bg-success rounded-md px-3 py-2">
+		Form submitted. Selected files: @Model.Files.Count
+	</div>
+	<div>
+        NotificationsEnabled: @Model.NotificationsEnabled
+		Plan: @Model.Plan
+	</div>
+}
+
+@code {
+	[SupplyParameterFromForm]
+    private FormModel? Model { get; set; }
+    private bool _submitted;
+
+    protected override void OnInitialized()
+    {
+        Model ??= new FormModel();
+    }
+
+    private Task OnValidSubmit()
+    {
+        _submitted = true;
+        return Task.CompletedTask;
+    }
+
+    private sealed class FormModel
+    {
+	    public string Plan { get; set; } = string.Empty;
+        public bool NotificationsEnabled { get; set; }
+        public IReadOnlyList<IBrowserFile> Files { get; set; } = [];
+    }
+}

@@ -34,6 +34,11 @@ public abstract partial class UiInputFieldBase<TValue> : UiDebouncedInputBase<TV
     [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
 
     protected string TypeString { get; set; } = "text";
+    protected virtual bool IsMultiline => false;
+    protected virtual int TextareaRows => 4;
+    protected virtual string InputWrapperClass => DefaultUiInputFieldStyles.InputWrapperClass;
+    protected virtual string InputElementClass => DefaultUiInputFieldStyles.InputClass;
+    protected virtual RenderFragment? TrailingContent => null;
 
     private ElementReference _wrapperReference;
 
