@@ -7,13 +7,9 @@
          Disabled="@(Disabled || ReadOnly)"
          TriggerMode="open"
          TriggerAs="div"
-         TriggerClass="@SelectStyles.TriggerClass"
-         ContentClass="@SelectStyles.PopupClass"
-         BackdropClass="@SelectStyles.BackdropClass"
          TriggerAttributes="@TriggerAttributes"
          data-select-root="true"
-         @attributes="@AdditionalAttributes"
-         @ref="_popup">
+         @attributes="@AdditionalAttributes">
 
     <TriggerContent>
         <input type="text"
@@ -73,7 +69,7 @@
                 class="@SelectStyles.ClearButtonClass"
                 disabled="@(!CanClear)"
                 aria-disabled="@((!CanClear).ToAttributeValue())"
-                @onclick="ClearAsync">
+                @onclick="Clear">
             <svg class="@SelectStyles.ClearIconClass"
                  viewBox="0 0 20 20"
                  fill="none"

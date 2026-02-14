@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 
@@ -26,14 +26,25 @@ public partial class UiNumbox<TValue> : UiInputFieldBase<TValue>
 
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
     {
-        result = TValue.Zero;
-        validationErrorMessage = string.Empty;
-
-        if (value is null)
+        if (!string.IsNullOrWhiteSpace(value) &&
+            (TValue.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result) ||
+            TValue.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out result))
+        )
         {
-            return false;
+            validationErrorMessage = null;
+            return true;
         }
 
-        return TValue.TryParse(value, CultureInfo.CurrentCulture, out result);
+        result = TValue.Zero;
+        validationErrorMessage = $"The {FieldIdentifier.FieldName} field is not valid.";
+        return false;
+    }
+
+    protected override string? FormatValueAsString(TValue? value)
+    {
+        if (value is null)
+            return null;
+
+        return value.ToString(null, CultureInfo.InvariantCulture);
     }
 }

@@ -8,17 +8,16 @@
      data-close-escape="@CloseOnEscape.ToAttributeValue()"
      data-show-backdrop="@ShowBackdrop.ToAttributeValue()"
      data-trigger-mode="@TriggerModeValue"
-     @attributes="@AdditionalAttributes"
-     @ref="_rootReference">
+     @attributes="@AdditionalAttributes">
 
     <UiComponent As="@TriggerAsValue"
-            class="@TriggerClassValue"
-            data-slot="popup-trigger"
-            data-open="false"
-            aria-disabled="@Disabled.ToAttributeValue()"
-            aria-expanded="false"
-            disabled="@(IsButtonTrigger ? Disabled : null)"
-            @attributes="@TriggerAttributes">
+                 class="@PopupStyles.TriggerClass"
+                 data-slot="popup-trigger"
+                 data-open="false"
+                 aria-disabled="@Disabled.ToAttributeValue()"
+                 aria-expanded="false"
+                 disabled="@(IsButtonTrigger ? Disabled : null)"
+                 @attributes="@TriggerAttributes">
         @TriggerContent
     </UiComponent>
 

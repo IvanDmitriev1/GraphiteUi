@@ -1,4 +1,5 @@
 import { getUiPopupController } from './uiPopup.js';
+import { createObservedRootLifecycle } from './domLifecycle.js';
 
 const SELECT_ROOT_SELECTOR = '[data-select-root="true"]';
 const ITEM_SELECTOR = '[data-slot="select-item"]';
@@ -34,7 +35,7 @@ function registerAwaitPopupReady(root) {
 
     const onPopupReady = () => {
         clearAwaitPopupReady(root);
-        setupSelect(root);
+        selectLifecycle.refresh(root);
     };
 
     awaitPopupReadyByRoot.set(root, { awaiting: true, handler: onPopupReady });
@@ -455,18 +456,13 @@ function setupSelect(root) {
     refresh();
 }
 
+const selectLifecycle = createObservedRootLifecycle({
+    selector: SELECT_ROOT_SELECTOR,
+    setup: setupSelect,
+    destroy: destroySelect,
+    isInitialized: (root) => selectStateByRoot.has(root)
+});
+
 export function refreshUiSelects(root = document) {
-    if (!root) {
-        return;
-    }
-
-    root.querySelectorAll(SELECT_ROOT_SELECTOR).forEach(setupSelect);
-}
-
-export function refreshUiSelectBlazor(root) {
-    setupSelect(root);
-}
-
-export function destroyUiSelectBlazor(root) {
-    destroySelect(root);
+    selectLifecycle.refresh(root);
 }

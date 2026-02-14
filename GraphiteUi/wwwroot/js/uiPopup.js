@@ -1,9 +1,10 @@
+import { createObservedRootLifecycle } from './domLifecycle.js';
+
 const POPUP_ROOT_SELECTOR = '[data-slot="popup-root"]';
 const TRIGGER_SELECTOR = '[data-slot="popup-trigger"]';
 const CONTENT_SELECTOR = '[data-slot="popup-content"]';
 const BACKDROP_SELECTOR = '[data-slot="popup-backdrop"]';
 
-const CLOSE_ANIMATION_MS = 160;
 const POPUP_READY_EVENT = 'graphite:popup-ready';
 const POPUP_OPEN_CHANGE_EVENT = 'graphite:popup-open-change';
 
@@ -74,12 +75,16 @@ function registerDocumentHandlers() {
 }
 
 function destroyPopup(root) {
-    const state = root ? popupStateByRoot.get(root) : null;
+    if (!root) {
+        return;
+    }
+
+    const state = popupStateByRoot.get(root);
     if (!state) {
         return;
     }
 
-    state.clearCloseTimer();
+    state.clearOpenAnimationFrame();
     state.trigger.removeEventListener('click', state.onTriggerClick);
     state.backdrop.removeEventListener('click', state.onBackdropClick);
 
@@ -117,7 +122,7 @@ function setupPopup(root) {
 
     registerDocumentHandlers();
 
-    let closeTimerId = 0;
+    let openAnimationFrameId = 0;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const canInteract = () => !isTrue(root.getAttribute('data-disabled')) && !trigger.disabled;
@@ -127,13 +132,13 @@ function setupPopup(root) {
     const getCloseOnEscape = () => isTrue(root.getAttribute('data-close-escape'));
     const getTriggerMode = () => root.getAttribute('data-trigger-mode') || 'toggle';
 
-    const clearCloseTimer = () => {
-        if (closeTimerId === 0) {
+    const clearOpenAnimationFrame = () => {
+        if (openAnimationFrameId === 0) {
             return;
         }
 
-        clearTimeout(closeTimerId);
-        closeTimerId = 0;
+        cancelAnimationFrame(openAnimationFrameId);
+        openAnimationFrameId = 0;
     };
 
     const hideElements = () => {
@@ -149,17 +154,45 @@ function setupPopup(root) {
         trigger.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
 
         if (shouldOpen) {
-            clearCloseTimer();
+            clearOpenAnimationFrame();
 
-            content.hidden = false;
-            content.setAttribute('data-state', 'open');
+            if (animate && !prefersReducedMotion && !wasOpen) {
+                content.hidden = false;
+                content.setAttribute('data-state', 'closed');
 
-            if (getShowBackdrop()) {
-                backdrop.hidden = false;
-                backdrop.setAttribute('data-state', 'open');
+                if (getShowBackdrop()) {
+                    backdrop.hidden = false;
+                    backdrop.setAttribute('data-state', 'closed');
+                } else {
+                    backdrop.hidden = true;
+                    backdrop.setAttribute('data-state', 'closed');
+                }
+
+                openAnimationFrameId = window.requestAnimationFrame(() => {
+                    openAnimationFrameId = 0;
+
+                    if (!getOpen()) {
+                        return;
+                    }
+
+                    content.setAttribute('data-state', 'open');
+
+                    if (getShowBackdrop()) {
+                        backdrop.hidden = false;
+                        backdrop.setAttribute('data-state', 'open');
+                    }
+                });
             } else {
-                backdrop.hidden = true;
-                backdrop.setAttribute('data-state', 'closed');
+                content.hidden = false;
+                content.setAttribute('data-state', 'open');
+
+                if (getShowBackdrop()) {
+                    backdrop.hidden = false;
+                    backdrop.setAttribute('data-state', 'open');
+                } else {
+                    backdrop.hidden = true;
+                    backdrop.setAttribute('data-state', 'closed');
+                }
             }
 
             if (wasOpen !== shouldOpen) {
@@ -172,9 +205,9 @@ function setupPopup(root) {
         content.setAttribute('data-state', 'closed');
         backdrop.setAttribute('data-state', 'closed');
 
-        clearCloseTimer();
+        clearOpenAnimationFrame();
 
-        if (!animate || prefersReducedMotion) {
+        if (!animate || prefersReducedMotion || !wasOpen) {
             hideElements();
 
             if (wasOpen !== shouldOpen) {
@@ -183,11 +216,6 @@ function setupPopup(root) {
 
             return;
         }
-
-        closeTimerId = window.setTimeout(() => {
-            hideElements();
-            closeTimerId = 0;
-        }, CLOSE_ANIMATION_MS);
 
         if (wasOpen !== shouldOpen) {
             dispatchOpenChange(root, false);
@@ -244,7 +272,7 @@ function setupPopup(root) {
         backdrop,
         onTriggerClick,
         onBackdropClick,
-        clearCloseTimer,
+        clearOpenAnimationFrame,
         setOpen,
         getOpen,
         getCloseOnOutside,
@@ -256,6 +284,13 @@ function setupPopup(root) {
     root.dispatchEvent(new CustomEvent(POPUP_READY_EVENT));
 }
 
+const popupLifecycle = createObservedRootLifecycle({
+    selector: POPUP_ROOT_SELECTOR,
+    setup: setupPopup,
+    destroy: destroyPopup,
+    isInitialized: (root) => popupStateByRoot.has(root)
+});
+
 export function getUiPopupController(root) {
     if (!root) {
         return null;
@@ -265,17 +300,5 @@ export function getUiPopupController(root) {
 }
 
 export function refreshUiPopups(root = document) {
-    if (!root) {
-        return;
-    }
-
-    root.querySelectorAll(POPUP_ROOT_SELECTOR).forEach(setupPopup);
-}
-
-export function refreshUiPopupBlazor(root) {
-    setupPopup(root);
-}
-
-export function destroyUiPopupBlazor(root) {
-    destroyPopup(root);
+    popupLifecycle.refresh(root);
 }

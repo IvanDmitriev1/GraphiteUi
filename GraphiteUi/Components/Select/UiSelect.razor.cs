@@ -1,7 +1,6 @@
 using GraphiteUi.Extensions;
 using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
@@ -9,12 +8,8 @@ namespace GraphiteUi.Components;
 
 public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 {
-    private readonly List<UiSelectItem<TValue>> _items = [];
-    private UiPopup? _popup;
-    private UiSelectItem<TValue>? _selectedItem;
+    private string _selectedText = string.Empty;
     private string? _lastValueAsString;
-
-    [Inject] private IJSRuntime JsRuntime { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string ClearText { get; set; } = "Clear value";
@@ -22,13 +17,10 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 
     private protected string RootClass => MergeRootClass(SelectStyles.RootClass);
 
-    private bool HasSelectedItem => _selectedItem is not null;
-
+    private bool HasSelectedItem => CurrentValue is not null;
     private string HiddenValue => HasSelectedItem ? CurrentValueAsString ?? string.Empty : string.Empty;
-
-    private string SelectedText => _selectedItem?.DisplayText ?? string.Empty;
-
     private bool CanClear => !Disabled && !ReadOnly && HasSelectedItem;
+    private string SelectedText => _selectedText;
 
     private IReadOnlyDictionary<string, object> TriggerAttributes =>
         new Dictionary<string, object>
@@ -38,100 +30,57 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 
     protected override void OnParametersSet()
     {
-        base.OnParametersSet();
-
         if (string.Equals(_lastValueAsString, CurrentValueAsString, StringComparison.Ordinal))
-        {
             return;
-        }
 
         _lastValueAsString = CurrentValueAsString;
-        _selectedItem = FindItemByValue(CurrentValue);
-    }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender)
+        if (string.IsNullOrEmpty(CurrentValueAsString))
         {
-            return Task.CompletedTask;
+            _selectedText = string.Empty;
+            return;
         }
 
-        return SetUpJsAsync();
+        _selectedText = CurrentValueAsString;
     }
 
-    private async Task SetUpJsAsync()
+    internal void RegisterItem(TValue value, string displayText)
     {
-        await using var selectModule = await JsRuntime.LoadModule("js/uiSelect.js");
-        await selectModule.InvokeVoidAsync("refreshUiSelectBlazor", _popup!.ElementReference);
-    }
-
-    internal void RegisterItem(UiSelectItem<TValue> item)
-    {
-        if (_items.Contains(item))
+        if (!EqualityComparer<TValue>.Default.Equals(value, CurrentValue))
         {
             return;
         }
 
-        _items.Add(item);
-
-        if (_selectedItem is null && EqualityComparer<TValue>.Default.Equals(item.Value, CurrentValue))
-        {
-            _selectedItem = item;
-            _lastValueAsString = CurrentValueAsString;
-        }
-
-        _ = InvokeAsync(StateHasChanged);
+        _selectedText = displayText;
     }
 
-    internal void UnregisterItem(UiSelectItem<TValue> item)
+    internal void UnregisterItem(TValue value)
     {
-        if (!_items.Remove(item))
-            return;
-
-        if (ReferenceEquals(_selectedItem, item))
-        {
-            _selectedItem = null;
-        }
-
-        _ = InvokeAsync(StateHasChanged);
+        
     }
 
-    internal bool IsSelected(UiSelectItem<TValue> item)
+    internal bool IsSelected(TValue value)
     {
-        return ReferenceEquals(item, _selectedItem);
+        return HasSelectedItem && EqualityComparer<TValue>.Default.Equals(value, CurrentValue);
     }
 
-    internal string GetItemValueString(UiSelectItem<TValue> item)
+    internal string FormatItemValueString(TValue value)
     {
-        return FormatValueAsString(item.Value) ?? string.Empty;
+        return FormatValueAsString(value) ?? string.Empty;
     }
 
-    internal Task SelectAsync(UiSelectItem<TValue> item)
+    internal void Select(TValue value, string displayText)
     {
-        if (Disabled || ReadOnly || item.Disabled)
-        {
-            return Task.CompletedTask;
-        }
-
-        _selectedItem = item;
-        CurrentValue = item.Value;
+        _selectedText = displayText;
+        CurrentValue = value;
         _lastValueAsString = CurrentValueAsString;
-
-        return Task.CompletedTask;
     }
 
-    private Task ClearAsync()
+    private void Clear()
     {
-        if (!CanClear)
-        {
-            return Task.CompletedTask;
-        }
-
-        _selectedItem = null;
+        _selectedText = string.Empty;
         CurrentValue = default!;
         _lastValueAsString = CurrentValueAsString;
-
-        return Task.CompletedTask;
     }
 
     protected override bool TryParseValueFromString(string? value,
@@ -148,20 +97,5 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
         result = default;
         validationErrorMessage = $"The {FieldIdentifier.FieldName} field is not valid.";
         return false;
-    }
-
-    private UiSelectItem<TValue>? FindItemByValue(TValue? value)
-    {
-        var comparer = EqualityComparer<TValue>.Default;
-
-        foreach (UiSelectItem<TValue> item in _items)
-        {
-            if (comparer.Equals(item.Value, value))
-            {
-                return item;
-            }
-        }
-
-        return null;
     }
 }

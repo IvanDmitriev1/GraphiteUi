@@ -12,11 +12,13 @@ public partial class UiSelectItem<TValue> : ComponentBase, IDisposable
     [Parameter] public RenderFragment<TValue>? Template { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    internal string ValueString { get; private set; } = string.Empty;
+
     internal string DisplayText => string.IsNullOrWhiteSpace(Text)
         ? Value?.ToString() ?? string.Empty
         : Text;
 
-    private bool IsDisabled => Disabled || Parent.Disabled || Parent.ReadOnly;
+    internal bool IsDisabled => Disabled || Parent.Disabled || Parent.ReadOnly;
 
     protected override void OnInitialized()
     {
@@ -25,16 +27,17 @@ public partial class UiSelectItem<TValue> : ComponentBase, IDisposable
             throw new InvalidOperationException($"{nameof(UiSelectItem<>)} must be placed inside {nameof(UiSelect<>)}.");
         }
 
-        Parent.RegisterItem(this);
+        ValueString = Parent.FormatItemValueString(Value);
+        Parent.RegisterItem(Value, DisplayText);
     }
 
-    private Task OnClickAsync()
+    private void OnClick()
     {
-        return Parent.SelectAsync(this);
+        Parent.Select(Value, DisplayText);
     }
 
     public void Dispose()
     {
-        Parent.UnregisterItem(this);
+        Parent.UnregisterItem(Value);
     }
 }

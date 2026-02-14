@@ -5,11 +5,11 @@ import { refreshUiSelects } from './js/uiSelect.js';
 
 let enhancedLoadRegistered = false;
 
-function refreshAll(root = document) {
-    refreshUiInputFields(root);
-    refreshUiPopups(root);
-    refreshUiRadios(root);
-    refreshUiSelects(root);
+function refreshAll() {
+    refreshUiInputFields(document);
+    refreshUiPopups(document);
+    refreshUiRadios(document);
+    refreshUiSelects(document);
 }
 
 export function beforeWebStart() {
@@ -22,9 +22,5 @@ export function afterWebStarted(blazor) {
     }
 
     enhancedLoadRegistered = true;
-    blazor.addEventListener('enhancedload', onEnhancedLoad);
-}
-
-function onEnhancedLoad() {
-    refreshAll(document);
+    blazor.addEventListener('enhancedload', refreshAll);
 }

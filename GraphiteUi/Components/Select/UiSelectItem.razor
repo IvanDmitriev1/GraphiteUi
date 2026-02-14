@@ -4,16 +4,16 @@
 <button type="button"
         class="@SelectStyles.ItemClass"
         data-slot="select-item"
-        data-value="@Parent.GetItemValueString(this)"
+        data-value="@ValueString"
         data-text="@DisplayText"
-        data-selected="@Parent.IsSelected(this).ToAttributeValue()"
+        data-selected="@Parent.IsSelected(Value).ToAttributeValue()"
         data-active="false"
         data-disabled="@IsDisabled.ToAttributeValue()"
         role="option"
-        aria-selected="@Parent.IsSelected(this).ToAttributeValue()"
+        aria-selected="@Parent.IsSelected(Value).ToAttributeValue()"
         disabled="@IsDisabled"
         aria-disabled="@IsDisabled.ToAttributeValue()"
-        @onclick="OnClickAsync">
+        @onclick="OnClick">
     @if (Template is not null)
     {
         @Template(Value)
