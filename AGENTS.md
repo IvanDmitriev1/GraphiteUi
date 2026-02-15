@@ -97,6 +97,7 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 ## Docs and Examples
 - Docs updates are optional but encouraged when UX or API behavior changes.
 - Keep docs imports and casing aligned with library namespaces/components.
+- Follow `RAZOR_COMPONENT_STYLE.md` for detailed Razor component authoring guidance and performance review targets.
 
 ## PR Checklist
 - [ ] Run `dotnet build GraphiteUi.sln`

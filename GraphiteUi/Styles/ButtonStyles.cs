@@ -6,9 +6,7 @@ namespace GraphiteUi.Styles;
 
 public static class ButtonStyles
 {
-    private readonly record struct ColorStyles(string Background, string Hover, string Active);
-
-    private static readonly string Base = new CssClassBuilder(stackalloc char[256])
+    private static readonly string RootBaseClass = new CssClassBuilder(stackalloc char[256])
         .Add(Utils.InlineFlexCentered)
         .Add("min-w-max")
         .Add("font-normal")
@@ -37,54 +35,24 @@ public static class ButtonStyles
         "min-w-24 py-5 px-6 font-bold text-large"
     ];
 
-    private static readonly ColorStyles[] Colors =
+    private static readonly string[] ToneByColor =
     [
-        new(string.Empty, string.Empty, string.Empty),
-        new("bg-primary text-primary-foreground", "hover:bg-white hover:text-secondary-foreground", "active:bg-white active:text-black"),
-        new("bg-secondary text-secondary-foreground", "hover:bg-primary-15 hover:text-primary-foreground", "active:bg-primary active:text-primary-foreground"),
-        new("bg-success text-success-foreground", "hover:bg-success-400", "active:bg-success-500"),
-        new("bg-warning text-warning-foreground", "hover:bg-warning-400", "active:bg-warning-500"),
-        new("bg-danger text-danger-foreground", "hover:bg-danger-400", "active:bg-danger-500"),
-        new("bg-info text-info-foreground", "hover:bg-info-400", "active:bg-info-500")
+        string.Empty,
+        "bg-primary text-primary-foreground hover:bg-white hover:text-secondary-foreground active:bg-white active:text-black",
+        "bg-secondary text-secondary-foreground hover:bg-primary-15 hover:text-primary-foreground active:bg-primary active:text-primary-foreground",
+        "bg-success text-success-foreground hover:bg-success-400 active:bg-success-500",
+        "bg-warning text-warning-foreground hover:bg-warning-400 active:bg-warning-500",
+        "bg-danger text-danger-foreground hover:bg-danger-400 active:bg-danger-500",
+        "bg-info text-info-foreground hover:bg-info-400 active:bg-info-500"
     ];
 
-    private static readonly string Disabled = new CssClassBuilder(stackalloc char[128])
+    private static readonly string DisabledClass = new CssClassBuilder(stackalloc char[128])
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add(Utils.DisabledCursorDefault)
         .ToString();
 
-    private static readonly string[] CoreClassesByColorAndSize = BuildCoreClasses();
-
-    private static string[] BuildCoreClasses()
-    {
-        int colorCount = Colors.Length;
-        int sizeCount = SizeClasses.Length;
-        var coreClasses = new string[colorCount * sizeCount];
-
-        for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
-        {
-            var color = (ThemeColor)colorIndex;
-            var colorStyles = Colors[colorIndex];
-
-            for (int sizeIndex = 0; sizeIndex < sizeCount; sizeIndex++)
-            {
-                coreClasses[colorIndex * sizeCount + sizeIndex] = CssClassBuilder.Empty()
-                    .Add(Base)
-                    .Add(colorStyles.Background)
-                    .Add(colorStyles.Hover)
-                    .Add(colorStyles.Active)
-                    .Add(ColorVariants.Ring.Default)
-                    .Add(ColorVariants.Border.Default)
-                    .Add(ColorVariants.Ring.Focus(color))
-                    .Add(SizeClasses[sizeIndex])
-                    .Add(Disabled)
-                    .ToString();
-            }
-        }
-
-        return coreClasses;
-    }
+    private static readonly string[] RootClassesByColorAndSize = BuildRootClasses();
 
     public static string GetRootClasses(UiButton component)
     {
@@ -92,6 +60,43 @@ public static class ButtonStyles
         int sizeIndex = (int)component.Size;
         int sizeCount = SizeClasses.Length;
 
-        return CoreClassesByColorAndSize[colorIndex * sizeCount + sizeIndex];
+        if ((uint)colorIndex >= (uint)ToneByColor.Length)
+        {
+            colorIndex = (int)ThemeColor.Primary;
+        }
+
+        if ((uint)sizeIndex >= (uint)sizeCount)
+        {
+            sizeIndex = (int)Size.Medium;
+        }
+
+        return RootClassesByColorAndSize[colorIndex * sizeCount + sizeIndex];
+    }
+
+    private static string[] BuildRootClasses()
+    {
+        int colorCount = ToneByColor.Length;
+        int sizeCount = SizeClasses.Length;
+        var rootClasses = new string[colorCount * sizeCount];
+
+        for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
+        {
+            var color = (ThemeColor)colorIndex;
+
+            for (int sizeIndex = 0; sizeIndex < sizeCount; sizeIndex++)
+            {
+                rootClasses[colorIndex * sizeCount + sizeIndex] = CssClassBuilder.Empty()
+                    .Add(RootBaseClass)
+                    .Add(ToneByColor[colorIndex])
+                    .Add(ColorVariants.Ring.Default)
+                    .Add(ColorVariants.Border.Default)
+                    .Add(ColorVariants.Ring.Focus(color))
+                    .Add(SizeClasses[sizeIndex])
+                    .Add(DisabledClass)
+                    .ToString();
+            }
+        }
+
+        return rootClasses;
     }
 }

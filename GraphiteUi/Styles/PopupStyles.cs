@@ -14,6 +14,8 @@ public static class PopupStyles
 
     public static string TriggerClass { get; } = new CssClassBuilder(stackalloc char[512])
         .Add("inline-flex")
+        .Add("relative")
+        .Add("z-50")
         .Add("items-center")
         .Add("justify-center")
         .Add("gap-2")

@@ -53,11 +53,6 @@ public partial class UiButton : UiComponentBase
     [Parameter] public bool Disabled { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the button is full-width.
-    /// </summary>
-    [Parameter] public bool FullWidth { get; set; }
-
-    /// <summary>
     /// Gets or sets a callback that is fired whenever the button is clicked.
     /// </summary>
     [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }

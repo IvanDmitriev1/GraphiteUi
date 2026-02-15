@@ -8,6 +8,17 @@
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- Size-focused release settings for the docs WASM payload. -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+    <DebuggerSupport>false</DebuggerSupport>
+    <EventSourceSupport>false</EventSourceSupport>
+    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.3" />
   </ItemGroup>

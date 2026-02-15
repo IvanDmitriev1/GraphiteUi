@@ -5,30 +5,24 @@ namespace GraphiteUi.Styles;
 
 public static class CheckBoxStyles
 {
-    private static readonly string BaseClass = new CssClassBuilder(stackalloc char[256])
+    private static readonly string BaseClass = new CssClassBuilder(stackalloc char[512])
         .Add("p-1 -m-1")
+        .Add("relative")
         .Add("group")
         .Add("max-w-fit")
         .Add(Utils.InlineFlexStart)
+        .Add("gap-1.5")
+        .Add("flex-shrink-0")
         .Add("outline-hidden")
         .Add("cursor-pointer")
+        .Add("transition-transform")
+        .Add(Utils.MotionReduceTransitionNone)
+        .Add("group-active:scale-95")
         .Add(Utils.DataDisabledCursorDefault)
         .Add(Utils.DataReadonlyCursorDefault)
         .ToString();
 
     public static string GetRootClasses(UiCheckbox component) => BaseClass;
-
-    public static string WrapperClass { get; } = new CssClassBuilder(stackalloc char[512])
-        .Add("relative")
-        .Add(Utils.InlineFlexStart)
-        .Add("gap-1.5")
-        .Add("flex-shrink-0")
-        .Add("transition-transform")
-        .Add(Utils.MotionReduceTransitionNone)
-        .Add("group-active:scale-95")
-        .Add(Utils.GroupDataDisabledCursorDefault)
-        .Add(Utils.GroupDataReadonlyCursorDefault)
-        .ToString();
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[128])
         .Add(Utils.VisuallyHidden)

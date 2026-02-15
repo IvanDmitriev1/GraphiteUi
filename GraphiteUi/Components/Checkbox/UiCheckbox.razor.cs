@@ -14,7 +14,6 @@ public partial class UiCheckbox : UiInputBase<bool>
 
     private protected string RootClass => MergeRootClass(CheckBoxStyles.GetRootClasses(this));
 
-    private protected string WrapperClass = CheckBoxStyles.WrapperClass;
     private protected string InputClass = CheckBoxStyles.InputClass;
     private protected string ControlClass = CheckBoxStyles.ControlClass;
     private protected string IconClass = CheckBoxStyles.IconClass;
