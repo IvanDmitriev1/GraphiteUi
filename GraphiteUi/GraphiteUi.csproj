@@ -4,6 +4,15 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>GraphiteUi</PackageId>
+    <Version>0.5</Version>
+    <Authors>Ivan Dmitriev</Authors>
+    <Description>GraphiteUi is a Blazor UI component library for SSR and interactive rendering modes.</Description>
+    <PackageTags>blazor;ui;components;razor</PackageTags>
+    <PackageProjectUrl>https://github.com/IvanDmitriev1/GraphiteUi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/IvanDmitriev1/GraphiteUi</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -18,6 +27,7 @@
 
 	<ItemGroup>
 		<None Include="GraphiteUi.targets" Pack="true" PackagePath="buildTransitive\GraphiteUi.targets" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="Styles\*.cs" Pack="true" PackagePath="theme\components\%(Filename)%(Extension)" />
 		<None Include="Styles\_theme.css" Pack="true" PackagePath="theme\theme.css" />
 		<None Include="Styles\_dark.css" Pack="true" PackagePath="theme\_dark.css" />
