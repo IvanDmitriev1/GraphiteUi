@@ -58,27 +58,32 @@
     --graphite-shimmer-from: rgba(0, 0, 0, 0.03);
     --graphite-shimmer-via: rgba(0, 0, 0, 0.09);
 
-    /* ---- Accent ramp. This is the brand color; to rebrand, change this ramp
-            and the --graphite-accent* values that reference it. ---- */
-    --graphite-accent-50: #EEF2FF;
-    --graphite-accent-100: #E0E7FF;
-    --graphite-accent-200: #C7D2FE;
-    --graphite-accent-300: #A5B4FC;
-    --graphite-accent-400: #818CF8;
-    --graphite-accent-500: #6366F1;
-    --graphite-accent-600: #4F46E5;
-    --graphite-accent-700: #4338CA;
-    --graphite-accent-800: #3730A3;
-    --graphite-accent-900: #312E81;
-    --graphite-accent-950: #1E1B4B;
+    /* ---- Accent ramp: graphite, not a hue. The library's emphasis signal is
+            LIGHTNESS INVERSION, not color — Primary is a near-black fill on the
+            light theme and a white fill on the dark one. The ramp itself is
+            shared by both themes; only which step is "base" flips.
 
-    --graphite-accent: var(--graphite-accent-600);
+            To rebrand with a real hue, replace these eleven values and set
+            --graphite-accent / -foreground in both this file and _dark.css. ---- */
+    --graphite-accent-50: #FAFAFA;
+    --graphite-accent-100: #F4F4F5;
+    --graphite-accent-200: #E4E4E7;
+    --graphite-accent-300: #D4D4D8;
+    --graphite-accent-400: #A1A1AA;
+    --graphite-accent-500: #71717A;
+    --graphite-accent-600: #52525B;
+    --graphite-accent-700: #3F3F46;
+    --graphite-accent-800: #27272A;
+    --graphite-accent-900: #18181B;
+    --graphite-accent-950: #09090B;
+
+    --graphite-accent: var(--graphite-accent-900);
     --graphite-accent-foreground: #FFFFFF;
-    --graphite-accent-subtle: var(--graphite-accent-50);
-    --graphite-accent-subtle-foreground: var(--graphite-accent-800);
-    --graphite-accent-border: var(--graphite-accent-200);
+    --graphite-accent-subtle: var(--graphite-accent-200);
+    --graphite-accent-subtle-foreground: var(--graphite-accent-900);
+    --graphite-accent-border: var(--graphite-accent-300);
 
-    --graphite-focus: var(--graphite-accent-600);
+    --graphite-focus: var(--graphite-accent-900);
 
     /* ---- Semantic fills ---- */
     --graphite-success: #15803D;
@@ -125,8 +130,13 @@
     --graphite-tint-toward-dark: #000000;
     --graphite-tint-toward-light: #FFFFFF;
 
-    --graphite-accent-hover: color-mix(in oklab, var(--graphite-accent) 88%, var(--graphite-tint-toward-dark));
-    --graphite-accent-active: color-mix(in oklab, var(--graphite-accent) 78%, var(--graphite-tint-toward-dark));
+    /* Accent is the one fill that does NOT follow the move-away-from-foreground
+       rule. It sits at an extreme of the ramp (900 light / 50 dark), so there is
+       nowhere further to go; base contrast is already ~16:1, and stepping one
+       notch toward the middle still leaves ~13:1. Named ramp steps, not
+       color-mix, so the two hover states are visibly different from each other. */
+    --graphite-accent-hover: var(--graphite-accent-800);
+    --graphite-accent-active: var(--graphite-accent-700);
 
     --graphite-danger-hover: color-mix(in oklab, var(--graphite-danger) 88%, var(--graphite-tint-toward-dark));
     --graphite-danger-active: color-mix(in oklab, var(--graphite-danger) 78%, var(--graphite-tint-toward-dark));

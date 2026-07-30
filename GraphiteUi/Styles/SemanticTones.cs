@@ -18,17 +18,23 @@ internal static class SemanticTones
     /// <summary>Filled, high-emphasis tone. Used by buttons.</summary>
     private static readonly string[] SolidByColor =
     [
-        // Inherit — contributes nothing, the consumer supplies the color.
-        string.Empty,
-        // Primary — the accent. Was a 10%-white ghost.
-        "bg-accent text-accent-foreground hover:bg-accent-hover active:bg-accent-active",
-        // Secondary — neutral, low emphasis. Was a near-black slab that could not
-        // survive a light theme.
-        "bg-surface2 text-surface2-foreground hover:bg-neutral-10 active:bg-neutral-15",
-        "bg-success text-success-foreground hover:bg-success-hover active:bg-success-active",
-        "bg-warning text-warning-foreground hover:bg-warning-hover active:bg-warning-active",
-        "bg-danger text-danger-foreground hover:bg-danger-hover active:bg-danger-active",
-        "bg-info text-info-foreground hover:bg-info-hover active:bg-info-active"
+        // Inherit — no fill, the consumer supplies the color.
+        "border-transparent",
+        // Primary — the accent: a lightness inversion of the page (white fill in
+        // dark, near-black fill in light).
+        "bg-accent text-accent-foreground border-transparent hover:bg-accent-hover active:bg-accent-active",
+        // Secondary — the graphite fill. Built from the neutral overlay ramp, not
+        // from `surface2`, so all three states composite over whatever is behind
+        // the button and step in the same direction in both themes. `bg-surface2`
+        // is opaque, so its hover had to jump to an alpha value and the step size
+        // was whatever the two happened to differ by.
+        // It is the one tone that draws an edge: its fill sits close to the page,
+        // so the border is what gives it a shape.
+        "bg-neutral-10 text-foreground border-neutral-20 hover:bg-neutral-15 hover:border-neutral-30 active:bg-neutral-20",
+        "bg-success text-success-foreground border-transparent hover:bg-success-hover active:bg-success-active",
+        "bg-warning text-warning-foreground border-transparent hover:bg-warning-hover active:bg-warning-active",
+        "bg-danger text-danger-foreground border-transparent hover:bg-danger-hover active:bg-danger-active",
+        "bg-info text-info-foreground border-transparent hover:bg-info-hover active:bg-info-active"
     ];
 
     /// <summary>Tinted, low-emphasis tone. Used by alerts and badges.</summary>

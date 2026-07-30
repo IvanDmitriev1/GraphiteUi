@@ -1,4 +1,4 @@
-const OVERLAY_DISMISS_DELAY_MS = 800;
+const OVERLAY_DISMISS_DELAY_MS = 100;
 
 let activeScrollLocks = 0;
 let previousBodyOverflow = '';

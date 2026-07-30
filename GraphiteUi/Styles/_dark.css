@@ -51,15 +51,21 @@
     --graphite-shimmer-from: rgba(255, 255, 255, 0.02);
     --graphite-shimmer-via: rgba(255, 255, 255, 0.10);
 
-    /* ---- Accent: lifted slightly so it reads on a near-black page.
-            White foreground = 5.3:1. ---- */
-    --graphite-accent: #5A52E8;
-    --graphite-accent-foreground: #FFFFFF;
-    --graphite-accent-subtle: rgba(99, 102, 241, 0.16);
-    --graphite-accent-subtle-foreground: #C7D2FE;
-    --graphite-accent-border: rgba(129, 140, 248, 0.32);
+    /* ---- Accent: inverted. Primary is a WHITE fill with near-black text here,
+            the mirror of the near-black fill in light. Emphasis comes from
+            lightness inversion against the page, not from a hue.
+            Ramp steps come from _theme.css and are shared. ---- */
+    --graphite-accent: var(--graphite-accent-50);
+    --graphite-accent-foreground: var(--graphite-accent-900);
+    --graphite-accent-hover: var(--graphite-accent-200);
+    --graphite-accent-active: var(--graphite-accent-300);
 
-    --graphite-focus: #818CF8;
+    /* Subtle tone stays alpha-based so it composites over any surface. */
+    --graphite-accent-subtle: rgba(255, 255, 255, 0.12);
+    --graphite-accent-subtle-foreground: #FAFAFA;
+    --graphite-accent-border: rgba(255, 255, 255, 0.22);
+
+    --graphite-focus: #FAFAFA;
 
     /* ---- Semantic fills.
             success/warning keep a bright fill + near-black foreground (a green or

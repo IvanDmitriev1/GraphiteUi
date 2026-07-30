@@ -665,7 +665,9 @@ Usage: `class="text-body-sm text-neutral-60 bg-surface1"`.
 
 **The neutral ramp flips polarity per theme.** `neutral-*` is black-alpha in light and white-alpha in dark; `overlay-*` is the reverse. The number is the alpha percent. So `bg-neutral-10` or `text-neutral-60` is correct in both themes with no `dark:` variant — that is what makes the light theme cheap.
 
-**Hover and active are tokens, not shades.** Use `hover:bg-accent-hover`, never `hover:bg-accent-400`. Each fill moves *away* from its own foreground on hover, so contrast improves in every state. Measured: accent 6.29:1 → 8.08:1 on hover (light).
+**Hover and active are tokens, not shades.** Use `hover:bg-accent-hover`, never `hover:bg-accent-400`. Semantic fills move *away* from their own foreground on hover, so contrast improves in every state. The accent is the exception — it already sits at an extreme of the ramp, so it steps one notch toward the middle (17.72:1 base, 14.89:1 hover, 10.44:1 active in light).
+
+**The accent is a lightness inversion, not a hue.** `ThemeColor.Primary` is a near-black fill with white text in light (`accent-900`) and a white fill with near-black text in dark (`accent-50`). Emphasis comes from inverting against the page. `ThemeColor.Secondary` is the graphite fill built from `neutral-10/15/20`, and is the only solid tone that draws a visible border — its fill sits ~1.2–1.4:1 from the page, so the edge is what gives it a shape. To rebrand with a real hue, replace the eleven `--graphite-accent-*` ramp values in `_theme.css` and set `--graphite-accent` / `-foreground` in **both** `_theme.css` and `_dark.css`.
 
 **Two border weights, deliberately.** `control-border` holds 3:1 (WCAG 1.4.11) for anything interactive — inputs, checkboxes, radios, switches, triggers. `neutral-10` is a decorative hairline for containers and measures ~1.2:1 against the page; do not use it as a control boundary.
 

@@ -18,8 +18,11 @@ public static class ButtonStyles
         .Add("subpixel-antialiased")
         .Add("overflow-hidden")
         .Add("cursor-pointer")
+        // Border WIDTH only. The color comes from the tone, so the box is always
+        // allocated but only Secondary draws an edge. Keeping `border-transparent`
+        // here would leave two border-color utilities on the element, and these are
+        // concatenated, not TwMerge'd — stylesheet order would decide the winner.
         .Add("border")
-        .Add("border-transparent")
         .Add("shadow-xs")
         // transition
         .Add("transition-colors-transform-opacity")
