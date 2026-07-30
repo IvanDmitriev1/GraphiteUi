@@ -1,11 +1,43 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <DialogHost @rendermode="InteractiveServer"/>
 <UiToastHost @rendermode="InteractiveServer" />
 
 <div class="p-2">
+    <div class="mb-4 flex items-center justify-end">
+        <UiButton Color="ThemeColor.Secondary"
+                  Size="Size.Small"
+                  id="graphite-theme-toggle">
+            Toggle theme
+        </UiButton>
+    </div>
+
     @Body
 </div>
+
+@* Plain JS, no interop: the toggle has to work on statically rendered pages too.
+   The listener is delegated from document so it survives enhanced navigation. *@
+<script suppress-error="BL9992">
+    (() => {
+        let stored = null;
+        try { stored = localStorage.getItem('graphite-docs-theme'); } catch { }
+        document.documentElement.classList.toggle('dark', stored !== 'light');
+
+        if (window.graphiteDocsThemeBound) {
+            return;
+        }
+        window.graphiteDocsThemeBound = true;
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#graphite-theme-toggle')) {
+                return;
+            }
+
+            const next = document.documentElement.classList.toggle('dark') ? 'dark' : 'light';
+            try { localStorage.setItem('graphite-docs-theme', next); } catch { }
+        });
+    })();
+</script>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

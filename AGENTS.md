@@ -24,6 +24,7 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
   - Avoid speculative abstractions, unnecessary indirection, and premature optimization.
 
 ## Repo Map (what to touch)
+- `docs/API.md` - public API reference (components, parameters, services, theme tokens, known gaps). Read before writing GraphiteUi markup.
 - `GraphiteUi/` - Razor Class Library.
 - `GraphiteUi/Components/**` - components (`Ui*.razor` + `.razor.cs`), base types in `Components/Bases`.
 - `GraphiteUi/Styles/*.cs` - class strings and style variants.

@@ -13,7 +13,7 @@ public static class CardStyles
     public static string FooterClass { get; } = CommonStyles.CardFooterClass;
 
     public static string TitleClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-medium")
+        .Add("text-h6")
         .Add("text-foreground")
         .ToString();
 }

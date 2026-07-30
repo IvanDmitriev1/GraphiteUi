@@ -12,38 +12,16 @@ public static class AlertStyles
         .Add("w-full")
         .Add("items-start")
         .Add("gap-3")
-        .Add("rounded-md")
+        .Add("rounded-lg")
         .Add("border")
         .Add("p-3")
         .Add("shadow-xs")
         .ToString();
 
-    private static readonly string[] ToneByColor =
-    [
-        "bg-surface2 border-primary-5 text-surface2-foreground",
-        "bg-surface2 border-primary-5 text-surface2-foreground",
-        "bg-surface2 border-primary-5 text-surface2-foreground",
-        "bg-success border-success-400 text-success-foreground",
-        "bg-warning border-warning-400 text-warning-foreground",
-        "bg-danger border-danger-400 text-danger-foreground",
-        "bg-info border-info-400 text-info-foreground"
-    ];
-
-    private static readonly string[] IndicatorByColor =
-    [
-        "bg-primary-50",
-        "bg-primary-50",
-        "bg-primary-50",
-        "bg-success-500",
-        "bg-warning-500",
-        "bg-danger-500",
-        "bg-info-500"
-    ];
-
     private static readonly string[] RootClassesByColor = BuildRootClassesByColor();
     private static readonly string[] IndicatorClassesByColor = BuildIndicatorClassesByColor();
 
-    public static string  StartContentClass { get; } = new CssClassBuilder(stackalloc char[128])
+    public static string StartContentClass { get; } = new CssClassBuilder(stackalloc char[128])
         .Add("mt-0.5")
         .Add("shrink-0")
         .ToString();
@@ -57,12 +35,13 @@ public static class AlertStyles
         .ToString();
 
     public static string TitleClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-small")
+        .Add("text-body-sm")
+        .Add("font-semibold")
         .Add("text-current")
         .ToString();
 
     public static string BodyClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-small")
+        .Add("text-body-sm")
         .Add("text-current")
         .Add("opacity-90")
         .ToString();
@@ -76,41 +55,31 @@ public static class AlertStyles
         .Add("rounded-md")
         .Add("text-current")
         .Add("opacity-75")
-        .Add("outline-hidden")
+        .Add("cursor-pointer")
         .Add("transition-[color,background-color,box-shadow]")
         .Add(Utils.MotionReduceTransitionNone)
-        .Add("hover:bg-black/10")
+        // Was `hover:bg-black/10` + `focus-visible:ring-black/25`: both hardcoded
+        // black, and therefore invisible on a dark surface.
+        .Add("hover:bg-neutral-15")
         .Add("hover:opacity-100")
-        .Add("focus-visible:ring")
-        .Add("focus-visible:ring-black/25")
+        .Add(Utils.FocusVisible)
         .ToString();
 
     public static string DismissIconClass { get; } = new CssClassBuilder(stackalloc char[64])
         .Add("size-4")
         .ToString();
 
-    public static string GetRootClasses(UiAlert component)
+    public static string GetRootClasses(UiAlert component) =>
+        RootClassesByColor[IndexOf(component.Color, RootClassesByColor.Length)];
+
+    public static string GetIndicatorClass(UiAlert component) =>
+        IndicatorClassesByColor[IndexOf(component.Color, IndicatorClassesByColor.Length)];
+
+    private static int IndexOf(ThemeColor color, int length)
     {
-        int colorIndex = (int)NormalizeColor(component.Color);
+        int index = (int)NormalizeColor(color);
 
-        if ((uint)colorIndex >= (uint)RootClassesByColor.Length)
-        {
-            colorIndex = (int)ThemeColor.Primary;
-        }
-
-        return RootClassesByColor[colorIndex];
-    }
-
-    public static string GetIndicatorClass(UiAlert component)
-    {
-        int colorIndex = (int)NormalizeColor(component.Color);
-
-        if ((uint)colorIndex >= (uint)IndicatorClassesByColor.Length)
-        {
-            colorIndex = (int)ThemeColor.Primary;
-        }
-
-        return IndicatorClassesByColor[colorIndex];
+        return (uint)index >= (uint)length ? (int)ThemeColor.Primary : index;
     }
 
     private static ThemeColor NormalizeColor(ThemeColor color) =>
@@ -118,14 +87,17 @@ public static class AlertStyles
 
     private static string[] BuildRootClassesByColor()
     {
-        int colorCount = ToneByColor.Length;
+        int colorCount = SemanticTones.Count;
         var rootClasses = new string[colorCount];
 
         for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
         {
             rootClasses[colorIndex] = CssClassBuilder.Empty()
                 .Add(RootBaseClass)
-                .Add(ToneByColor[colorIndex])
+                // Tinted, not fully saturated. A full-bleed success or danger fill
+                // reads as an error page rather than an inline message, and the
+                // subtle tokens keep an AA-safe foreground in both themes.
+                .Add(SemanticTones.Subtle((ThemeColor)colorIndex))
                 .ToString();
         }
 
@@ -134,14 +106,12 @@ public static class AlertStyles
 
     private static string[] BuildIndicatorClassesByColor()
     {
-        int colorCount = IndicatorByColor.Length;
+        int colorCount = SemanticTones.Count;
         var indicatorClasses = new string[colorCount];
 
         for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
         {
-            indicatorClasses[colorIndex] = CssClassBuilder.Empty()
-                .Add(IndicatorByColor[colorIndex])
-                .ToString();
+            indicatorClasses[colorIndex] = SemanticTones.Indicator((ThemeColor)colorIndex);
         }
 
         return indicatorClasses;

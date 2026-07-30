@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": [
+        "run",
+        "--project",
+        "GraphiteUi.Docs/GraphiteUi.Docs/GraphiteUi.Docs.csproj",
+        "--launch-profile",
+        "https"
+      ],
+      "port": 7183,
+      "url": "https://localhost:7183"
+    }
+  ]
+}

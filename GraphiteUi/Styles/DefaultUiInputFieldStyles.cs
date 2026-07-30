@@ -1,11 +1,10 @@
-using GraphiteUi.Common;
 using GraphiteUi.Utilities;
 
 namespace GraphiteUi.Styles;
 
 internal static class DefaultUiInputFieldStyles
 {
-    public static string InputWrapperClass { get; } = new CssClassBuilder(stackalloc char[256])
+    public static string InputWrapperClass { get; } = new CssClassBuilder(stackalloc char[768])
         .Add("group")
         .Add("relative")
         .Add(Utils.InlineFlexStart)
@@ -14,24 +13,23 @@ internal static class DefaultUiInputFieldStyles
         .Add("cursor-text")
         .Add("h-10 min-h-10")
         .Add("px-3")
-        .Add("transition-[background]")
+        .Add("text-body")
+        .Add("transition-[background-color,border-color,box-shadow]")
         .Add(Utils.MotionReduceTransitionNone)
-        .Add("has-[label]:mt-[calc(var(--text-small)_+_10px)]")
-        .Add(CommonStyles.SurfaceFrameClass)
-        .Add(ColorVariants.Placeholder.Foreground)
-        .Add(ColorVariants.Surface.HoverBackground)
+        .Add("has-[label]:mt-[calc(var(--text-body-sm)_+_10px)]")
+        .Add(CommonStyles.ControlFrameClass)
+        .Add("hover:border-foreground")
         .Add(Utils.FocusWithin)
-        .Add("focus-within:ring")
-        .Add(ColorVariants.Ring.FocusWithin(ThemeColor.Primary))
-        .Add("data-invalid:border-danger-400")
-        .Add("data-invalid:focus-within:ring-danger-600/20")
+        .Add("focus-within:border-accent")
+        .Add("data-invalid:border-danger")
+        .Add("data-invalid:focus-within:ring-danger")
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add(Utils.DisabledCursorDefault)
-        .Add("data-disabled:border-none")
+        .Add("data-disabled:border-transparent")
         .ToString();
 
-    public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[256])
+    public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[512])
         .Add("absolute")
         .Add("block")
         .Add("origin-top-left")
@@ -46,17 +44,24 @@ internal static class DefaultUiInputFieldStyles
         .Add("top-1/2")
         .Add("-translate-y-1/2")
         .Add("left-3")
-        .Add("text-small")
+        .Add("text-body-sm")
+        .Add("text-neutral-60")
         .Add("group-data-active:left-0")
         .Add("group-data-active:pointer-events-auto")
-        .Add("group-data-active:-translate-y-[calc(100%_+_var(--text-small)/2_+_18px)]")
+        .Add("group-data-active:-translate-y-[calc(100%_+_var(--text-body-sm)/2_+_18px)]")
         .Add("group-data-active:text-foreground")
+        .Add("group-focus-within:text-accent")
         .Add(ColorVariants.Disabled.GroupForeground)
         .ToString();
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("w-full")
+        .Add("bg-transparent")
         .Add("outline-none")
+        // Must sit on the input itself. It used to be on the wrapper, where the
+        // `placeholder:` variant matched nothing, so Tailwind's preflight default
+        // (50% of currentColor) applied instead — 3.35:1 on the light theme.
+        .Add(ColorVariants.Placeholder.Foreground)
         .Add("group-data-[trailing=true]:pe-8")
         .ToString();
 

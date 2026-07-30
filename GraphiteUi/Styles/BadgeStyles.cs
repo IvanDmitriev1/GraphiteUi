@@ -17,20 +17,9 @@ public static class BadgeStyles
 
     private static readonly string[] SizeClasses =
     [
-        "px-2 py-0.5 text-small",
-        "px-2.5 py-1 text-small",
-        "px-3 py-1.5 text-regular"
-    ];
-
-    private static readonly string[] ToneByColor =
-    [
-        "bg-surface2 text-surface2-foreground border-primary-10",
-        "bg-surface2 text-surface2-foreground border-primary-10",
-        "bg-secondary text-secondary-foreground border-secondary-30",
-        "bg-success text-success-foreground border-success-400",
-        "bg-warning text-warning-foreground border-warning-400",
-        "bg-danger text-danger-foreground border-danger-400",
-        "bg-info text-info-foreground border-info-400"
+        "px-2 py-0.5 text-caption",
+        "px-2.5 py-1 text-body-sm",
+        "px-3 py-1.5 text-body"
     ];
 
     private static readonly string[] RootClassesByColorAndSize = BuildRootClasses();
@@ -41,7 +30,7 @@ public static class BadgeStyles
         int sizeIndex = (int)component.Size;
         int sizeCount = SizeClasses.Length;
 
-        if ((uint)colorIndex >= (uint)ToneByColor.Length)
+        if ((uint)colorIndex >= (uint)SemanticTones.Count)
         {
             colorIndex = (int)ThemeColor.Primary;
         }
@@ -59,17 +48,22 @@ public static class BadgeStyles
 
     private static string[] BuildRootClasses()
     {
-        int colorCount = ToneByColor.Length;
+        int colorCount = SemanticTones.Count;
         int sizeCount = SizeClasses.Length;
         var classes = new string[colorCount * sizeCount];
 
         for (int colorIndex = 0; colorIndex < colorCount; colorIndex++)
         {
+            var color = (ThemeColor)colorIndex;
+
             for (int sizeIndex = 0; sizeIndex < sizeCount; sizeIndex++)
             {
                 classes[colorIndex * sizeCount + sizeIndex] = CssClassBuilder.Empty()
                     .Add(BaseClass)
-                    .Add(ToneByColor[colorIndex])
+                    // Tinted rather than fully saturated: a badge is a label, not a
+                    // call to action, and the subtle tones carry their own AA-safe
+                    // foreground in both themes.
+                    .Add(SemanticTones.Subtle(color))
                     .Add(SizeClasses[sizeIndex])
                     .ToString();
             }

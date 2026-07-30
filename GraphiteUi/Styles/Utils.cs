@@ -4,7 +4,7 @@ namespace GraphiteUi.Styles;
 
 public static class Utils
 {
-    public static readonly string VisuallyHidden = new CssClassBuilder(stackalloc char[25])
+    public static readonly string VisuallyHidden = new CssClassBuilder(stackalloc char[32])
         .Add("sr-only")
         .ToString();
 
@@ -17,28 +17,38 @@ public static class Utils
     public const string GroupDataDisabledCursorDefault = "group-data-[disabled=true]:cursor-default";
     public const string GroupDataReadonlyCursorDefault = "group-data-[readonly=true]:cursor-default";
 
-    public static readonly string ReduceMotion = new CssClassBuilder(stackalloc char[128])
-        .Add("reduce-motion:transition-none")
-        .ToString();
-
+    /// <summary>
+    /// Dimming + pointer suppression for a whole subtree. <c>opacity-disabled</c> is
+    /// declared as a custom utility in <c>_theme.css</c>; before that it silently
+    /// compiled to nothing.
+    /// </summary>
     public static readonly string Disabled = new CssClassBuilder(stackalloc char[128])
         .Add("opacity-disabled")
         .Add("pointer-events-none")
         .ToString();
 
-    public static readonly string FocusVisible = new CssClassBuilder(stackalloc char[128])
+    /// <summary>Same as <see cref="Disabled"/>, driven by <c>data-disabled="true"</c>.</summary>
+    public const string DataDisabled =
+        "data-[disabled=true]:opacity-disabled data-[disabled=true]:pointer-events-none";
+
+    /// <summary>
+    /// The single focus indicator for the library: a 2px accent ring offset from the
+    /// element. Do not pair this with a bare <c>focus:ring</c> — that draws two
+    /// indicators and fires on mouse click as well as keyboard.
+    /// </summary>
+    public static readonly string FocusVisible = new CssClassBuilder(stackalloc char[192])
         .Add("outline-hidden")
         .Add("focus-visible:z-10")
-        .Add("focus-visible:outline-2")
-        .Add("focus-visible:outline-focus")
-        .Add("focus-visible:outline-offset-2")
+        .Add(ColorVariants.Ring.Focus)
+        .Add("focus-visible:ring-offset-2")
+        .Add("focus-visible:ring-offset-background")
         .ToString();
 
-    public static readonly string FocusWithin = new CssClassBuilder(stackalloc char[128])
+    public static readonly string FocusWithin = new CssClassBuilder(stackalloc char[192])
         .Add("outline-hidden")
         .Add("focus-within:z-10")
-        .Add("focus-within:outline-2")
-        .Add("focus-within:outline-focus")
-        .Add("focus-within:outline-offset-2")
+        .Add(ColorVariants.Ring.FocusWithin)
+        .Add("focus-within:ring-offset-2")
+        .Add("focus-within:ring-offset-background")
         .ToString();
 }

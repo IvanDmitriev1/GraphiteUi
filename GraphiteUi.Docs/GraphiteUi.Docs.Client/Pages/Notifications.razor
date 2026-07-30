@@ -6,13 +6,13 @@
 
 <h1>Notifications</h1>
 
-<p class="text-small text-primary-30">
+<p class="text-body-sm text-neutral-50">
     Toast notifications are rendered by <code>UiToastHost</code>. Inline messages use <code>UiAlert</code>.
 </p>
 
 <div class="mt-4 max-w-2xl flex flex-col gap-6">
     <section class="flex flex-col gap-2">
-        <h2 class="text-medium">Toasts</h2>
+        <h2 class="text-h5">Toasts</h2>
 
         <div class="flex flex-wrap gap-2">
             <UiButton OnClick="@(() => ShowToast(ThemeColor.Primary))">Primary</UiButton>
@@ -26,7 +26,7 @@
     </section>
 
     <section class="flex flex-col gap-2">
-        <h2 class="text-medium">Inline Alerts</h2>
+        <h2 class="text-h5">Inline Alerts</h2>
 
         <div class="flex flex-col gap-3">
             <UiAlert Title="Connection restored"
@@ -102,7 +102,7 @@
     private static RenderFragment SyncDetails => builder =>
     {
         builder.OpenElement(0, "div");
-        builder.AddAttribute(1, "class", "text-small text-primary-50");
+        builder.AddAttribute(1, "class", "text-body-sm text-neutral-50");
         builder.AddContent(2, "Last sync: a few seconds ago");
         builder.CloseElement();
     };

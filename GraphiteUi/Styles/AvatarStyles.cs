@@ -20,9 +20,9 @@ public static class AvatarStyles
 
     private static readonly string[] SizeClasses =
     [
-        "size-8 text-small",
-        "size-10 text-regular",
-        "size-14 text-medium"
+        "size-8 text-caption",
+        "size-10 text-body-sm",
+        "size-14 text-body"
     ];
 
     private static readonly string[] RootClassesBySize = BuildRootClassesBySize();
