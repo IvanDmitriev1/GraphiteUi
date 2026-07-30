@@ -24,12 +24,12 @@ internal static class ColorVariants
             .ToString();
 
         /// <summary>
-        /// Hover tint for rows and triggers. Uses the neutral overlay ramp, not
-        /// <c>--color-focus</c>: focus is now the accent color, so hovering would
-        /// otherwise tint every row brand-colored.
+        /// Hover tint for rows and triggers. Its own role, not <c>--color-focus</c>:
+        /// focus is the accent color, so hovering would otherwise tint every row
+        /// brand-colored.
         /// </summary>
         public static readonly string HoverBackground = new CssClassBuilder(stackalloc char[128])
-            .Add("hover:bg-neutral-10")
+            .Add("hover:bg-surface-hover")
             .Add("text-surface1-foreground")
             .ToString();
     }
@@ -38,12 +38,12 @@ internal static class ColorVariants
     {
         /// <summary>Default hairline. Was a 5%-alpha border, too faint to read on either theme.</summary>
         public static readonly string Default = new CssClassBuilder(stackalloc char[128])
-            .Add("border-neutral-10")
+            .Add("border-border")
             .ToString();
 
         /// <summary>Emphasised border for modal surfaces.</summary>
         public static readonly string Strong = new CssClassBuilder(stackalloc char[128])
-            .Add("border-neutral-20")
+            .Add("border-border-strong")
             .ToString();
 
         /// <summary>
@@ -52,8 +52,14 @@ internal static class ColorVariants
         /// a decorative hairline and measures 1.19:1 against the page.
         /// </summary>
         public static readonly string Control = new CssClassBuilder(stackalloc char[128])
-            .Add("border-control-border")
+            .Add("border-control")
             .ToString();
+
+        /// <summary>Hover edge for interactive controls, paired with <see cref="Control"/>.</summary>
+        public const string ControlHover = "hover:border-control-hover";
+
+        /// <summary>Same, driven by a hover on the wrapping <c>group</c>.</summary>
+        public const string GroupControlHover = "group-hover:border-control-hover";
     }
 
     public static class Ring
@@ -67,16 +73,21 @@ internal static class ColorVariants
         public const string FocusWithin = "focus-within:ring-2 focus-within:ring-focus";
 
         /// <summary>Invalid-state ring, applied via the <c>data-invalid</c> attribute.</summary>
-        public const string Invalid = "data-invalid:focus-within:ring-danger";
+        public const string Invalid = "data-invalid:focus-within:ring-focus-invalid";
     }
 
     public static class Disabled
     {
-        public const string Background = "disabled:bg-neutral-5 data-disabled:bg-neutral-5";
-        public const string Foreground = "disabled:text-neutral-30 data-disabled:text-neutral-30";
+        public const string Background = "disabled:bg-disabled-surface data-disabled:bg-disabled-surface";
+        public const string Foreground = "disabled:text-disabled-foreground data-disabled:text-disabled-foreground";
 
-        public const string GroupBackground = "group-data-disabled:bg-neutral-5";
-        public const string GroupForeground = "group-data-disabled:text-neutral-30";
+        public const string GroupBackground = "group-data-disabled:bg-disabled-surface";
+        public const string GroupForeground = "group-data-disabled:text-disabled-foreground";
+
+        /// <summary>Disabled variants driven by a sibling <c>peer</c> input.</summary>
+        public const string PeerBackground = "peer-disabled:bg-disabled-surface";
+        public const string PeerForeground = "peer-disabled:text-disabled-foreground";
+        public const string PeerBorder = "peer-disabled:border-disabled";
     }
 
     public static class Placeholder
@@ -86,6 +97,6 @@ internal static class ColorVariants
         /// step clears 4.5:1 on dark but only reaches 3.35:1 on light, so secondary
         /// text sits at 60%.
         /// </summary>
-        public const string Foreground = "placeholder:text-neutral-60";
+        public const string Foreground = "placeholder:text-muted-foreground";
     }
 }

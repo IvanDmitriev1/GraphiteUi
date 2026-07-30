@@ -6,7 +6,7 @@
 
 <h1>Notifications</h1>
 
-<p class="text-body-sm text-neutral-50">
+<p class="text-body-sm text-subtle-foreground">
     Toast notifications are rendered by <code>UiToastHost</code>. Inline messages use <code>UiAlert</code>.
 </p>
 
@@ -102,7 +102,7 @@
     private static RenderFragment SyncDetails => builder =>
     {
         builder.OpenElement(0, "div");
-        builder.AddAttribute(1, "class", "text-body-sm text-neutral-50");
+        builder.AddAttribute(1, "class", "text-body-sm text-subtle-foreground");
         builder.AddContent(2, "Last sync: a few seconds ago");
         builder.CloseElement();
     };

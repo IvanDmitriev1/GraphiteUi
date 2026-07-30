@@ -44,25 +44,25 @@ public static class CheckBoxStyles
         .Add("transition-[background-color,border-color,color,box-shadow]")
         .Add(Utils.MotionReduceTransitionNone)
         // static -> hovered
-        .Add("group-hover:border-foreground")
-        // checked state (driven by native input) — now the accent, so a checked box
+        .Add(ColorVariants.Border.GroupControlHover)
+        // checked state (driven by native input) — the accent, so a checked box
         // reads as a deliberate selection instead of an unlabelled white square.
-        .Add("peer-checked:bg-accent")
-        .Add("peer-checked:border-accent")
-        .Add("peer-checked:text-accent-foreground")
-        .Add("group-hover:peer-checked:bg-accent-hover")
-        .Add("group-hover:peer-checked:border-accent-hover")
+        .Add("peer-checked:bg-control-checked")
+        .Add("peer-checked:border-control-checked")
+        .Add("peer-checked:text-control-checked-foreground")
+        .Add("group-hover:peer-checked:bg-control-checked-hover")
+        .Add("group-hover:peer-checked:border-control-checked-hover")
         // validation state
-        .Add("data-[invalid=true]:border-danger")
+        .Add("data-[invalid=true]:border-invalid")
         // focus state
         .Add("peer-focus-visible:ring-2")
         .Add("peer-focus-visible:ring-focus")
         .Add("peer-focus-visible:ring-offset-2")
         .Add("peer-focus-visible:ring-offset-background")
         // disabled state
-        .Add("peer-disabled:bg-neutral-5")
-        .Add("peer-disabled:border-neutral-10")
-        .Add("peer-disabled:text-neutral-20")
+        .Add(ColorVariants.Disabled.PeerBackground)
+        .Add(ColorVariants.Disabled.PeerBorder)
+        .Add(ColorVariants.Disabled.PeerForeground)
         .ToString();
 
     public static string IconClass { get; } = new CssClassBuilder(stackalloc char[256])
@@ -73,6 +73,6 @@ public static class CheckBoxStyles
         .Add("text-body")
         .Add("text-foreground")
         .Add("leading-none")
-        .Add("peer-disabled:text-neutral-30")
+        .Add(ColorVariants.Disabled.PeerForeground)
         .ToString();
 }

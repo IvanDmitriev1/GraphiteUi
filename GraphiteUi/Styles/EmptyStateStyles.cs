@@ -16,7 +16,7 @@ public static class EmptyStateStyles
         .ToString();
 
     public static string IconClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-neutral-50")
+        .Add("text-subtle-foreground")
         .ToString();
 
     public static string TitleClass { get; } = new CssClassBuilder(stackalloc char[128])
@@ -26,6 +26,6 @@ public static class EmptyStateStyles
 
     public static string DescriptionClass { get; } = new CssClassBuilder(stackalloc char[128])
         .Add("text-body-sm")
-        .Add("text-neutral-60")
+        .Add("text-muted-foreground")
         .ToString();
 }

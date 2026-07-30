@@ -13,7 +13,7 @@ public static class FileInputStyles
 
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[128])
         .Add("text-body-sm")
-        .Add("text-neutral-60")
+        .Add("text-muted-foreground")
         .ToString();
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[768])
@@ -24,16 +24,16 @@ public static class FileInputStyles
         .Add("file:mr-3")
         .Add("file:rounded-md")
         .Add("file:border")
-        .Add("file:border-neutral-10")
+        .Add("file:border-border")
         .Add("file:bg-surface2")
         .Add("file:px-2")
         .Add("file:py-1")
         .Add("file:text-body-sm")
         .Add("file:text-surface2-foreground")
         .Add("file:transition-colors")
-        .Add("hover:file:bg-neutral-15")
+        .Add("hover:file:bg-surface-active")
         .Add("file:cursor-pointer")
-        .Add("aria-[invalid=true]:border-danger")
+        .Add("aria-[invalid=true]:border-invalid")
         .Add(Utils.FocusVisible)
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
@@ -42,6 +42,6 @@ public static class FileInputStyles
 
     public static string InfoClass { get; } = new CssClassBuilder(stackalloc char[128])
         .Add("text-body-sm")
-        .Add("text-neutral-60")
+        .Add("text-muted-foreground")
         .ToString();
 }

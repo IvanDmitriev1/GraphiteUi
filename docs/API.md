@@ -645,45 +645,120 @@ Custom placeholder:
 
 ## 8. Theme tokens
 
-Prefer these over raw Tailwind palette colors — they follow the theme. Light values live at `:root` in `GraphiteUi/Styles/_theme.css`; `_dark.css` overrides them under `:root.dark, :root[data-theme="dark"]`.
+Two layers, and the split is the whole point.
+
+**Roles** are the vocabulary — utility classes named for what a color *means*. This is what you write.
+**Primitives** (`--graphite-*` custom properties) are the palette — the raw values roles resolve to. This is what you *override*. They are not exposed as utility classes.
+
+Because nothing above the primitive layer holds a literal, changing any color is a CSS edit. No component class string names a value or a ramp step, so a retune never needs a library rebuild. Light values live at `:root` in `GraphiteUi/Styles/_theme.css`; `_dark.css` overrides them under `:root.dark, :root[data-theme="dark"]`.
+
+### 8.1 Roles — use these
 
 | Group | Tailwind class stems |
 |---|---|
 | Page | `background`, `foreground` |
-| Surfaces | `surface1`, `surface2`, `surface3` (+ `-foreground` each), `divider`, `focus`, `scrim`, `control-border` |
-| Accent (`ThemeColor.Primary`) | `accent`, `accent-50`…`accent-950`, `accent-hover`, `accent-active`, `accent-foreground`, `accent-subtle`, `accent-subtle-foreground`, `accent-border` |
-| Neutral overlay | `neutral`, `neutral-5/10/15/20/30/50/60/70`, `neutral-foreground` |
-| Inverse overlay | `overlay`, `overlay-5/10/15/20/30/50/90`, `overlay-foreground` |
+| Surfaces | `surface1`, `surface2`, `surface3` (+ `-foreground` each), `divider`, `scrim` |
+| Surface states | `surface-hover`, `surface-active`, `disabled-surface`, `selected`, `selected-foreground`, `skeleton` |
+| Content | `foreground` (body), `muted-foreground` (secondary), `subtle-foreground` (tertiary), `disabled-foreground` |
+| Borders | `border`, `border-strong`, `control`, `control-hover`, `disabled`, `focus`, `invalid` — all as `border-*` |
+| Focus | `focus` (ring + accent-tinted text), `focus-invalid` |
+| Controls | `control-track`, `control-track-hover`, `control-thumb`, `control-thumb-disabled`, `control-checked`, `control-checked-hover`, `control-checked-foreground` |
+| Accent (`ThemeColor.Primary`) | `accent`, `accent-hover`, `accent-active`, `accent-foreground`, `accent-subtle`, `accent-subtle-foreground`, `accent-border` |
+| Secondary (`ThemeColor.Secondary`) | `secondary`, `secondary-hover`, `secondary-active`, `secondary-foreground`, `secondary-border`, `secondary-border-hover`, `secondary-subtle`, `secondary-subtle-foreground`, `secondary-border-subtle`, `secondary-indicator` |
 | Success / Warning / Danger / Info | `<name>`, `<name>-hover`, `<name>-active`, `<name>-foreground`, `<name>-subtle`, `<name>-subtle-foreground`, `<name>-border` |
+| Shimmer | `shimmer-from`, `shimmer-via` |
 | Text scale | `text-h1`…`text-h6`, `text-body-lg`, `text-body`, `text-body-sm`, `text-caption`, `text-heading` |
 | Radius | `rounded-sm/md/lg/xl` — controls `md`, containers `lg`, dialog `xl` |
 | Shadows | `shadow-xs/sm/md/lg/xl/2xl` |
 
-Usage: `class="text-body-sm text-neutral-60 bg-surface1"`.
+Usage: `class="text-body-sm text-muted-foreground bg-surface1"`.
 
-### Three rules worth knowing
+Border roles read as `border-border`, `border-border-strong`, `border-control`, `border-control-hover`, `border-disabled`, `border-focus`, `border-invalid`. The doubled word in `border-border` is Tailwind's utility prefix plus the role name; it is the default container hairline.
 
-**The neutral ramp flips polarity per theme.** `neutral-*` is black-alpha in light and white-alpha in dark; `overlay-*` is the reverse. The number is the alpha percent. So `bg-neutral-10` or `text-neutral-60` is correct in both themes with no `dark:` variant — that is what makes the light theme cheap.
+> **Adding a role?** Tailwind builds `bg-X`, `text-X`, `border-X` and `ring-X` from a single `--color-X`. The token name is the part *after* the prefix, so a border role must be `--color-control`, not `--color-border-control` — the latter compiles to `border-border-control` and leaves `border-control` silently undefined. One token serves every property: `--color-focus` backs both `ring-focus` and `border-focus`.
 
-**Hover and active are tokens, not shades.** Use `hover:bg-accent-hover`, never `hover:bg-accent-400`. Semantic fills move *away* from their own foreground on hover, so contrast improves in every state. The accent is the exception — it already sits at an extreme of the ramp, so it steps one notch toward the middle (17.72:1 base, 14.89:1 hover, 10.44:1 active in light).
+### 8.2 Primitives — override these
 
-**The accent is a lightness inversion, not a hue.** `ThemeColor.Primary` is a near-black fill with white text in light (`accent-900`) and a white fill with near-black text in dark (`accent-50`). Emphasis comes from inverting against the page. `ThemeColor.Secondary` is the graphite fill built from `neutral-10/15/20`, and is the only solid tone that draws a visible border — its fill sits ~1.2–1.4:1 from the page, so the edge is what gives it a shape. To rebrand with a real hue, replace the eleven `--graphite-accent-*` ramp values in `_theme.css` and set `--graphite-accent` / `-foreground` in **both** `_theme.css` and `_dark.css`.
+Never referenced as classes. Redefine them to retheme.
 
-**Two border weights, deliberately.** `control-border` holds 3:1 (WCAG 1.4.11) for anything interactive — inputs, checkboxes, radios, switches, triggers. `neutral-10` is a decorative hairline for containers and measures ~1.2:1 against the page; do not use it as a control boundary.
+| Group | Custom properties |
+|---|---|
+| Page / surfaces | `--graphite-background`, `--graphite-foreground`, `--graphite-surface1/2/3` (+ `-foreground`) |
+| Neutral overlay ramp | `--graphite-neutral-5/10/15/20/30/50/60/70` |
+| Inverse overlay ramp | `--graphite-overlay-5/10/15/20/30/50/90` |
+| Accent ramp | `--graphite-accent-50` … `--graphite-accent-950`, plus `--graphite-accent`, `-hover`, `-active`, `-foreground`, `-subtle`, `-subtle-foreground`, `-border` |
+| Lines | `--graphite-divider`, `--graphite-control-border`, `--graphite-scrim` |
+| Semantic fills | `--graphite-success/warning/danger/info` (+ `-foreground`, `-subtle`, `-subtle-foreground`, `-border`, `-hover`, `-active`) |
+| Focus, shimmer, shadows | `--graphite-focus`, `--graphite-shimmer-from/via`, `--graphite-shadow-xs`…`-2xl` |
+
+### 8.3 Rebranding without touching the library
+
+`@theme static inline` inlines the primitive reference into every generated utility — `bg-accent` compiles to `background-color: var(--graphite-accent)`, not to a hex. So redefining a primitive at `:root` **after** the theme import retints the whole library at runtime, with no rebuild of GraphiteUi:
+
+```css
+@import "tailwindcss";
+@import "GraphiteUi/theme";
+
+/* Swap the graphite accent for a real hue. */
+:root {
+    --graphite-accent-900: #1D4ED8;
+    --graphite-accent-800: #1E40AF;
+    --graphite-accent-700: #1E3A8A;
+}
+```
+
+That single block moves primary buttons, checked checkboxes/radios/switches, focus rings, the focused input border, and the selected select row — because every one of them goes through a role that resolves to the accent.
+
+To retune a *role* rather than a value — "disabled text should be lighter", "the switch track needs another step" — rebind the role instead:
+
+```css
+@theme static inline {
+    --color-disabled-foreground: var(--graphite-neutral-20);
+    --color-control-track: var(--graphite-neutral-15);
+}
+```
+
+### Rules worth knowing
+
+**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is black-alpha in light and white-alpha in dark; `--graphite-overlay-*` is the reverse. The number is the alpha percent. That is why roles built on it — `surface-hover`, `muted-foreground`, `control-track` — are correct in both themes with no `dark:` variant, and it is what makes the light theme cheap.
+
+**Hover and active are roles, not shades.** Use `hover:bg-accent-hover`, never a numbered step. Semantic fills move *away* from their own foreground on hover, so contrast improves in every state. The accent is the exception — it already sits at an extreme of the ramp, so it steps one notch toward the middle (17.72:1 base, 14.89:1 hover, 10.44:1 active in light).
+
+**The accent is a lightness inversion, not a hue.** `ThemeColor.Primary` is a near-black fill with white text in light (`--graphite-accent-900`) and a white fill with near-black text in dark (`--graphite-accent-50`). Emphasis comes from inverting against the page. `ThemeColor.Secondary` is the graphite fill, and is the only solid tone that draws a visible border — its fill sits ~1.2–1.4:1 from the page, so the edge is what gives it a shape.
+
+**Two border weights, deliberately.** `border-control` holds 3:1 (WCAG 1.4.11) for anything interactive — inputs, checkboxes, radios, switches, triggers. `border-border` is a decorative hairline for containers and measures ~1.2:1 against the page; do not use it as a control boundary.
 
 ### Renamed in this version
 
+The numbered ramps are no longer utility classes. Every step now reaches you through a role.
+
 | Old | New |
 |---|---|
-| `primary`, `primary-5`…`primary-70` | `neutral`, `neutral-5`…`neutral-70` |
-| `secondary`, `secondary-5`…`secondary-90` | `overlay`, `overlay-5`…`overlay-90` |
-| — | `accent-*` (new; `ThemeColor.Primary` now maps here) |
-| `success-400/500/600` etc. | `success-hover` / `success-active` / `success-subtle` |
+| `text-neutral-60`, `placeholder:text-neutral-60` | `text-muted-foreground`, `placeholder:text-muted-foreground` |
+| `text-neutral-50` | `text-subtle-foreground` |
+| `text-neutral-30`, `text-neutral-20` | `text-disabled-foreground` |
+| `bg-neutral-5` | `bg-disabled-surface` |
+| `hover:bg-neutral-10` | `hover:bg-surface-hover` |
+| `hover:bg-neutral-15` | `hover:bg-surface-active` |
+| `bg-neutral-10` (skeleton / switch track) | `bg-skeleton` / `bg-control-track` |
+| `bg-neutral-60`, `bg-neutral-30` (switch thumb) | `bg-control-thumb`, `bg-control-thumb-disabled` |
+| `bg-neutral-50` (alert indicator) | `bg-secondary-indicator` |
+| `border-neutral-10`, `border-neutral-20` | `border-border`, `border-border-strong` |
+| `border-control-border` | `border-control` |
+| `hover:border-foreground` | `hover:border-control-hover` |
+| `border-danger` on a control, `ring-danger` | `border-invalid`, `ring-focus-invalid` |
+| `bg-accent` / `border-accent` on a control | `bg-control-checked` / `border-control-checked` |
+| `bg-accent-subtle` on a selected row | `bg-selected` / `text-selected-foreground` |
+| `accent-50`…`accent-950`, `neutral-*`, `overlay-*` | removed — primitives only |
+| `primary`, `primary-5`…`primary-70` | `neutral` primitives (previous version) |
+| `secondary`, `secondary-5`…`secondary-90` | `overlay` primitives (previous version); `secondary-*` is now the Secondary tone |
 | `text-regular`, `text-medium` | `text-body` |
 | `text-small` | `text-body-sm` |
 | `text-large`, `text-header` | `text-body-lg` / `text-h5` |
 
-The old `text-*` names still resolve as deprecated aliases for one version. The old **color** names do not — `bg-primary-10` and `bg-secondary` are gone.
+The old `text-*` size names still resolve as deprecated aliases. The **color** names do not.
+
+> **Watch out for `neutral-50`.** Tailwind v4 ships its own `neutral-50`…`neutral-950` palette. Now that GraphiteUi no longer defines `--color-neutral-*`, a stale `text-neutral-50` silently resolves to Tailwind's near-white `#fafafa` instead of failing. Every other removed name (`neutral-5/10/15/20/30/60/70`, `overlay-*`, `accent-<n>`) has no Tailwind counterpart and simply stops compiling.
 
 ---
 

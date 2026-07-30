@@ -39,4 +39,75 @@
     <PackageReference Include="TwMerge" Version="1.0.7" />
   </ItemGroup>
 
+  <!-- ==== Role-token guard =================================================
+       Class strings in Styles/*.cs may name only ROLE tokens. Referencing a
+       numbered ramp step (bg-neutral-10, text-accent-700, ...) puts a color
+       decision back into compiled C#, which is exactly what the role layer in
+       _theme.css exists to prevent: retuning it would then need a library
+       rebuild and a NuGet republish instead of a one-line CSS edit.
+
+       Tailwind scans these files as plain text, so a step named in a COMMENT is
+       also a real reference — the guard does not exempt them.
+
+       Warning, not error: a deliberate exception stays possible, it just has to
+       be visible. ==================================================== -->
+  <UsingTask TaskName="VerifyGraphiteRoleTokens"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <Violations ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        var forbidden = new Regex(@"\b(?:bg|text|border|ring|fill|stroke|from|via|to|caret|divide|outline|shadow|accent)-(?:neutral|overlay|accent)-\d+\b");
+        var report = new StringBuilder();
+
+        foreach (var file in Files)
+        {
+            var path = file.GetMetadata("FullPath");
+            var lines = File.ReadAllLines(path);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                foreach (Match match in forbidden.Matches(lines[i]))
+                {
+                    if (report.Length != 0)
+                    {
+                        report.Append("; ");
+                    }
+
+                    report.Append(Path.GetFileName(path)).Append('(').Append(i + 1).Append("): ").Append(match.Value);
+                }
+            }
+        }
+
+        Violations = report.ToString();
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="VerifyGraphiteUiRoleTokens"
+          BeforeTargets="CoreCompile"
+          Inputs="@(GraphiteUiStyleSource);$(MSBuildProjectFullPath)"
+          Outputs="$(IntermediateOutputPath)graphiteui.roletokens.stamp">
+    <VerifyGraphiteRoleTokens Files="@(GraphiteUiStyleSource)">
+      <Output TaskParameter="Violations" PropertyName="GraphiteUiRoleTokenViolations" />
+    </VerifyGraphiteRoleTokens>
+
+    <Warning Condition="'$(GraphiteUiRoleTokenViolations)' != ''"
+             Code="GRAPHITE001"
+             Text="Styles/*.cs references a numbered ramp step instead of a role token. Add a role to the @theme block in Styles/_theme.css and bind it there. Offenders: $(GraphiteUiRoleTokenViolations)" />
+
+    <Touch Files="$(IntermediateOutputPath)graphiteui.roletokens.stamp" AlwaysCreate="true" />
+  </Target>
+
+  <ItemGroup>
+    <GraphiteUiStyleSource Include="Styles\*.cs" />
+  </ItemGroup>
+
 </Project>

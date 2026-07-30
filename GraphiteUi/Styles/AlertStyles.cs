@@ -60,7 +60,7 @@ public static class AlertStyles
         .Add(Utils.MotionReduceTransitionNone)
         // Was `hover:bg-black/10` + `focus-visible:ring-black/25`: both hardcoded
         // black, and therefore invisible on a dark surface.
-        .Add("hover:bg-neutral-15")
+        .Add("hover:bg-surface-active")
         .Add("hover:opacity-100")
         .Add(Utils.FocusVisible)
         .ToString();

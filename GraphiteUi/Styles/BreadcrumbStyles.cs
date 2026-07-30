@@ -22,7 +22,7 @@ public static class BreadcrumbStyles
         .ToString();
 
     public static string LinkClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("text-neutral-60")
+        .Add("text-muted-foreground")
         .Add("transition-colors")
         .Add("hover:text-foreground")
         .ToString();
@@ -32,6 +32,6 @@ public static class BreadcrumbStyles
         .ToString();
 
     public static string SeparatorClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-neutral-50")
+        .Add("text-subtle-foreground")
         .ToString();
 }

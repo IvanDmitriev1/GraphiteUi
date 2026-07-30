@@ -26,7 +26,7 @@ public static class SelectStyles
     public static string SearchIconClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("size-5")
         .Add("shrink-0")
-        .Add("text-neutral-60")
+        .Add("text-muted-foreground")
         .ToString();
 
     public static string ListClass { get; } = new CssClassBuilder(stackalloc char[256])
@@ -41,7 +41,7 @@ public static class SelectStyles
         .Add("px-4")
         .Add("py-3")
         .Add("text-body-sm")
-        .Add("text-neutral-60")
+        .Add("text-muted-foreground")
         .ToString();
 
     public static string DividerClass { get; } = new CssClassBuilder(stackalloc char[128])
@@ -66,7 +66,7 @@ public static class SelectStyles
         .Add(Utils.MotionReduceTransitionNone)
         .Add(ColorVariants.Surface.HoverBackground)
         .Add(Utils.FocusVisible)
-        .Add("disabled:text-neutral-30")
+        .Add("disabled:text-disabled-foreground")
         .Add("disabled:hover:bg-transparent")
         .Add(Utils.DisabledCursorDefault)
         .ToString();
@@ -90,11 +90,11 @@ public static class SelectStyles
         .Add(ColorVariants.Surface.HoverBackground)
         .Add(Utils.FocusVisible)
         // Was a solid white row, a jarring jump from a transparent resting state.
-        .Add("data-[selected=true]:bg-accent-subtle")
-        .Add("data-[selected=true]:text-accent-subtle-foreground")
-        .Add("data-[active=true]:bg-accent-subtle")
-        .Add("data-[active=true]:text-accent-subtle-foreground")
-        .Add("data-[disabled=true]:text-neutral-30")
+        .Add("data-[selected=true]:bg-selected")
+        .Add("data-[selected=true]:text-selected-foreground")
+        .Add("data-[active=true]:bg-selected")
+        .Add("data-[active=true]:text-selected-foreground")
+        .Add("data-[disabled=true]:text-disabled-foreground")
         .Add("data-[disabled=true]:hover:bg-transparent")
         .Add("data-[disabled=true]:pointer-events-none")
         .Add("data-[disabled=true]:cursor-default")

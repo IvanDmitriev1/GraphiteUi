@@ -195,11 +195,25 @@
     --shadow-xl: var(--graphite-shadow-xl);
     --shadow-2xl: var(--graphite-shadow-2xl);
 
-    /* Page colors */
+    /* ==== ROLE TOKENS =======================================================
+       The complete color vocabulary components are allowed to use. Every token
+       here names an INTENT and binds it to a primitive; the primitives above are
+       the palette and are NOT part of the vocabulary.
+
+       This is what keeps color work out of C#. Retuning a role — "disabled text
+       should be lighter", "the switch track needs one more step", "Secondary
+       wants a stronger edge" — is a one-line edit in this block. No class string
+       changes, no library rebuild, no NuGet republish.
+
+       The numbered ramps (`neutral-*`, `overlay-*`, `accent-<n>`) are deliberately
+       NOT aliased into `--color-*`. If a component needs a step, that step needs a
+       role name first. ==================================================== */
+
+    /* ---- Page ---- */
     --color-background: var(--graphite-background);
     --color-foreground: var(--graphite-foreground);
 
-    /* Surfaces (semantic elevation steps) */
+    /* ---- Surfaces (semantic elevation steps) ---- */
     --color-surface1: var(--graphite-surface1);
     --color-surface1-foreground: var(--graphite-surface1-foreground);
     --color-surface2: var(--graphite-surface2);
@@ -207,48 +221,70 @@
     --color-surface3: var(--graphite-surface3);
     --color-surface3-foreground: var(--graphite-surface3-foreground);
     --color-divider: var(--graphite-divider);
-    --color-focus: var(--graphite-focus);
     --color-scrim: var(--graphite-scrim);
-    --color-control-border: var(--graphite-control-border);
+
+    /* ---- Content. `foreground` is body text; these are the quieter steps. ---- */
+    --color-muted-foreground: var(--graphite-neutral-60);
+    --color-subtle-foreground: var(--graphite-neutral-50);
+    --color-disabled-foreground: var(--graphite-neutral-30);
+
+    /* ---- Surface states. Alpha tints, so they composite over whatever is
+            behind them and step the same direction in both themes. ---- */
+    --color-surface-hover: var(--graphite-neutral-10);
+    --color-surface-active: var(--graphite-neutral-15);
+    --color-disabled-surface: var(--graphite-neutral-5);
+    --color-selected: var(--graphite-accent-subtle);
+    --color-selected-foreground: var(--graphite-accent-subtle-foreground);
+    --color-skeleton: var(--graphite-neutral-10);
+
+    /* ---- Borders. Two weights on purpose: `border` is a decorative hairline
+            for containers (~1.2:1), `control` is the 3:1 boundary WCAG 1.4.11
+            wants on anything interactive.
+
+            Names carry no `border-` prefix: Tailwind builds `border-X` from
+            `--color-X`, so a token named `--color-border-control` would compile
+            to `border-border-control`. The utility prefix supplies the property.
+            The focus border rides `--color-focus` below. ---- */
+    --color-border: var(--graphite-neutral-10);
+    --color-border-strong: var(--graphite-neutral-20);
+    --color-control: var(--graphite-control-border);
+    --color-control-hover: var(--graphite-foreground);
+    --color-disabled: var(--graphite-neutral-10);
+    --color-invalid: var(--graphite-danger);
+
+    /* ---- Controls: checkbox, radio, switch. Split from the accent tone so a
+            rebrand can leave the controls alone, or vice versa. ---- */
+    --color-control-track: var(--graphite-neutral-10);
+    --color-control-track-hover: var(--graphite-neutral-15);
+    --color-control-thumb: var(--graphite-neutral-60);
+    --color-control-thumb-disabled: var(--graphite-neutral-30);
+    --color-control-checked: var(--graphite-accent);
+    --color-control-checked-hover: var(--graphite-accent-hover);
+    --color-control-checked-foreground: var(--graphite-accent-foreground);
+
+    /* ---- Focus ---- */
+    --color-focus: var(--graphite-focus);
+    --color-focus-invalid: var(--graphite-danger);
 
     --color-shimmer-from: var(--graphite-shimmer-from);
     --color-shimmer-via: var(--graphite-shimmer-via);
 
-    /* NEUTRAL overlay ramp (was `primary` — that name is now the accent) */
-    --color-neutral: var(--graphite-neutral);
-    --color-neutral-5: var(--graphite-neutral-5);
-    --color-neutral-10: var(--graphite-neutral-10);
-    --color-neutral-15: var(--graphite-neutral-15);
-    --color-neutral-20: var(--graphite-neutral-20);
-    --color-neutral-30: var(--graphite-neutral-30);
-    --color-neutral-50: var(--graphite-neutral-50);
-    --color-neutral-60: var(--graphite-neutral-60);
-    --color-neutral-70: var(--graphite-neutral-70);
-    --color-neutral-foreground: var(--graphite-neutral-foreground);
+    /* ---- SECONDARY tone (ThemeColor.Secondary). Built from the neutral overlay
+            ramp, and the one solid tone that draws a visible edge — its fill sits
+            ~1.2–1.4:1 from the page, so the border is what gives it a shape. ---- */
+    --color-secondary: var(--graphite-neutral-10);
+    --color-secondary-hover: var(--graphite-neutral-15);
+    --color-secondary-active: var(--graphite-neutral-20);
+    --color-secondary-foreground: var(--graphite-foreground);
+    --color-secondary-border: var(--graphite-neutral-20);
+    --color-secondary-border-hover: var(--graphite-neutral-30);
+    --color-secondary-subtle: var(--graphite-surface2);
+    --color-secondary-subtle-foreground: var(--graphite-surface2-foreground);
+    --color-secondary-border-subtle: var(--graphite-neutral-15);
+    --color-secondary-indicator: var(--graphite-neutral-50);
 
-    /* INVERSE overlay ramp (was `secondary`) */
-    --color-overlay: var(--graphite-overlay);
-    --color-overlay-5: var(--graphite-overlay-5);
-    --color-overlay-10: var(--graphite-overlay-10);
-    --color-overlay-15: var(--graphite-overlay-15);
-    --color-overlay-20: var(--graphite-overlay-20);
-    --color-overlay-30: var(--graphite-overlay-30);
-    --color-overlay-50: var(--graphite-overlay-50);
-    --color-overlay-90: var(--graphite-overlay-90);
-    --color-overlay-foreground: var(--graphite-overlay-foreground);
-
-    /* ACCENT (ThemeColor.Primary) */
-    --color-accent-50: var(--graphite-accent-50);
-    --color-accent-100: var(--graphite-accent-100);
-    --color-accent-200: var(--graphite-accent-200);
-    --color-accent-300: var(--graphite-accent-300);
-    --color-accent-400: var(--graphite-accent-400);
-    --color-accent-500: var(--graphite-accent-500);
-    --color-accent-600: var(--graphite-accent-600);
-    --color-accent-700: var(--graphite-accent-700);
-    --color-accent-800: var(--graphite-accent-800);
-    --color-accent-900: var(--graphite-accent-900);
-    --color-accent-950: var(--graphite-accent-950);
+    /* ---- ACCENT tone (ThemeColor.Primary). The ramp steps are primitives; only
+            the resolved tone is exposed. ---- */
     --color-accent: var(--graphite-accent);
     --color-accent-hover: var(--graphite-accent-hover);
     --color-accent-active: var(--graphite-accent-active);

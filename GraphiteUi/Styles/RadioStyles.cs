@@ -40,23 +40,23 @@ public static class RadioStyles
         .Add("bg-surface1")
         .Add("transition-[background-color,border-color,border-width,box-shadow]")
         .Add(Utils.MotionReduceTransitionNone)
-        .Add("group-hover:border-foreground")
+        .Add(ColorVariants.Border.GroupControlHover)
         .Add("peer-focus-visible:ring-2")
         .Add("peer-focus-visible:ring-focus")
         .Add("peer-focus-visible:ring-offset-2")
         .Add("peer-focus-visible:ring-offset-background")
         // Accent dot via a thick border, matching the checked checkbox fill.
-        .Add("peer-checked:border-accent")
+        .Add("peer-checked:border-control-checked")
         .Add("peer-checked:border-[6px]")
-        .Add("group-hover:peer-checked:border-accent-hover")
-        .Add("data-[invalid=true]:border-danger")
-        .Add("peer-disabled:border-neutral-10")
-        .Add("peer-disabled:bg-neutral-5")
+        .Add("group-hover:peer-checked:border-control-checked-hover")
+        .Add("data-[invalid=true]:border-invalid")
+        .Add(ColorVariants.Disabled.PeerBorder)
+        .Add(ColorVariants.Disabled.PeerBackground)
         .ToString();
 
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[128])
         .Add("text-body")
         .Add("text-foreground")
-        .Add("peer-disabled:text-neutral-30")
+        .Add(ColorVariants.Disabled.PeerForeground)
         .ToString();
 }

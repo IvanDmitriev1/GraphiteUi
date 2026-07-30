@@ -23,14 +23,10 @@ internal static class SemanticTones
         // Primary — the accent: a lightness inversion of the page (white fill in
         // dark, near-black fill in light).
         "bg-accent text-accent-foreground border-transparent hover:bg-accent-hover active:bg-accent-active",
-        // Secondary — the graphite fill. Built from the neutral overlay ramp, not
-        // from `surface2`, so all three states composite over whatever is behind
-        // the button and step in the same direction in both themes. `bg-surface2`
-        // is opaque, so its hover had to jump to an alpha value and the step size
-        // was whatever the two happened to differ by.
-        // It is the one tone that draws an edge: its fill sits close to the page,
-        // so the border is what gives it a shape.
-        "bg-neutral-10 text-foreground border-neutral-20 hover:bg-neutral-15 hover:border-neutral-30 active:bg-neutral-20",
+        // Secondary — the graphite fill, and the one tone that draws an edge: its
+        // fill sits close to the page, so the border is what gives it a shape.
+        // Every step is a `secondary-*` role token, so retuning it is a CSS edit.
+        "bg-secondary text-secondary-foreground border-secondary-border hover:bg-secondary-hover hover:border-secondary-border-hover active:bg-secondary-active",
         "bg-success text-success-foreground border-transparent hover:bg-success-hover active:bg-success-active",
         "bg-warning text-warning-foreground border-transparent hover:bg-warning-hover active:bg-warning-active",
         "bg-danger text-danger-foreground border-transparent hover:bg-danger-hover active:bg-danger-active",
@@ -40,9 +36,11 @@ internal static class SemanticTones
     /// <summary>Tinted, low-emphasis tone. Used by alerts and badges.</summary>
     private static readonly string[] SubtleByColor =
     [
-        "bg-surface2 text-surface2-foreground border-neutral-10",
+        // Inherit and Secondary share the neutral subtle tone. They used to differ
+        // by a single alpha step on the border, which no role could justify.
+        "bg-secondary-subtle text-secondary-subtle-foreground border-secondary-border-subtle",
         "bg-accent-subtle text-accent-subtle-foreground border-accent-border",
-        "bg-surface2 text-surface2-foreground border-neutral-15",
+        "bg-secondary-subtle text-secondary-subtle-foreground border-secondary-border-subtle",
         "bg-success-subtle text-success-subtle-foreground border-success-border",
         "bg-warning-subtle text-warning-subtle-foreground border-warning-border",
         "bg-danger-subtle text-danger-subtle-foreground border-danger-border",
@@ -52,9 +50,9 @@ internal static class SemanticTones
     /// <summary>Solid accent bar / dot, for the leading indicator on alerts.</summary>
     private static readonly string[] IndicatorByColor =
     [
-        "bg-neutral-50",
+        "bg-secondary-indicator",
         "bg-accent",
-        "bg-neutral-50",
+        "bg-secondary-indicator",
         "bg-success",
         "bg-warning",
         "bg-danger",
