@@ -12,34 +12,36 @@ public static class FileInputStyles
         .ToString();
 
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-small")
-        .Add("text-primary-60")
+        .Add("text-body-sm")
+        .Add("text-muted-foreground")
         .ToString();
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[768])
-        .Add(CommonStyles.SurfaceFrameRegularClass)
+        .Add(CommonStyles.ControlFrameRegularClass)
         .Add("w-full")
         .Add("px-3")
         .Add("py-2")
         .Add("file:mr-3")
         .Add("file:rounded-md")
         .Add("file:border")
-        .Add("file:border-primary-10")
+        .Add("file:border-border")
         .Add("file:bg-surface2")
         .Add("file:px-2")
         .Add("file:py-1")
-        .Add("file:text-small")
+        .Add("file:text-body-sm")
         .Add("file:text-surface2-foreground")
         .Add("file:transition-colors")
-        .Add("hover:file:bg-focus")
-        .Add("aria-[invalid=true]:border-danger-400")
+        .Add("hover:file:bg-surface-active")
+        .Add("file:cursor-pointer")
+        .Add("aria-[invalid=true]:border-invalid")
+        .Add(Utils.FocusVisible)
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add(Utils.DisabledCursorDefault)
         .ToString();
 
     public static string InfoClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-small")
-        .Add("text-primary-50")
+        .Add("text-body-sm")
+        .Add("text-muted-foreground")
         .ToString();
 }

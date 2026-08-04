@@ -4,117 +4,407 @@
 
 @layer theme, base, components, utilities;
 
+/* ---- LIGHT PRIMITIVES (defaults) ---------------------------------------
+   _dark.css overrides these under :root.dark / :root[data-theme="dark"].
+   Everything a component consumes goes through the --color-* aliases in the
+   @theme block below, never through --graphite-* directly. */
+:root {
+    /* Page + surfaces. Explicit values, not alpha overlays — that is what keeps
+       surface1 and surface2 from composing to the same color. */
+    --graphite-background: #FFFFFF;
+    --graphite-foreground: #18181B;
+    --graphite-surface1: #FAFAFA;
+    --graphite-surface1-foreground: #18181B;
+    --graphite-surface2: #F4F4F5;
+    --graphite-surface2-foreground: #18181B;
+    --graphite-surface3: #FFFFFF;
+    --graphite-surface3-foreground: #18181B;
+
+    /* Neutral overlay ramp: black-on-light. The number is the alpha percent.
+       Because the ramp flips polarity per theme, a class like `bg-neutral-10`
+       or `text-neutral-60` is correct in both themes with no dark: variant. */
+    --graphite-neutral-5: rgba(0, 0, 0, 0.05);
+    --graphite-neutral-10: rgba(0, 0, 0, 0.08);
+    --graphite-neutral-15: rgba(0, 0, 0, 0.12);
+    --graphite-neutral-20: rgba(0, 0, 0, 0.16);
+    --graphite-neutral-30: rgba(0, 0, 0, 0.28);
+    --graphite-neutral-50: rgba(0, 0, 0, 0.48);
+    --graphite-neutral-60: rgba(0, 0, 0, 0.60);
+    --graphite-neutral-70: rgba(0, 0, 0, 0.72);
+    --graphite-neutral: rgba(0, 0, 0, 0.08);
+    --graphite-neutral-foreground: #18181B;
+
+    /* Inverse overlay ramp: white-on-light. */
+    --graphite-overlay-5: rgba(255, 255, 255, 0.05);
+    --graphite-overlay-10: rgba(255, 255, 255, 0.10);
+    --graphite-overlay-15: rgba(255, 255, 255, 0.15);
+    --graphite-overlay-20: rgba(255, 255, 255, 0.20);
+    --graphite-overlay-30: rgba(255, 255, 255, 0.30);
+    --graphite-overlay-50: rgba(255, 255, 255, 0.50);
+    --graphite-overlay-90: rgba(255, 255, 255, 0.90);
+    --graphite-overlay: rgba(255, 255, 255, 0.90);
+    --graphite-overlay-foreground: #18181B;
+
+    --graphite-divider: rgba(0, 0, 0, 0.10);
+    --graphite-scrim: rgba(0, 0, 0, 0.35);
+
+    /* Border for interactive controls — inputs, checkboxes, radios, switches,
+       triggers. WCAG 1.4.11 wants 3:1 for a control's visual boundary, and the
+       decorative neutral hairline only reaches 1.19:1 against the page. Kept
+       separate so containers can stay subtle. Measures 3.12:1 light, 3.72:1 dark. */
+    --graphite-control-border: rgba(0, 0, 0, 0.42);
+
+    /* Skeleton shimmer sweep */
+    --graphite-shimmer-from: rgba(0, 0, 0, 0.03);
+    --graphite-shimmer-via: rgba(0, 0, 0, 0.09);
+
+    /* ---- Accent ramp: graphite, not a hue. The library's emphasis signal is
+            LIGHTNESS INVERSION, not color — Primary is a near-black fill on the
+            light theme and a white fill on the dark one. The ramp itself is
+            shared by both themes; only which step is "base" flips.
+
+            To rebrand with a real hue, replace these eleven values and set
+            --graphite-accent / -foreground in both this file and _dark.css. ---- */
+    --graphite-accent-50: #FAFAFA;
+    --graphite-accent-100: #F4F4F5;
+    --graphite-accent-200: #E4E4E7;
+    --graphite-accent-300: #D4D4D8;
+    --graphite-accent-400: #A1A1AA;
+    --graphite-accent-500: #71717A;
+    --graphite-accent-600: #52525B;
+    --graphite-accent-700: #3F3F46;
+    --graphite-accent-800: #27272A;
+    --graphite-accent-900: #18181B;
+    --graphite-accent-950: #09090B;
+
+    --graphite-accent: var(--graphite-accent-900);
+    --graphite-accent-foreground: #FFFFFF;
+    --graphite-accent-subtle: var(--graphite-accent-200);
+    --graphite-accent-subtle-foreground: var(--graphite-accent-900);
+    --graphite-accent-border: var(--graphite-accent-300);
+
+    --graphite-focus: var(--graphite-accent-900);
+
+    /* ---- Semantic fills ---- */
+    --graphite-success: #15803D;
+    --graphite-success-foreground: #FFFFFF;
+    --graphite-success-subtle: #F0FDF4;
+    --graphite-success-subtle-foreground: #166534;
+    --graphite-success-border: #BBF7D0;
+
+    --graphite-warning: #B45309;
+    --graphite-warning-foreground: #FFFFFF;
+    --graphite-warning-subtle: #FFFBEB;
+    --graphite-warning-subtle-foreground: #92400E;
+    --graphite-warning-border: #FDE68A;
+
+    --graphite-danger: #DC2626;
+    --graphite-danger-foreground: #FFFFFF;
+    --graphite-danger-subtle: #FEF2F2;
+    --graphite-danger-subtle-foreground: #991B1B;
+    --graphite-danger-border: #FECACA;
+
+    --graphite-info: #2563EB;
+    --graphite-info-foreground: #FFFFFF;
+    --graphite-info-subtle: #EFF6FF;
+    --graphite-info-subtle-foreground: #1E40AF;
+    --graphite-info-border: #BFDBFE;
+
+    /* Shadows (light). _dark.css ships much heavier values. */
+    --graphite-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --graphite-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px -1px rgba(0, 0, 0, 0.10);
+    --graphite-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
+    --graphite-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
+    --graphite-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 8px 10px -6px rgba(0, 0, 0, 0.10);
+    --graphite-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* ---- INTERACTION STATE TOKENS ------------------------------------------
+       Defined once, for both themes. Custom properties substitute lazily, so
+       these resolve against whichever --graphite-<name> is in scope.
+
+       Rule: hover/active always move a fill AWAY from its own foreground, so
+       contrast improves in every state. Fills with a white foreground darken;
+       fills with a near-black foreground lighten. That replaces the old
+       per-color `-400`/`-500` shade references, where `-400` happened to be
+       darker for success/warning but lighter for danger/info. */
+    --graphite-tint-toward-dark: #000000;
+    --graphite-tint-toward-light: #FFFFFF;
+
+    /* Accent is the one fill that does NOT follow the move-away-from-foreground
+       rule. It sits at an extreme of the ramp (900 light / 50 dark), so there is
+       nowhere further to go; base contrast is already ~16:1, and stepping one
+       notch toward the middle still leaves ~13:1. Named ramp steps, not
+       color-mix, so the two hover states are visibly different from each other. */
+    --graphite-accent-hover: var(--graphite-accent-800);
+    --graphite-accent-active: var(--graphite-accent-700);
+
+    --graphite-danger-hover: color-mix(in oklab, var(--graphite-danger) 88%, var(--graphite-tint-toward-dark));
+    --graphite-danger-active: color-mix(in oklab, var(--graphite-danger) 78%, var(--graphite-tint-toward-dark));
+
+    --graphite-info-hover: color-mix(in oklab, var(--graphite-info) 88%, var(--graphite-tint-toward-dark));
+    --graphite-info-active: color-mix(in oklab, var(--graphite-info) 78%, var(--graphite-tint-toward-dark));
+
+    /* success + warning carry a near-black foreground in dark and a white one in
+       light, so they are the two that get overridden per theme below. */
+    --graphite-success-hover: color-mix(in oklab, var(--graphite-success) 88%, var(--graphite-tint-toward-dark));
+    --graphite-success-active: color-mix(in oklab, var(--graphite-success) 78%, var(--graphite-tint-toward-dark));
+
+    --graphite-warning-hover: color-mix(in oklab, var(--graphite-warning) 88%, var(--graphite-tint-toward-dark));
+    --graphite-warning-active: color-mix(in oklab, var(--graphite-warning) 78%, var(--graphite-tint-toward-dark));
+}
+
+/* Dark flips success/warning only: there the fill is bright with a near-black
+   foreground, so it must lighten on hover to keep gaining contrast. */
+:root.dark,
+:root[data-theme="dark"] {
+    --graphite-success-hover: color-mix(in oklab, var(--graphite-success) 88%, var(--graphite-tint-toward-light));
+    --graphite-success-active: color-mix(in oklab, var(--graphite-success) 78%, var(--graphite-tint-toward-light));
+
+    --graphite-warning-hover: color-mix(in oklab, var(--graphite-warning) 88%, var(--graphite-tint-toward-light));
+    --graphite-warning-active: color-mix(in oklab, var(--graphite-warning) 78%, var(--graphite-tint-toward-light));
+}
+
 /* ---- THEME (static, inline) ------------------------------------------- */
 @theme static inline {
-    /* Ring defaults */
-    --default-ring-width: 6px;
+    /* Focus ring. Was 6px, which drew a wide near-invisible halo. */
+    --default-ring-width: 2px;
+
     /* typography */
     --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+
+    /* radius scale. Controls use md, containers lg, dialog xl. */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
     /* transitions */
     --default-transition-duration: .15s;
     --transition-property-colors-opacity: color, background-color, border-color, text-decoration-color, fill, stroke, opacity;
     --transition-property-colors-transform-opacity: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, transform;
+
     /* shadows */
     --shadow-xs: var(--graphite-shadow-xs);
     --shadow-sm: var(--graphite-shadow-sm);
     --shadow-md: var(--graphite-shadow-md);
-    --shadow-xl: var(--graphite-shadow-lg);
+    --shadow-lg: var(--graphite-shadow-lg);
+    --shadow-xl: var(--graphite-shadow-xl);
     --shadow-2xl: var(--graphite-shadow-2xl);
-    /*Page colors*/
+
+    /* ==== ROLE TOKENS =======================================================
+       The complete color vocabulary components are allowed to use. Every token
+       here names an INTENT and binds it to a primitive; the primitives above are
+       the palette and are NOT part of the vocabulary.
+
+       This is what keeps color work out of C#. Retuning a role — "disabled text
+       should be lighter", "the switch track needs one more step", "Secondary
+       wants a stronger edge" — is a one-line edit in this block. No class string
+       changes, no library rebuild, no NuGet republish.
+
+       The numbered ramps (`neutral-*`, `overlay-*`, `accent-<n>`) are deliberately
+       NOT aliased into `--color-*`. If a component needs a step, that step needs a
+       role name first. ==================================================== */
+
+    /* ---- Page ---- */
     --color-background: var(--graphite-background);
     --color-foreground: var(--graphite-foreground);
-    /* Surfaces (semantic) */
+
+    /* ---- Surfaces (semantic elevation steps) ---- */
     --color-surface1: var(--graphite-surface1);
     --color-surface1-foreground: var(--graphite-surface1-foreground);
     --color-surface2: var(--graphite-surface2);
     --color-surface2-foreground: var(--graphite-surface2-foreground);
+    --color-surface3: var(--graphite-surface3);
+    --color-surface3-foreground: var(--graphite-surface3-foreground);
     --color-divider: var(--graphite-divider);
+    --color-scrim: var(--graphite-scrim);
+
+    /* ---- Content. `foreground` is body text; these are the quieter steps. ---- */
+    --color-muted-foreground: var(--graphite-neutral-60);
+    --color-subtle-foreground: var(--graphite-neutral-50);
+    --color-disabled-foreground: var(--graphite-neutral-30);
+
+    /* ---- Surface states. Alpha tints, so they composite over whatever is
+            behind them and step the same direction in both themes. ---- */
+    --color-surface-hover: var(--graphite-neutral-10);
+    --color-surface-active: var(--graphite-neutral-15);
+    --color-disabled-surface: var(--graphite-neutral-5);
+    --color-selected: var(--graphite-accent-subtle);
+    --color-selected-foreground: var(--graphite-accent-subtle-foreground);
+    --color-skeleton: var(--graphite-neutral-10);
+
+    /* ---- Borders. Two weights on purpose: `border` is a decorative hairline
+            for containers (~1.2:1), `control` is the 3:1 boundary WCAG 1.4.11
+            wants on anything interactive.
+
+            Names carry no `border-` prefix: Tailwind builds `border-X` from
+            `--color-X`, so a token named `--color-border-control` would compile
+            to `border-border-control`. The utility prefix supplies the property.
+            The focus border rides `--color-focus` below. ---- */
+    --color-border: var(--graphite-neutral-10);
+    --color-border-strong: var(--graphite-neutral-20);
+    --color-control: var(--graphite-control-border);
+    --color-control-hover: var(--graphite-foreground);
+    --color-disabled: var(--graphite-neutral-10);
+    --color-invalid: var(--graphite-danger);
+
+    /* ---- Controls: checkbox, radio, switch. Split from the accent tone so a
+            rebrand can leave the controls alone, or vice versa. ---- */
+    --color-control-track: var(--graphite-neutral-10);
+    --color-control-track-hover: var(--graphite-neutral-15);
+    --color-control-thumb: var(--graphite-neutral-60);
+    --color-control-thumb-disabled: var(--graphite-neutral-30);
+    --color-control-checked: var(--graphite-accent);
+    --color-control-checked-hover: var(--graphite-accent-hover);
+    --color-control-checked-foreground: var(--graphite-accent-foreground);
+
+    /* ---- Focus ---- */
     --color-focus: var(--graphite-focus);
-    /* PRIMARY */
-    --color-primary: var(--graphite-primary);
-    --color-primary-1: var(--graphite-primary-1);
-    --color-primary-5: var(--graphite-primary-5);
-    --color-primary-10: var(--graphite-primary-10);
-    --color-primary-15: var(--graphite-primary-15);
-    --color-primary-20: var(--graphite-primary-20);
-    --color-primary-30: var(--graphite-primary-30);
-    --color-primary-50: var(--graphite-primary-50);
-    --color-primary-60: var(--graphite-primary-60);
-    --color-primary-70: var(--graphite-primary-70);
-    --color-primary-foreground: var(--graphite-primary-foreground);
-    /* SECONDARY */
-    --color-secondary-5: var(--graphite-secondary-5);
-    --color-secondary-6: var(--graphite-secondary-6);
-    --color-secondary-10: var(--graphite-secondary-10);
-    --color-secondary-15: var(--graphite-secondary-15);
-    --color-secondary-20: var(--graphite-secondary-20);
-    --color-secondary-30: var(--graphite-secondary-30);
-    --color-secondary-40: var(--graphite-secondary-40);
-    --color-secondary-80: var(--graphite-secondary-80);
-    --color-secondary-90: var(--graphite-secondary-90);
-    --color-secondary: var(--graphite-secondary);
-    --color-secondary-foreground: var(--graphite-secondary-foreground);
+    --color-focus-invalid: var(--graphite-danger);
+
+    --color-shimmer-from: var(--graphite-shimmer-from);
+    --color-shimmer-via: var(--graphite-shimmer-via);
+
+    /* ---- SECONDARY tone (ThemeColor.Secondary). Built from the neutral overlay
+            ramp, and the one solid tone that draws a visible edge — its fill sits
+            ~1.2–1.4:1 from the page, so the border is what gives it a shape. ---- */
+    --color-secondary: var(--graphite-neutral-10);
+    --color-secondary-hover: var(--graphite-neutral-15);
+    --color-secondary-active: var(--graphite-neutral-20);
+    --color-secondary-foreground: var(--graphite-foreground);
+    --color-secondary-border: var(--graphite-neutral-20);
+    --color-secondary-border-hover: var(--graphite-neutral-30);
+    --color-secondary-subtle: var(--graphite-surface2);
+    --color-secondary-subtle-foreground: var(--graphite-surface2-foreground);
+    --color-secondary-border-subtle: var(--graphite-neutral-15);
+    --color-secondary-indicator: var(--graphite-neutral-50);
+
+    /* ---- ACCENT tone (ThemeColor.Primary). The ramp steps are primitives; only
+            the resolved tone is exposed. ---- */
+    --color-accent: var(--graphite-accent);
+    --color-accent-hover: var(--graphite-accent-hover);
+    --color-accent-active: var(--graphite-accent-active);
+    --color-accent-foreground: var(--graphite-accent-foreground);
+    --color-accent-subtle: var(--graphite-accent-subtle);
+    --color-accent-subtle-foreground: var(--graphite-accent-subtle-foreground);
+    --color-accent-border: var(--graphite-accent-border);
+
     /* SUCCESS */
-    --color-success-400: var(--graphite-success-400);
-    --color-success-500: var(--graphite-success-500);
-    --color-success-600: var(--graphite-success-600);
     --color-success: var(--graphite-success);
+    --color-success-hover: var(--graphite-success-hover);
+    --color-success-active: var(--graphite-success-active);
     --color-success-foreground: var(--graphite-success-foreground);
+    --color-success-subtle: var(--graphite-success-subtle);
+    --color-success-subtle-foreground: var(--graphite-success-subtle-foreground);
+    --color-success-border: var(--graphite-success-border);
+
     /* WARNING */
-    --color-warning-400: var(--graphite-warning-400);
-    --color-warning-500: var(--graphite-warning-500);
-    --color-warning-600: var(--graphite-warning-600);
     --color-warning: var(--graphite-warning);
+    --color-warning-hover: var(--graphite-warning-hover);
+    --color-warning-active: var(--graphite-warning-active);
     --color-warning-foreground: var(--graphite-warning-foreground);
+    --color-warning-subtle: var(--graphite-warning-subtle);
+    --color-warning-subtle-foreground: var(--graphite-warning-subtle-foreground);
+    --color-warning-border: var(--graphite-warning-border);
+
     /* DANGER */
-    --color-danger-400: var(--graphite-danger-400);
-    --color-danger-500: var(--graphite-danger-500);
-    --color-danger-600: var(--graphite-danger-600);
     --color-danger: var(--graphite-danger);
+    --color-danger-hover: var(--graphite-danger-hover);
+    --color-danger-active: var(--graphite-danger-active);
     --color-danger-foreground: var(--graphite-danger-foreground);
+    --color-danger-subtle: var(--graphite-danger-subtle);
+    --color-danger-subtle-foreground: var(--graphite-danger-subtle-foreground);
+    --color-danger-border: var(--graphite-danger-border);
+
     /* INFO */
-    --color-info-400: var(--graphite-info-400);
-    --color-info-500: var(--graphite-info-500);
     --color-info: var(--graphite-info);
+    --color-info-hover: var(--graphite-info-hover);
+    --color-info-active: var(--graphite-info-active);
     --color-info-foreground: var(--graphite-info-foreground);
-    /* Typography sizes carried over as utilities: text-h1, text-h2, ... */
+    --color-info-subtle: var(--graphite-info-subtle);
+    --color-info-subtle-foreground: var(--graphite-info-subtle-foreground);
+    --color-info-border: var(--graphite-info-border);
+
+    /* ---- Type scale. Every size carries a line-height; the old scale defined
+            none outside label-*, so vertical rhythm drifted per component. ---- */
     --text-h1: 32px;
     --text-h1--font-weight: 700;
+    --text-h1--line-height: 1.2;
+    --text-h1--letter-spacing: -0.02em;
     --text-h2: 28px;
     --text-h2--font-weight: 700;
+    --text-h2--line-height: 1.25;
+    --text-h2--letter-spacing: -0.015em;
     --text-h3: 24px;
     --text-h3--font-weight: 600;
+    --text-h3--line-height: 1.3;
+    --text-h3--letter-spacing: -0.01em;
     --text-h4: 20px;
     --text-h4--font-weight: 600;
+    --text-h4--line-height: 1.35;
     --text-h5: 18px;
     --text-h5--font-weight: 600;
+    --text-h5--line-height: 1.4;
     --text-h6: 16px;
     --text-h6--font-weight: 600;
-    --text-header: 18px;
-    --text-header--font-weight: 600;
-    --text-medium: 16px;
-    --text-medium--font-weight: 500;
-    --text-large: 18px;
-    --text-large--font-weight: 600;
-    --text-regular: 16px;
-    --text-regular--font-weight: 500;
-    --text-small: 14px;
-    --text-small--font-weight: 500;
+    --text-h6--line-height: 1.45;
+
+    /* Body scale. Weight is 400 — the old body default was 500, which rendered
+       every piece of UI text semi-bold. */
+    --text-body-lg: 18px;
+    --text-body-lg--font-weight: 400;
+    --text-body-lg--line-height: 1.6;
+    --text-body: 16px;
+    --text-body--font-weight: 400;
+    --text-body--line-height: 1.6;
+    --text-body-sm: 14px;
+    --text-body-sm--font-weight: 400;
+    --text-body-sm--line-height: 1.5;
+    --text-caption: 12px;
+    --text-caption--font-weight: 400;
+    --text-caption--line-height: 1.4;
+
+    /* Eyebrow / section label */
     --text-heading: 14px;
     --text-heading--font-weight: 600;
+    --text-heading--line-height: 1.4;
     --text-heading--letter-spacing: 0.1em;
-    --text-label-large: 1.25rem;
-    --text-label-large--line-height: 1;
-    --text-label-large--font-weight: 400;
-    --text-label-large--letter-spacing: 0.00938em;
-    --text-label-small: 1.125rem;
-    --text-label-small--line-height: 1;
-    --text-label-small--font-weight: 400;
-    --text-label-small--letter-spacing: 0.00938em;
+
+    /* ---- DEPRECATED type aliases. Kept one version so consumer markup does
+            not break. `header`/`large` and `medium`/`regular` were duplicate
+            definitions of each other. Prefer the body-* scale above. ---- */
+    --text-regular: 16px;
+    --text-regular--font-weight: 400;
+    --text-regular--line-height: 1.6;
+    --text-medium: 16px;
+    --text-medium--font-weight: 500;
+    --text-medium--line-height: 1.6;
+    --text-large: 18px;
+    --text-large--font-weight: 400;
+    --text-large--line-height: 1.6;
+    --text-small: 14px;
+    --text-small--font-weight: 400;
+    --text-small--line-height: 1.5;
+    --text-header: 18px;
+    --text-header--font-weight: 600;
+    --text-header--line-height: 1.4;
+    --text-label-large: 16px;
+    --text-label-large--font-weight: 500;
+    --text-label-large--line-height: 1.5;
+    --text-label-small: 14px;
+    --text-label-small--font-weight: 500;
+    --text-label-small--line-height: 1.5;
+}
+
+/* `--opacity-*` is not a Tailwind v4 theme namespace, so the old
+   `opacity-disabled` class never compiled — five components relied on it for
+   their disabled state and rendered no dimming at all. Declare it explicitly. */
+@utility opacity-disabled {
+    opacity: 0.5;
 }
 
 /* ---- BASE -------------------------------------------------------------- */

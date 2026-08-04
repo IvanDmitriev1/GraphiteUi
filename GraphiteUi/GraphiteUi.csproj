@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>GraphiteUi</PackageId>
-    <Version>0.5</Version>
+    <Version>0.5.5</Version>
     <Authors>Ivan Dmitriev</Authors>
     <Description>GraphiteUi is a Blazor UI component library for SSR and interactive rendering modes.</Description>
     <PackageTags>blazor;ui;components;razor</PackageTags>
@@ -34,9 +34,13 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LinkDotNet.StringBuilder" Version="3.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.3" />
+    <PackageReference Include="LinkDotNet.StringBuilder" Version="3.4.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.10" />
     <PackageReference Include="TwMerge" Version="1.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <GraphiteUiStyleSource Include="Styles\*.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,65 +1,106 @@
-/* GraphiteUI — DARK tokens (semantic) */
-.dark {
+/* GraphiteUi — DARK theme primitives.
+   Only the values that differ from the light defaults in _theme.css live here.
+   State tokens (*-hover / *-active) are formulas defined once in _theme.css and
+   are NOT repeated: they resolve against whichever base is in scope.
+
+   Selector is :root-qualified on purpose. @import must come first in a CSS file,
+   so this block is parsed BEFORE the light defaults in _theme.css; a bare .dark
+   would tie :root on specificity and lose on source order. */
+:root.dark,
+:root[data-theme="dark"] {
+    /* ---- Page + surfaces (explicit, so elevation steps stay distinct).
+            Each surface must stay lighter than the page or elevation inverts, so
+            the steps move with the background. ---- */
     --graphite-background: #242424;
-    --graphite-foreground: #FFFFFF;
-    --graphite-divider: var(--graphite-primary-10);
-    --graphite-focus: var(--graphite-primary-15);
-    --graphite-surface1: var(--graphite-primary-10);
-    --graphite-surface1-foreground: var(--graphite-primary-foreground);
-    --graphite-surface2: #3A3A3A;
-    --graphite-surface2-foreground: #F0F0F0;
-    /* Primary */
-    --graphite-primary: rgba(255,255,255,0.10);
-    --graphite-primary-5: rgba(255,255,255,0.05);
-    --graphite-primary-10: rgba(255,255,255,0.10);
-    --graphite-primary-15: rgba(255,255,255,0.15);
-    --graphite-primary-20: rgba(255,255,255,0.20);
-    --graphite-primary-30: rgba(255,255,255,0.30);
-    --graphite-primary-50: rgba(255,255,255,0.50);
-    --graphite-primary-60: rgba(255,255,255,0.60);
-    --graphite-primary-70: rgba(255,255,255,0.70);
-    --graphite-primary-foreground: #FFFFFF;
-    /* Secondary */
-    --graphite-secondary: rgba(0,0,0,0.89);
-    --graphite-secondary-1: rgba(0,0,0,0.01);
-    --graphite-secondary-5: rgba(0,0,0,0.05);
-    --graphite-secondary-6: rgba(0,0,0,0.06);
-    --graphite-secondary-10: rgba(0,0,0,0.10);
-    --graphite-secondary-15: rgba(0,0,0,0.15);
-    --graphite-secondary-20: rgba(0,0,0,0.20);
-    --graphite-secondary-30: rgba(0,0,0,0.30);
-    --graphite-secondary-40: rgba(0,0,0,0.40);
-    --graphite-secondary-80: rgba(0,0,0,0.40);
-    --graphite-secondary-90: rgba(0,0,0,0.90);
-    --graphite-secondary-foreground: #000000;
-    /* Success */
-    --graphite-success-400: #009F23;
-    --graphite-success-500: #2ECE51;
-    --graphite-success-600: #00881E;
-    --graphite-success: var(--graphite-success-500);
+    --graphite-foreground: #FAFAFA;
+    --graphite-surface1: #2B2B2B;
+    --graphite-surface1-foreground: #FAFAFA;
+    --graphite-surface2: #333333;
+    --graphite-surface2-foreground: #FAFAFA;
+    --graphite-surface3: #3A3A3A;
+    --graphite-surface3-foreground: #FAFAFA;
+
+    /* ---- Neutral overlay ramp: white-on-dark ---- */
+    --graphite-neutral-5: rgba(255, 255, 255, 0.05);
+    --graphite-neutral-10: rgba(255, 255, 255, 0.10);
+    --graphite-neutral-15: rgba(255, 255, 255, 0.15);
+    --graphite-neutral-20: rgba(255, 255, 255, 0.20);
+    --graphite-neutral-30: rgba(255, 255, 255, 0.30);
+    --graphite-neutral-50: rgba(255, 255, 255, 0.50);
+    --graphite-neutral-60: rgba(255, 255, 255, 0.60);
+    --graphite-neutral-70: rgba(255, 255, 255, 0.70);
+    --graphite-neutral: rgba(255, 255, 255, 0.10);
+    --graphite-neutral-foreground: #FAFAFA;
+
+    /* ---- Inverse overlay ramp: black-on-dark ---- */
+    --graphite-overlay-5: rgba(0, 0, 0, 0.05);
+    --graphite-overlay-10: rgba(0, 0, 0, 0.10);
+    --graphite-overlay-15: rgba(0, 0, 0, 0.15);
+    --graphite-overlay-20: rgba(0, 0, 0, 0.20);
+    --graphite-overlay-30: rgba(0, 0, 0, 0.30);
+    --graphite-overlay-50: rgba(0, 0, 0, 0.50);
+    --graphite-overlay-90: rgba(0, 0, 0, 0.90);
+    --graphite-overlay: rgba(0, 0, 0, 0.90);
+    --graphite-overlay-foreground: #FAFAFA;
+
+    --graphite-divider: rgba(255, 255, 255, 0.10);
+    --graphite-scrim: rgba(0, 0, 0, 0.60);
+    --graphite-control-border: rgba(255, 255, 255, 0.42);
+
+    /* Skeleton shimmer sweep */
+    --graphite-shimmer-from: rgba(255, 255, 255, 0.02);
+    --graphite-shimmer-via: rgba(255, 255, 255, 0.10);
+
+    /* ---- Accent: inverted. Primary is a WHITE fill with near-black text here,
+            the mirror of the near-black fill in light. Emphasis comes from
+            lightness inversion against the page, not from a hue.
+            Ramp steps come from _theme.css and are shared. ---- */
+    --graphite-accent: var(--graphite-accent-50);
+    --graphite-accent-foreground: var(--graphite-accent-900);
+    --graphite-accent-hover: var(--graphite-accent-200);
+    --graphite-accent-active: var(--graphite-accent-300);
+
+    /* Subtle tone stays alpha-based so it composites over any surface. */
+    --graphite-accent-subtle: rgba(255, 255, 255, 0.12);
+    --graphite-accent-subtle-foreground: #FAFAFA;
+    --graphite-accent-border: rgba(255, 255, 255, 0.22);
+
+    --graphite-focus: #FAFAFA;
+
+    /* ---- Semantic fills.
+            success/warning keep a bright fill + near-black foreground (a green or
+            yellow dark enough for white text stops reading as green or yellow).
+            danger/info keep a mid fill + white foreground. ---- */
+    --graphite-success: #2ECE51;
     --graphite-success-foreground: #04170A;
-    /* Warning */
-    --graphite-warning-400: #D9AF20;
-    --graphite-warning-500: #FFD234;
-    --graphite-warning-600: #CBA112;
-    --graphite-warning: var(--graphite-warning-500);
+    --graphite-success-subtle: rgba(46, 206, 81, 0.16);
+    --graphite-success-subtle-foreground: #86EFAC;
+    --graphite-success-border: rgba(46, 206, 81, 0.32);
+
+    --graphite-warning: #FFD234;
     --graphite-warning-foreground: #2A1D00;
-    /* Danger */
-    --graphite-danger-400: #FF1515;
-    --graphite-danger-500: #BB2200;
-    --graphite-danger-600: #9F0000;
-    --graphite-danger: var(--graphite-danger-500);
+    --graphite-warning-subtle: rgba(255, 210, 52, 0.16);
+    --graphite-warning-subtle-foreground: #FDE68A;
+    --graphite-warning-border: rgba(255, 210, 52, 0.32);
+
+    --graphite-danger: #DC2626;
     --graphite-danger-foreground: #FFFFFF;
-    /* INFO */
-    --graphite-info-400: #3385FF;
-    --graphite-info-500: #0066FF;
-    --graphite-info: var(--graphite-info-500);
+    --graphite-danger-subtle: rgba(220, 38, 38, 0.18);
+    --graphite-danger-subtle-foreground: #FECACA;
+    --graphite-danger-border: rgba(220, 38, 38, 0.38);
+
+    --graphite-info: #2563EB;
     --graphite-info-foreground: #FFFFFF;
-    /* Shadows */
-    --graphite-shadow-xs: 0 0 2px 0 rgba(0,0,0,0.12), 0 1px 2px 0 rgba(0,0,0,0.14);
-    --graphite-shadow-sm: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.14);
-    --graphite-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --graphite-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --graphite-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --graphite-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --graphite-info-subtle: rgba(37, 99, 235, 0.18);
+    --graphite-info-subtle-foreground: #BFDBFE;
+    --graphite-info-border: rgba(37, 99, 235, 0.38);
+
+    /* ---- Shadows: a black shadow does almost nothing at #1A1A1A, so the dark
+            values are much heavier than the light ones. ---- */
+    --graphite-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.40);
+    --graphite-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.45), 0 1px 2px -1px rgba(0, 0, 0, 0.45);
+    --graphite-shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.50), 0 2px 4px -2px rgba(0, 0, 0, 0.45);
+    --graphite-shadow-lg: 0 12px 20px -4px rgba(0, 0, 0, 0.55), 0 4px 8px -4px rgba(0, 0, 0, 0.50);
+    --graphite-shadow-xl: 0 24px 32px -8px rgba(0, 0, 0, 0.60), 0 8px 12px -6px rgba(0, 0, 0, 0.50);
+    --graphite-shadow-2xl: 0 32px 64px -12px rgba(0, 0, 0, 0.70);
 }

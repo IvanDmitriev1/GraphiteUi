@@ -12,7 +12,7 @@ public static class BreadcrumbStyles
         .Add("inline-flex")
         .Add("items-center")
         .Add("gap-2")
-        .Add("text-small")
+        .Add("text-body-sm")
         .ToString();
 
     public static string ItemClass { get; } = new CssClassBuilder(stackalloc char[256])
@@ -22,7 +22,7 @@ public static class BreadcrumbStyles
         .ToString();
 
     public static string LinkClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("text-primary-60")
+        .Add("text-muted-foreground")
         .Add("transition-colors")
         .Add("hover:text-foreground")
         .ToString();
@@ -32,6 +32,6 @@ public static class BreadcrumbStyles
         .ToString();
 
     public static string SeparatorClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-primary-30")
+        .Add("text-subtle-foreground")
         .ToString();
 }

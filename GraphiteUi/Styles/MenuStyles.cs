@@ -6,12 +6,9 @@ public static class MenuStyles
 {
     public static string RootClass { get; } = PopupStyles.RootClass;
 
-    public static string TriggerClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add(PopupStyles.TriggerClass)
-        .Add("text-small")
-        .ToString();
+    public static string TriggerClass { get; } = PopupStyles.TriggerClass;
 
-    public static string ContentClass { get; } = new CssClassBuilder(stackalloc char[256])
+    public static string ContentClass { get; } = new CssClassBuilder(stackalloc char[896])
         .Add(PopupStyles.ContentClass)
         .Add("min-w-44")
         .ToString();
@@ -32,13 +29,12 @@ public static class MenuStyles
         .Add("rounded-md")
         .Add("px-2")
         .Add("text-left")
-        .Add("text-small")
-        .Add("outline-hidden")
+        .Add("text-body-sm")
+        .Add("cursor-pointer")
         .Add("transition-[background-color,color]")
         .Add(Utils.MotionReduceTransitionNone)
         .Add(ColorVariants.Surface.HoverBackground)
-        .Add("focus-visible:ring")
-        .Add("focus-visible:ring-primary-5")
+        .Add(Utils.FocusVisible)
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add(Utils.DisabledCursorDefault)

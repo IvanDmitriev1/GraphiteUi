@@ -23,8 +23,9 @@ public static class TooltipStyles
         .Add(ColorVariants.Surface.PopupBackground)
         .Add("px-2")
         .Add("py-1")
-        .Add("text-small")
-        .Add("shadow-sm")
+        .Add("text-body-sm")
+        .Add("shadow-md")
+        .Add("whitespace-nowrap")
         .Add("opacity-0")
         .Add("scale-[0.98]")
         .Add("transition-[opacity,transform]")
@@ -37,23 +38,32 @@ public static class TooltipStyles
         .Add("group-focus-within:scale-100")
         .ToString();
 
+    private static readonly string[] BubbleClassesByPlacement =
+    [
+        BuildBubbleClass("bottom-full mb-2", "left-0"),
+        BuildBubbleClass("bottom-full mb-2", "left-1/2 -translate-x-1/2"),
+        BuildBubbleClass("bottom-full mb-2", "right-0"),
+        BuildBubbleClass("top-full mt-2", "left-0"),
+        BuildBubbleClass("top-full mt-2", "left-1/2 -translate-x-1/2"),
+        BuildBubbleClass("top-full mt-2", "right-0")
+    ];
+
     public static string GetBubbleClass(UiTooltip tooltip)
     {
-        string verticalClass = tooltip.Bottom
-            ? "top-full mt-2"
-            : "bottom-full mb-2";
-
-        string alignClass = tooltip.Align switch
+        int alignIndex = tooltip.Align switch
         {
-            Align.Start => "left-0",
-            Align.End => "right-0",
-            _ => "left-1/2 -translate-x-1/2"
+            Align.Start => 0,
+            Align.End => 2,
+            _ => 1
         };
 
-        return CssClassBuilder.Empty()
+        return BubbleClassesByPlacement[(tooltip.Bottom ? 3 : 0) + alignIndex];
+    }
+
+    private static string BuildBubbleClass(string verticalClass, string alignClass) =>
+        CssClassBuilder.Empty()
             .Add(BubbleBaseClass)
             .Add(verticalClass)
             .Add(alignClass)
             .ToString();
-    }
 }

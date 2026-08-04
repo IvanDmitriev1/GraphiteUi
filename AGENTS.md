@@ -24,6 +24,7 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
   - Avoid speculative abstractions, unnecessary indirection, and premature optimization.
 
 ## Repo Map (what to touch)
+- `docs/API.md` - public API reference (components, parameters, services, theme tokens, known gaps). Read before writing GraphiteUi markup.
 - `GraphiteUi/` - Razor Class Library.
 - `GraphiteUi/Components/**` - components (`Ui*.razor` + `.razor.cs`), base types in `Components/Bases`.
 - `GraphiteUi/Styles/*.cs` - class strings and style variants.
@@ -56,7 +57,10 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - Keep class composition in `Styles/*.cs`, not inline in component markup.
 - Use `CssClassBuilder` (stackalloc-friendly) for class assembly.
 - Prefer precomputed class tables for variants (for example color by size matrices).
-- Merge consumer classes via `MergeRootClass` and `RootClassMergeCache` with injected `TwMerge`.
+- Merge consumer classes via `MergeRootClass` with injected `TwMerge`; return core classes directly when no consumer override exists.
+- **Role tokens only.** Class strings may name a role (`bg-surface-hover`, `text-muted-foreground`, `border-control`, `bg-control-checked`) and never a numbered ramp step (`bg-neutral-10`, `text-accent-700`) or a raw `--graphite-*` primitive. The ramps are the palette; the roles are the vocabulary. A build warning (`GRAPHITE001`, defined in `GraphiteUi.csproj`) enforces this, including inside comments — Tailwind scans these files as plain text, so a step named in a comment still compiles a utility.
+- Need a look the vocabulary does not cover? Add a role token to the `@theme` block in `Styles/_theme.css` and bind it to a primitive there. Do not reach for a step. This is what keeps a color retune a one-line CSS edit instead of a library rebuild and a NuGet republish.
+- Naming a new role: Tailwind derives `bg-X`/`text-X`/`border-X`/`ring-X` from one `--color-X`, so the token name must exclude the property prefix. A border role is `--color-control` (utility `border-control`), never `--color-border-control` — that compiles to `border-border-control` and leaves `border-control` undefined with no error. Verify the utility actually appears in the generated `GraphiteUi.Docs/GraphiteUi.Docs/wwwroot/app.css` after adding one.
 
 ## JS and Rendering Modes
 - Put JS modules in `GraphiteUi/wwwroot/js`.
@@ -79,8 +83,8 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 ## Performance and Allocation Discipline
 - Avoid per-render string interpolation for classes.
 - Prefer stackalloc + `CssClassBuilder`/`ValueStringBuilder` patterns.
-- Reuse cached merges through `RootClassMergeCache`.
-- Keep TwMerge cache lean (`AddGraphiteUi` config currently sets cache size to 1).
+- Use precomputed static class strings and finite variant tables; rely on TwMerge bounded LRU only for consumer overrides.
+- Keep TwMerge cache bounded; `AddGraphiteUi` defaults to cache size 500 and honors callback overrides.
 - Minimize unnecessary `StateHasChanged` calls.
 - Use `UiDebouncedInputBase` for debounced input behavior where applicable.
 
@@ -112,3 +116,4 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - Non-idempotent JS initialization causing duplicate listeners.
 - Missing boolean attribute normalization (`ToAttributeValue()`).
 - Adding new interop modules without wiring `GraphiteUi.lib.module.js` refresh hooks.
+

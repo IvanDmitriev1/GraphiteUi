@@ -2,7 +2,6 @@ using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
 using GraphiteUi.Extensions;
 using GraphiteUi.Styles;
-using GraphiteUi.Utilities;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -19,5 +18,5 @@ public partial class UiToast : UiComponentBase
     private int DurationMs => Math.Max(0, Options.DurationMs ?? 0);
     private string AriaLive => Color == ThemeColor.Danger ? "assertive" : "polite";
     private protected string RootClass =>
-        RootClassMergeCache.GetOrAdd(TwMerge, ToastStyles.ItemClass, Options.Class);
+        Merge(ToastStyles.ItemClass, Options.Class);
 }

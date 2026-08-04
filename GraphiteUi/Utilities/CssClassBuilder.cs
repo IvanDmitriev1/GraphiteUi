@@ -54,10 +54,12 @@ public ref struct CssClassBuilder
 
     private void AppendWithLeadingSpace(scoped ReadOnlySpan<char> value)
     {
+        value = value.Trim();
+
         if (value.IsEmpty)
             return;
 
-        if (_stringBuilder.Length > 0 && value[^1] != ' ')
+        if (_stringBuilder.Length > 0)
             _stringBuilder.Append(' ');
 
         _stringBuilder.Append(value);

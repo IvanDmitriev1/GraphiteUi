@@ -11,7 +11,7 @@ public static class CheckBoxStyles
         .Add("group")
         .Add("max-w-fit")
         .Add(Utils.InlineFlexStart)
-        .Add("gap-1.5")
+        .Add("gap-2")
         .Add("flex-shrink-0")
         .Add("outline-hidden")
         .Add("cursor-pointer")
@@ -32,44 +32,47 @@ public static class CheckBoxStyles
     public static string ControlClass { get; } = new CssClassBuilder(stackalloc char[1024])
         .Add("relative")
         .Add(Utils.InlineFlexCentered)
-        .Add("size-8")
-        .Add("rounded-md")
+        // Was size-8 (32px) against a 20px radio — the two controls did not match.
+        .Add("size-5")
+        .Add("shrink-0")
+        .Add("rounded-sm")
         .Add("border")
-        .Add("border-primary-15")
-        .Add("bg-primary-10")
+        .Add(ColorVariants.Border.Control)
+        .Add("bg-surface1")
         .Add("text-transparent")
         .Add("select-none")
         .Add("transition-[background-color,border-color,color,box-shadow]")
         .Add(Utils.MotionReduceTransitionNone)
         // static -> hovered
-        .Add("group-hover:bg-primary-15")
-        .Add("group-hover:border-primary-20")
-        // checked state (driven by native input)
-        .Add("peer-checked:bg-primary-foreground")
-        .Add("peer-checked:border-primary-foreground")
-        .Add("peer-checked:text-secondary-foreground")
+        .Add(ColorVariants.Border.GroupControlHover)
+        // checked state (driven by native input) — the accent, so a checked box
+        // reads as a deliberate selection instead of an unlabelled white square.
+        .Add("peer-checked:bg-control-checked")
+        .Add("peer-checked:border-control-checked")
+        .Add("peer-checked:text-control-checked-foreground")
+        .Add("group-hover:peer-checked:bg-control-checked-hover")
+        .Add("group-hover:peer-checked:border-control-checked-hover")
         // validation state
-        .Add("data-[invalid=true]:border-danger-400")
+        .Add("data-[invalid=true]:border-invalid")
         // focus state
-        .Add("group-focus-within:ring")
-        .Add("peer-focus-visible:ring")
-        .Add("group-focus-within:ring-primary-5")
-        .Add("peer-focus-visible:ring-primary-5")
+        .Add("peer-focus-visible:ring-2")
+        .Add("peer-focus-visible:ring-focus")
+        .Add("peer-focus-visible:ring-offset-2")
+        .Add("peer-focus-visible:ring-offset-background")
         // disabled state
-        .Add("peer-disabled:bg-primary-5")
-        .Add("peer-disabled:border-primary-10")
-        .Add("peer-disabled:text-primary-20")
+        .Add(ColorVariants.Disabled.PeerBackground)
+        .Add(ColorVariants.Disabled.PeerBorder)
+        .Add(ColorVariants.Disabled.PeerForeground)
         .ToString();
 
     public static string IconClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("size-4")
+        .Add("size-3.5")
         .ToString();
 
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("text-regular")
+        .Add("text-body")
         .Add("text-foreground")
         .Add("leading-none")
-        .Add("peer-disabled:text-primary-30")
+        .Add(ColorVariants.Disabled.PeerForeground)
         .ToString();
 }
-
