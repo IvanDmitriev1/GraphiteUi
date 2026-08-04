@@ -71,17 +71,18 @@ public static class DrawerStyles
         .Add("gap-2")
         .ToString();
 
-    public static string GetPanelClass(UiDrawer drawer)
-    {
-        string placementClass = drawer.Side switch
-        {
-            Align.End => "right-0 translate-x-full",
-            _ => "left-0 -translate-x-full"
-        };
+    private static readonly string[] PanelClassesBySide =
+    [
+        BuildPanelClass("left-0 -translate-x-full"),
+        BuildPanelClass("right-0 translate-x-full")
+    ];
 
-        return CssClassBuilder.Empty()
+    public static string GetPanelClass(UiDrawer drawer) =>
+        PanelClassesBySide[drawer.Side == Align.End ? 1 : 0];
+
+    private static string BuildPanelClass(string placementClass) =>
+        CssClassBuilder.Empty()
             .Add(PanelBaseClass)
             .Add(placementClass)
             .ToString();
-    }
 }

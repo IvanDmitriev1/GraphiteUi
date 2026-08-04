@@ -20,7 +20,12 @@ internal static class DefaultUiInputFieldStyles
         .Add(CommonStyles.ControlFrameClass)
         .Add(ColorVariants.Border.ControlHover)
         .Add(Utils.FocusWithin)
-        .Add("focus-within:border-focus")
+        // The focus ring is the sole focus indicator. Keep the 1px border slot
+        // allocated, but make it transparent while the ring is active so focus
+        // cannot render as a second inner line.
+        .Add("focus-within:border-transparent")
+        .Add("focus-within:hover:border-transparent")
+        .Add("data-invalid:focus-within:border-transparent")
         .Add("data-invalid:border-invalid")
         .Add(ColorVariants.Ring.Invalid)
         .Add(ColorVariants.Disabled.Background)

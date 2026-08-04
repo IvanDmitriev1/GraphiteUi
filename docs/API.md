@@ -17,7 +17,7 @@ using GraphiteUI.Extensions;   // NOTE: capital "UI" — see Known gaps
 builder.Services.AddGraphiteUi();          // optional: AddGraphiteUi(cfg => ...) for TwConfig
 ```
 
-Registers `TwMerge` (cache size 1), scoped `IDialogService`, scoped `IToastService`.
+Registers `TwMerge` with bounded cache size 500 by default (customizable through `AddGraphiteUi` options), scoped `IDialogService`, scoped `IToastService`.
 Services are **scoped**, so call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` **and** `.Client/Program.cs` for an Auto/WASM app).
 
 `_Imports.razor`:

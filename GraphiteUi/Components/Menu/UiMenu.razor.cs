@@ -1,6 +1,5 @@
 using GraphiteUi.Components.Bases;
 using GraphiteUi.Styles;
-using GraphiteUi.Utilities;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -27,11 +26,11 @@ public partial class UiMenu : UiComponentBase
     private string RootClass => MergeRootClass(MenuStyles.RootClass);
 
     private string TriggerClassValue =>
-        RootClassMergeCache.GetOrAdd(TwMerge, MenuStyles.TriggerClass, TriggerClass);
+        Merge(MenuStyles.TriggerClass, TriggerClass);
 
     private string ContentClassValue =>
-        RootClassMergeCache.GetOrAdd(TwMerge, MenuStyles.ContentClass, ContentClass);
+        Merge(MenuStyles.ContentClass, ContentClass);
 
     private string BackdropClassValue =>
-        RootClassMergeCache.GetOrAdd(TwMerge, PopupStyles.BackdropClass, BackdropClass);
+        Merge(PopupStyles.BackdropClass, BackdropClass);
 }

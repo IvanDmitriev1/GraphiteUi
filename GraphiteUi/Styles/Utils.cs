@@ -44,11 +44,15 @@ public static class Utils
         .Add("focus-visible:ring-offset-background")
         .ToString();
 
+    /// <summary>
+    /// The single focus indicator for input wrappers: a 2px ring directly against
+    /// the control boundary. The input wrapper already owns a border, so an offset
+    /// would create a dark gap and make the focus state look like a double border.
+    /// </summary>
     public static readonly string FocusWithin = new CssClassBuilder(stackalloc char[192])
         .Add("outline-hidden")
         .Add("focus-within:z-10")
         .Add(ColorVariants.Ring.FocusWithin)
-        .Add("focus-within:ring-offset-2")
-        .Add("focus-within:ring-offset-background")
+        .Add("focus-within:ring-offset-0")
         .ToString();
 }

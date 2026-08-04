@@ -40,10 +40,12 @@ public abstract class UiComponentBase : ComponentBase, IUiComponent
     [Inject] internal TwMerge TwMerge { get; set; } = null!;
 
     private protected string MergeRootClass(string coreClasses) =>
-        RootClassMergeCache.GetOrAdd(TwMerge, coreClasses, Class);
+        Merge(coreClasses, Class);
 
     private protected string Merge(string first, string? second) =>
-        RootClassMergeCache.GetOrAdd(TwMerge, first, second);
+        string.IsNullOrWhiteSpace(second)
+            ? first
+            : TwMerge.Merge(first, second);
 
     /// <summary>
     /// Triggers a re-render of the component.

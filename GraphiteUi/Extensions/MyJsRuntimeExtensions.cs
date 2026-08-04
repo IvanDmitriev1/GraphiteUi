@@ -4,9 +4,6 @@ namespace GraphiteUi.Extensions;
 
 internal static class MyJsRuntimeExtensions
 {
-    public static ValueTask<IJSObjectReference> LoadModule(this IJSRuntime jsRuntime, string fileName)
-    {
-        return jsRuntime.InvokeAsync<IJSObjectReference>("import",
-            $"./_content/GraphiteUi/{fileName}");
-    }
+    public static ValueTask<IJSObjectReference> LoadModule(this IJSRuntime jsRuntime, string fileName) =>
+        jsRuntime.InvokeAsync<IJSObjectReference>("import", $"./_content/GraphiteUi/{fileName}");
 }

@@ -29,7 +29,7 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 ## Memory and Allocation Discipline
 - Do not build class strings with per-render interpolation in markup.
 - Compose classes with `CssClassBuilder` and size stackalloc buffers to expected output.
-- Merge consumer class overrides through `MergeRootClass` / `RootClassMergeCache`.
+- Merge consumer class overrides through `MergeRootClass`; return static core classes directly when no override exists.
 - Avoid per-render `new Dictionary<>` / `new List<>` in hot paths.
 - Avoid avoidable lambda captures in frequently rendered markup/event wiring.
 - Precompute variant class tables in style classes when combinations are finite.
@@ -71,7 +71,7 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 - [ ] Component structure follows direct-child-first approach and avoids convenience wrappers.
 - [ ] Nesting depth target is met (`<= 4`) or `5`-depth usage includes PR rationale.
 - [ ] No avoidable render-path allocations (dynamic class interpolation, repeated collection allocation).
-- [ ] Class composition is centralized in `Styles/*.cs` and merged via `MergeRootClass`/`RootClassMergeCache`.
+- [ ] Class composition is centralized in `Styles/*.cs` and merged via `MergeRootClass` with bounded TwMerge caching.
 - [ ] Interop setup is idempotent and does not create duplicate handlers/listeners.
 - [ ] SSR baseline behavior remains usable.
 - [ ] Accessibility semantics and keyboard behavior remain correct.
@@ -133,3 +133,4 @@ rg -n 'StateHasChanged\\(' GraphiteUi/Components
 # Lifecycle/interop touchpoints for review
 rg -n 'OnAfterRenderAsync|OnInitialized|JSDisconnectedException' GraphiteUi/Components
 ```
+

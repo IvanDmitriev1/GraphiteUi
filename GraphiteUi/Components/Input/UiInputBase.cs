@@ -1,5 +1,4 @@
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using TailwindMerge;
@@ -35,5 +34,7 @@ public abstract class UiInputBase<TValue> : InputBase<TValue>, IUiComponent
     protected internal bool IsInvalid => EditContext is not null && !EditContext.IsValid(FieldIdentifier);
 
     private protected string MergeRootClass(string coreClasses) =>
-        RootClassMergeCache.GetOrAdd(TwMerge, coreClasses, Class);
+        string.IsNullOrWhiteSpace(Class)
+            ? coreClasses
+            : TwMerge.Merge(coreClasses, Class);
 }
