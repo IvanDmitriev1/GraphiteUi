@@ -10,25 +10,24 @@ public partial class UiNumbox<TValue> : UiInputFieldBase<TValue>
     public static readonly bool IsFloatingPoint =
         default(TValue) is double or float or decimal;
 
-    protected override void OnInitialized()
+    protected override string? InputMode => AdditionalAttributes?.TryGetValue("inputmode", out var value) == true
+        ? Convert.ToString(value, CultureInfo.InvariantCulture)
+        : IsFloatingPoint ? "decimal" : "numeric";
+    protected override string? InputStep => AdditionalAttributes?.TryGetValue("step", out var value) == true
+        ? Convert.ToString(value, CultureInfo.InvariantCulture)
+        : IsFloatingPoint ? "any" : "1";
+
+    protected override void OnParametersSet()
     {
+        base.OnParametersSet();
         TypeString = "number";
-
-        var attr = new Dictionary<string, object>(AdditionalAttributes ??
-                                                  Enumerable.Empty<KeyValuePair<string, object>>())
-        {
-            ["inputmode"] = IsFloatingPoint ? "decimal" : "numeric",
-            ["step"] = "any"
-        };
-
-        AdditionalAttributes = attr;
     }
 
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
     {
         if (!string.IsNullOrWhiteSpace(value) &&
-            (TValue.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result) ||
-            TValue.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out result))
+            (TValue.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result) ||
+            TValue.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, out result))
         )
         {
             validationErrorMessage = null;

@@ -1,53 +1,53 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
 
 public abstract class UiDebouncedInputBase<TValue> : UiInputBase<TValue>
 {
-    /// <summary>
-    /// Gets or sets the delay, in milliseconds, for debouncing input events.
-    /// </summary>
     [Parameter] public int DebounceDelay { get; set; }
-
     private CancellationTokenSource? _cts;
+    private bool _disposed;
 
-    protected Task OnInputAsync(ChangeEventArgs args)
-    {
-        string? value = (string?)args.Value;
-
-        if (DebounceDelay > 0)
-        {
-            return DebounceAsync(value);
-        }
-
-        CurrentValueAsString = value;
-        return Task.CompletedTask;
-    }
+    protected Task OnInputAsync(ChangeEventArgs args) => DebounceAsync(args.Value as string);
 
     public async Task DebounceAsync(string? value)
     {
+        if (_disposed || Disabled || ReadOnly)
+            return;
+
         _cts?.Cancel();
-        _cts?.Dispose();
-
-        _cts = new CancellationTokenSource();
-        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(DebounceDelay));
-
-        while (await timer.WaitForNextTickAsync(_cts.Token))
+        if (DebounceDelay <= 0)
         {
-            // Debounce time has passed without further input; trigger the debounced event
             CurrentValueAsString = value;
-            break;
+            return;
+        }
+
+        using var cancellation = new CancellationTokenSource();
+        _cts = cancellation;
+        try
+        {
+            await Task.Delay(DebounceDelay, cancellation.Token);
+            if (!_disposed && !Disabled && !ReadOnly && ReferenceEquals(_cts, cancellation))
+                CurrentValueAsString = value;
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+            // A later keystroke or component disposal superseded this value.
+        }
+        finally
+        {
+            if (ReferenceEquals(_cts, cancellation))
+                _cts = null;
         }
     }
 
     protected override void Dispose(bool disposing)
     {
+        if (disposing)
+        {
+            _disposed = true;
+            _cts?.Cancel();
+        }
         base.Dispose(disposing);
-
-        if (!disposing) 
-            return;
-
-        _cts?.Cancel();
-        _cts?.Dispose();
     }
 }

@@ -29,10 +29,34 @@ public abstract partial class UiInputFieldBase<TValue> : UiDebouncedInputBase<TV
     /// </remarks>
     [Parameter] public Size Size { get; set; } = Size.Medium;
 
+    private readonly string _generatedId = $"graphite-input-{Guid.NewGuid():N}";
+    protected string InputId => AdditionalAttributes?.TryGetValue("id", out var id) == true
+        ? Convert.ToString(id, System.Globalization.CultureInfo.InvariantCulture) ?? _generatedId
+        : _generatedId;
+    protected string DescriptionId => InputId + "-description";
+    protected string? DescribedBy
+    {
+        get
+        {
+            var existing = AdditionalAttributes?.TryGetValue("aria-describedby", out var value) == true
+                ? Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)
+                : null;
+            return string.IsNullOrWhiteSpace(Description) ? existing
+                : string.IsNullOrWhiteSpace(existing) ? DescriptionId : existing + " " + DescriptionId;
+        }
+    }
+    protected string? AccessibleLabel => Label ?? GetAttributeText("aria-label");
+    protected virtual string? InputMode => GetAttributeText("inputmode");
+    protected virtual string? InputStep => GetAttributeText("step");
+
+    protected string? GetAttributeText(string name) => AdditionalAttributes?.TryGetValue(name, out var value) == true
+        ? Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)
+        : null;
+
     protected string TypeString { get; set; } = "text";
     protected virtual bool IsMultiline => false;
     protected virtual int TextareaRows => 4;
-    protected virtual string InputWrapperClass => DefaultUiInputFieldStyles.InputWrapperClass;
+    protected virtual string InputWrapperClass => DefaultUiInputFieldStyles.GetWrapperClass(Size);
     protected virtual string InputElementClass => DefaultUiInputFieldStyles.InputClass;
     protected virtual RenderFragment? TrailingContent => null;
 }

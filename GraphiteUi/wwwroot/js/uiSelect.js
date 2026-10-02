@@ -129,6 +129,8 @@ function setupSelect(root) {
     clearAwaitPopupReady(root);
 
     const selectId = ensureSelectId(root);
+    let querying = false;
+    let suppressFocusOpen = false;
 
     const getItems = () => Array.from(root.querySelectorAll(ITEM_SELECTOR));
     const getOpen = () => popup.isOpen();
@@ -216,7 +218,7 @@ function setupSelect(root) {
         clearButton.setAttribute('aria-disabled', disabled ? 'true' : 'false');
     };
 
-    const setSelected = (item) => {
+    const setSelected = (item, deferClearState = false) => {
         for (const option of getItems()) {
             const selected = option === item;
             option.setAttribute('data-selected', selected ? 'true' : 'false');
@@ -230,11 +232,17 @@ function setupSelect(root) {
             valueInput.value = '';
         }
 
-        updateClearState();
+        // Blazor delegates clicks at document level and ignores disabled buttons.
+        // Keep the clear button enabled until its current click has bubbled.
+        if (deferClearState) {
+            setTimeout(updateClearState, 0);
+        } else {
+            updateClearState();
+        }
     };
 
     const filterItems = () => {
-        const query = (input.value || '').trim().toLocaleLowerCase();
+        const query = querying ? (input.value || '').trim().toLocaleLowerCase() : '';
         let visibleCount = 0;
 
         for (const item of getItems()) {
@@ -305,6 +313,10 @@ function setupSelect(root) {
     };
 
     const handleInputFocus = () => {
+        if (suppressFocusOpen) {
+            suppressFocusOpen = false;
+            return;
+        }
         if (!canInteract()) {
             return;
         }
@@ -312,18 +324,12 @@ function setupSelect(root) {
         openAndPrepare();
     };
 
-    const handleInput = (event) => {
+    const handleInput = () => {
         if (!canInteract()) {
             return;
         }
 
-        const currentText = event.target.value || '';
-        const selected = getSelectedItem();
-
-        if (selected && (selected.getAttribute('data-text') || '') !== currentText) {
-            setSelected(null);
-        }
-
+        querying = true;
         openAndPrepare();
     };
 
@@ -360,6 +366,7 @@ function setupSelect(root) {
                 break;
 
             case 'Enter': {
+                event.preventDefault();
                 if (!getOpen()) {
                     openAndPrepare();
                     return;
@@ -367,7 +374,6 @@ function setupSelect(root) {
 
                 const target = getActiveItem() || getVisibleEnabledItems()[0];
                 if (target) {
-                    event.preventDefault();
                     target.click();
                 }
 
@@ -402,14 +408,17 @@ function setupSelect(root) {
         }
 
         input.value = '';
-        setSelected(null);
+        querying = false;
+        setSelected(null, true);
         filterItems();
         closePopup();
 
+        suppressFocusOpen = true;
         queueMicrotask(() => input.focus());
     };
 
     const handlePopupOpenChange = (event) => {
+        input.setAttribute('aria-expanded', event.detail?.open ? 'true' : 'false');
         if (event.detail?.open) {
             if (!getActiveItem()) {
                 activateDefaultItem();
@@ -419,9 +428,14 @@ function setupSelect(root) {
         }
 
         setActive(null);
+        querying = false;
+        const selected = getSelectedItem();
+        input.value = selected ? selected.getAttribute('data-text') || '' : '';
+        filterItems();
     };
 
     const refresh = () => {
+        querying = false;
         syncInitialSelection();
         filterItems();
         updateClearState();

@@ -1,0 +1,26 @@
+@layer theme, base, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@import "./_theme.css";
+@source "../Components";
+@source "./*.cs";
+
+/* Normalize library elements without resetting the consumer's page. */
+@layer base {
+    [data-slot] {
+        box-sizing: border-box;
+        border: 0 solid;
+    }
+
+    [data-slot][hidden]:not([hidden="until-found"]) {
+        display: none !important;
+    }
+
+    input[data-slot], textarea[data-slot], select[data-slot], button[data-slot] {
+        margin: 0;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        background: transparent;
+    }
+}

@@ -11,7 +11,7 @@
 		</ItemGroup>
 
 		<Copy SourceFiles="@(GraphiteUiThemeFiles)"
-		      DestinationFolder="$(GraphiteUiThemeDir)"
+		      DestinationFiles="@(GraphiteUiThemeFiles->'$(GraphiteUiThemeDir)/%(RecursiveDir)%(Filename)%(Extension)')"
 		      SkipUnchangedFiles="true" />
 	</Target>
 </Project>

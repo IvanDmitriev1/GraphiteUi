@@ -3,7 +3,7 @@
 Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 
 - Works in **static SSR**, **Interactive Server**, and **Interactive WebAssembly**. Most components render usable markup under static SSR and are enhanced by JS after load.
-- **No CSS ships with the package.** Every style is a Tailwind class string composed in C# (`Styles/*.cs`) via `CssClassBuilder` + `TwMerge`. Tailwind must scan those `.cs` files.
+- **Ready-to-use CSS ships with the package** at `_content/GraphiteUi/css/graphite-ui.css`. Add its stylesheet before application CSS. It contains library utilities without Tailwind preflight, so it does not reset the consuming application. Custom Tailwind class strings still require the consumer's own CSS build. Regenerate library CSS with `npm ci && npm run build:css`.
 - **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios and selects on `enhancedload`.
 - Namespaces: components/services in `GraphiteUi.Components`, enums in `GraphiteUi.Common`, style class constants in `GraphiteUi.Styles`.
 
@@ -37,7 +37,7 @@ Layout — both hosts need an interactive render mode:
 
 Missing host throws at call time: `InvalidOperationException("No DialogHost present. Place <DialogHost /> in your layout.")` (same shape for `UiToastHost`).
 
-Dark theme: `class="dark"` or `data-theme="dark"` on `<html>`. There is no light theme — see Known gaps.
+Dark theme: `class="dark"` or `data-theme="dark"` on `<html>`. Light theme is the default.
 
 ---
 
@@ -49,7 +49,7 @@ Dark theme: `class="dark"` or `data-theme="dark"` on `<html>`. There is no light
 | `Size` | `Small`, `Medium`, `Large` |
 | `Align` | `Start`, `Center`, `End` |
 | `AlignItems` | `None`, `Baseline`, `Center`, `Start`, `End`, `Stretch` |
-| `ButtonType` | `Button`, `Submit`, `Reset` (**`Reset` throws** — see Known gaps) |
+| `ButtonType` | `Button`, `Submit`, `Reset` (native HTML reset semantics) |
 | `InputType` | `Text`, `Password`, `Email` |
 | `ToastPlacement` | `TopRight`, `TopCenter`, `BottomRight` |
 
@@ -105,8 +105,8 @@ Plus Blazor's `Value`, `ValueChanged`, `ValueExpression` (`@bind-Value`), `Displ
 |---|---|---|---|
 | `Label` | `string?` | `null` | Floating label; also becomes `aria-label`. |
 | `Placeholder` | `string?` | `null` | Also forces the "active" (floated-label) state. |
-| `Description` | `string?` | `null` | **No-op** — never rendered. |
-| `Size` | `Size` | `Medium` | **No-op** — never consumed. |
+| `Description` | `string?` | `null` | Rendered below Textbox/Numbox/Select and linked with `aria-describedby`. |
+| `Size` | `Size` | `Medium` | Controls Textbox/Numbox height; Select retains its existing size. |
 
 Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three components is **not** TwMerge-merged.
 
@@ -237,7 +237,7 @@ Bind with `@bind-Value`. `TryParseValueFromString` throws `NotSupportedException
 | `CloseOnEscape` | `bool` | `true` |
 | `ShowBackdrop` | `bool` | `true` |
 
-The per-slot class/attribute parameters and `TriggerAs` **do not reach the popup** — see Known gaps.
+Per-slot classes, attributes and `TriggerAs` are forwarded to `UiPopup`.
 
 ### `UiMenuItem` — renders `<a>` when `Href` set, otherwise `<button>`
 
@@ -252,8 +252,8 @@ The per-slot class/attribute parameters and `TriggerAs` **do not reach the popup
 
 No own parameters. Surface = `UiInputFieldBase<TValue>` + `DebounceDelay` + `UiInputBase` + `InputBase`.
 
-- `OnInitialized` sets `type="number"` and **replaces** `AdditionalAttributes` with a copy carrying `inputmode` (`decimal` for float/double/decimal, else `numeric`) and `step="any"`.
-- Parses with `NumberStyles.Any`, InvariantCulture first then CurrentCulture. Formats with InvariantCulture.
+- Uses `type="number"`, default `inputmode` (`decimal` for float/double/decimal, else `numeric`) and default `step` (`any` for decimal types, `1` for integers). Caller attributes are retained; explicit `step` and `inputmode` take precedence.
+- Parses with `NumberStyles.Float` (no thousands grouping), InvariantCulture first then CurrentCulture. Formats with InvariantCulture.
 - `public static readonly bool IsFloatingPoint`.
 
 ### `UiPopup` — JS-driven (`wwwroot/js/uiPopup.js` reads the `data-*` attributes)
@@ -261,13 +261,15 @@ No own parameters. Surface = `UiInputFieldBase<TValue>` + `DebounceDelay` + `UiI
 | Parameter | Type | Default | Notes |
 |---|---|---|---|
 | `TriggerContent` / `ChildContent` | `RenderFragment?` | `null` | |
-| `TriggerAs` | `string` | `"button"` | **No-op** — razor uses a private const. |
-| `TriggerMode` | `string` | `"toggle"` | **No-op** — razor uses a private const. |
+| `TriggerAs` | `string` | `"button"` | Applied to the trigger element. |
+| `TriggerMode` | `string` | `"toggle"` | Controls toggle/open/none click behavior. |
 | `TriggerAttributes` | `IReadOnlyDictionary<string, object>?` | `null` | |
 | `Disabled` | `bool` | `false` | → `data-disabled` |
 | `CloseOnOutsideClick` | `bool` | `true` | → `data-close-outside` |
 | `CloseOnEscape` | `bool` | `true` | → `data-close-escape` |
 | `ShowBackdrop` | `bool` | `true` | → `data-show-backdrop` |
+
+`TriggerClass`, `ContentClass`, `BackdropClass`, `ContentAttributes` and `BackdropAttributes` are accepted and applied to the corresponding elements.
 
 Slots emitted: `data-slot="popup-root" | "popup-trigger" | "popup-backdrop" | "popup-content"`.
 
@@ -338,7 +340,7 @@ Same binding rule as `UiCheckbox`.
 
 | Parameter | Type | Default | Notes |
 |---|---|---|---|
-| `Type` | `InputType` | `Text` | Read once in `OnInitialized` — changing it later has no effect. |
+| `Type` | `InputType` | `Text` | Applied on parameter updates, including changes after first render. |
 
 ### `UiTooltip` — `As="span"`
 
@@ -768,19 +770,16 @@ Parameters that compile but do nothing, and behaviours that will surprise you. D
 
 | Item | Detail |
 |---|---|
-| `UiPopup` per-slot classes | `TriggerClass` / `ContentClass` / `BackdropClass` / `ContentAttributes` / `BackdropAttributes` **are not declared on `UiPopup`**. `UiMenu.razor:6-8,14-15` and `UiSelect.razor` pass them anyway, so they land in `AdditionalAttributes` and render as raw HTML attributes on the popup root. `UiMenu`'s `TriggerClassValue` / `ContentClassValue` / `BackdropClassValue` are effectively dead code. |
-| `UiPopup.TriggerAs` / `TriggerMode` | Declared but ignored — `UiPopup.razor:10,13` uses the private consts `TriggerAsValue = "button"` / `TriggerModeValue = "toggle"`. Also nullifies `UiSelect.razor`'s `TriggerAs="div"` / `TriggerMode="open"`. |
-| `UiInputFieldBase.Size` / `.Description` | Declared, never rendered. No-ops on `UiTextbox`, `UiNumbox`, `UiSelect`. |
+| `UiSelect.Size` | Select retains its existing dimensions; Size currently affects only Textbox/Numbox. |
 | `UiInputFieldBase.Class` | Applied raw (`class="@Class"`), **not** TwMerge-merged, unlike every `UiComponentBase` component. |
 | `UiDrawer.CloseOnEscape` | Never read — the drawer is pure CSS with no JS or data attribute. |
 | `UiDrawer` open state | No `Open` / `OpenChanged` parameter. `@bind-Open` compiles (falls into `AdditionalAttributes`) and silently does nothing. |
-| `ButtonType.Reset` | `ToHtmlValue()` throws `ArgumentOutOfRangeException` at render time — `Common/ButtonType.cs:32`. |
 | `UiSelect.UnregisterItem` | Empty body, so `UiSelectItem.Dispose()` is a no-op. |
-| `UiTextbox` / `UiNumbox` | `OnInitialized` does not call `base.OnInitialized()`. `UiTextbox.Type` is read once, so changing it after first render has no effect. `UiNumbox` **replaces** the caller's `AdditionalAttributes` instance. |
 | Namespace casing | `AddGraphiteUi` lives in `GraphiteUI.Extensions` (capital `UI`). `GraphiteUi.Extensions` (lowercase) is a *different*, real namespace of internal helpers — C# namespaces are case-sensitive, so the wrong one fails to resolve. |
 | No XML docs shipped | `GenerateDocumentationFile` is commented out in `GraphiteUi.csproj`, so the `///` comments never reach IntelliSense. This file is the reference. |
 
 ### Fixed in the design-system pass
 
 Recorded so the same ground is not re-audited: five components (`UiSwitch`, `UiRadio`, `UiPopup`, `UiSelect`, `UiDrawer`) rendered **no disabled state**, because `opacity-disabled` was never a real utility and compiled to nothing — it is now declared via `@utility`. `reduce-motion:` was the wrong prefix for `motion-reduce:`. `surface1` composited to exactly `surface2`'s value, so cards and popups were the same color. The focus ring was 6px of 5%-white (~1.1:1) and buttons drew it twice, once on `focus` rather than `focus-visible`. `-400` was darker than the base for success/warning but lighter for danger/info, so `hover:` changed direction per color. Placeholder colour sat on the wrapper `div`, where the `placeholder:` variant matched nothing, so Tailwind's preflight default applied (3.35:1 on light). The light theme did not exist. `--color-primary-1` aliased an undefined primitive, and `--shadow-xl` pointed at the `lg` primitive. `UiToast` passed a non-existent `AutoHideOnDismiss` parameter to `UiAlert`.
-| `GraphiteUi.Benchmarks` | Does not build (`CS5001: Program does not contain a static 'Main' method`). `dotnet build GraphiteUi.sln` fails on that project only; the library and docs app build clean. |
+
+See [ParcelStorage integration](parcelstorage.md) for the adapted development workflow and validation.

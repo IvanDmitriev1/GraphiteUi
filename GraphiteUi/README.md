@@ -45,3 +45,19 @@ builder.Services.AddGraphiteUi();
 ```
 
 Repository and docs: https://github.com/IvanDmitriev1/GraphiteUi
+
+## Styles
+
+Add this before your application stylesheet:
+
+```html
+<link rel="stylesheet" href="_content/GraphiteUi/css/graphite-ui.css" />
+```
+
+The package ships precompiled component utilities without a global CSS reset.
+Normal consumers do not need Node or Tailwind. For custom Tailwind utility classes,
+build consumer CSS as usual. Override GraphiteUi CSS primitives in app CSS to
+retune the palette. JS initializers are loaded by Blazor automatically.
+
+The `0.5.6-parcelstorage.2` version is a local integration build; it is not published
+by these changes. See the repository `docs/parcelstorage.md` for validation and packing.

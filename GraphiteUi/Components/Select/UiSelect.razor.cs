@@ -8,6 +8,7 @@ namespace GraphiteUi.Components;
 
 public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 {
+    private IReadOnlyDictionary<string, object>? RootAttributes { get; set; }
     private string _selectedText = string.Empty;
     private string? _lastValueAsString;
 
@@ -30,6 +31,13 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 
     protected override void OnParametersSet()
     {
+        base.OnParametersSet();
+        RootAttributes = AdditionalAttributes?.Where(pair =>
+            !pair.Key.Equals("id", StringComparison.OrdinalIgnoreCase)
+            && !pair.Key.Equals("aria-label", StringComparison.OrdinalIgnoreCase)
+            && !pair.Key.Equals("aria-describedby", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
+
         if (string.Equals(_lastValueAsString, CurrentValueAsString, StringComparison.Ordinal))
             return;
 
@@ -78,6 +86,8 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
 
     private void Clear()
     {
+        if (!CanClear)
+            return;
         _selectedText = string.Empty;
         CurrentValue = default!;
         _lastValueAsString = CurrentValueAsString;

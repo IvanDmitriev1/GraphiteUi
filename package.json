@@ -1,0 +1,11 @@
+{
+  "name": "graphiteui-assets",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i GraphiteUi/Styles/graphite-ui.css -o GraphiteUi/wwwroot/css/graphite-ui.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.1.13",
+    "tailwindcss": "4.1.13"
+  }
+}
