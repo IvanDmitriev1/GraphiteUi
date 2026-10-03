@@ -17,3 +17,10 @@ Blazor UI component library targeting .NET 10 with support for static SSR and in
 
 - GitHub Packages only: `https://nuget.pkg.github.com/<owner>/index.json`
 - Required GitHub Actions secret: `GH_PACKAGES_TOKEN`
+
+## ParcelStorage adaptation
+
+See [docs/parcelstorage.md](docs/parcelstorage.md). Component CSS is now included
+as a Razor static web asset. To regenerate it, run `npm ci && npm run build:css`.
+The docs app also uses the pinned npm Tailwind CLI, on all supported platforms.
+Normal consumers only need .NET.

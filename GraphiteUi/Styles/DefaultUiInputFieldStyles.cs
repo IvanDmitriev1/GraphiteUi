@@ -11,7 +11,6 @@ internal static class DefaultUiInputFieldStyles
         .Add("w-full")
         .Add("shadow-xs")
         .Add("cursor-text")
-        .Add("h-10 min-h-10")
         .Add("px-3")
         .Add("text-body")
         .Add("transition-[background-color,border-color,box-shadow]")
@@ -33,6 +32,19 @@ internal static class DefaultUiInputFieldStyles
         .Add(Utils.DisabledCursorDefault)
         .Add("data-disabled:border-transparent")
         .ToString();
+
+    private static readonly string SmallWrapperClass = InputWrapperClass + " h-8 min-h-8";
+    private static readonly string MediumWrapperClass = InputWrapperClass + " h-10 min-h-10";
+    private static readonly string LargeWrapperClass = InputWrapperClass + " h-12 min-h-12";
+
+    public static string GetWrapperClass(GraphiteUi.Common.Size size) => size switch
+    {
+        GraphiteUi.Common.Size.Small => SmallWrapperClass,
+        GraphiteUi.Common.Size.Large => LargeWrapperClass,
+        _ => MediumWrapperClass
+    };
+
+    public const string DescriptionClass = "mt-1 mb-0 text-body-sm text-muted-foreground";
 
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[512])
         .Add("absolute")

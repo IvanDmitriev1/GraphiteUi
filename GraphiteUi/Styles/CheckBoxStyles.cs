@@ -9,7 +9,8 @@ public static class CheckBoxStyles
         .Add("p-1 -m-1")
         .Add("relative")
         .Add("group")
-        .Add("max-w-fit")
+        .Add("max-w-full")
+        .Add("min-w-0")
         .Add(Utils.InlineFlexStart)
         .Add("gap-2")
         .Add("flex-shrink-0")
@@ -72,7 +73,7 @@ public static class CheckBoxStyles
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("text-body")
         .Add("text-foreground")
-        .Add("leading-none")
+        .Add("leading-normal")
         .Add(ColorVariants.Disabled.PeerForeground)
         .ToString();
 }

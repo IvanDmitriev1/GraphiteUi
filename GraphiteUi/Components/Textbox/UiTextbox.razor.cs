@@ -15,8 +15,9 @@ public partial class UiTextbox : UiInputFieldBase<string>
     [Parameter] public InputType Type { get; set; } = InputType.Text;
 
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
+        base.OnParametersSet();
         TypeString = Type.ToHtmlValue();
     }
 

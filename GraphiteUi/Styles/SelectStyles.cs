@@ -6,15 +6,16 @@ public static class SelectStyles
 {
     public static string RootClass { get; } = new CssClassBuilder(stackalloc char[384])
         .Add("group")
-        .Add("relative")
-        .Add("inline-flex")
         .Add("w-full")
-        .Add("flex-col")
-        .Add(Utils.DataDisabled)
+        .Add("min-w-0")
         .ToString();
+
+    public const string TriggerClass = "w-full min-w-0";
 
     public static string TriggerInputClass { get; } = new CssClassBuilder(stackalloc char[384])
         .Add("w-full")
+        .Add("min-w-0")
+        .Add("flex-1")
         .Add("bg-transparent")
         .Add("outline-none")
         .Add("appearance-none")

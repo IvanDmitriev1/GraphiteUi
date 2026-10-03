@@ -6,6 +6,8 @@ internal static class DialogStyles
 {
     public static string Classes { get; } = new CssClassBuilder(stackalloc char[512])
         .Add("p-6")
+        .Add("box-border")
+        .Add("overflow-auto")
         // Was `rounded` (4px) + `border-2` while every other container used
         // `rounded-lg` + a 1px border. Dialog is the largest surface, so it takes
         // the largest radius.

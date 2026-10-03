@@ -2,23 +2,26 @@
 @inherits UiInputBase<bool>
 
 <label class="@RootClass"
+       data-slot="checkbox"
        data-checked="@CurrentValue.ToAttributeValue()"
        data-disabled="@Disabled.ToAttributeValue()"
        data-invalid="@IsInvalid.ToAttributeValue()"
        data-readonly="@ReadOnly.ToAttributeValue()"
        @attributes="@AdditionalAttributes">
     <input type="checkbox"
+           data-slot="checkbox-input"
            class="@InputClass"
            value="true"
            checked="@CurrentValue"
            disabled="@Disabled"
-           aria-disabled="@Disabled"
-           aria-invalid="@IsInvalid"
-           aria-readonly="@ReadOnly"
+           aria-disabled="@Disabled.ToAttributeValue()"
+           aria-invalid="@IsInvalid.ToAttributeValue()"
+           aria-readonly="@ReadOnly.ToAttributeValue()"
            name="@NameAttributeValue"
            @onchange="@OnChangeAsync" />
 
     <span class="@ControlClass"
+          data-slot="checkbox-control"
           data-invalid="@IsInvalid.ToAttributeValue()"
           aria-hidden="true">
         <svg class="@IconClass"

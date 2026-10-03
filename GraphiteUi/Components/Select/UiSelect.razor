@@ -7,12 +7,20 @@
          Disabled="@(Disabled || ReadOnly)"
          TriggerMode="open"
          TriggerAs="div"
+         TriggerClass="@SelectStyles.TriggerClass"
          TriggerAttributes="@TriggerAttributes"
          data-select-root="true"
-         @attributes="@AdditionalAttributes">
+         @attributes="@RootAttributes">
 
     <TriggerContent>
-        <input type="text"
+        <input id="@InputId"
+               aria-label="@AccessibleLabel"
+               aria-describedby="@DescribedBy"
+               role="combobox"
+               aria-controls="@(InputId + "-options")"
+               aria-haspopup="listbox"
+               aria-autocomplete="list"
+               type="text"
                class="@SelectStyles.TriggerInputClass"
                data-slot="select-input"
                value="@SelectedText"
@@ -51,6 +59,8 @@
 
         <CascadingValue Value="this" IsFixed="true">
             <div class="@SelectStyles.ListClass"
+                 id="@(InputId + "-options")"
+                 role="listbox"
                  data-slot="select-list">
                 @ChildContent
             </div>
@@ -106,3 +116,8 @@
         </button>
     </ChildContent>
 </UiPopup>
+
+@if (!string.IsNullOrWhiteSpace(Description))
+{
+    <p id="@DescriptionId" class="@DefaultUiInputFieldStyles.DescriptionClass">@Description</p>
+}
