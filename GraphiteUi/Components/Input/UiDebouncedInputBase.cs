@@ -4,6 +4,10 @@ namespace GraphiteUi.Components;
 
 public abstract class UiDebouncedInputBase<TValue> : UiInputBase<TValue>
 {
+    /// <summary>
+    /// Gets or sets the delay, in milliseconds, for debouncing input events.
+    /// A non-positive delay commits the value immediately.
+    /// </summary>
     [Parameter] public int DebounceDelay { get; set; }
     private CancellationTokenSource? _cts;
     private bool _disposed;
@@ -22,17 +26,21 @@ public abstract class UiDebouncedInputBase<TValue> : UiInputBase<TValue>
             return;
         }
 
+        // Each invocation owns its token source until its wait completes.
+        // A newer input cancels the previous wait without disposing its source early.
         using var cancellation = new CancellationTokenSource();
         _cts = cancellation;
         try
         {
+            // Debounce needs one wait after the latest input, not recurring timer ticks.
             await Task.Delay(DebounceDelay, cancellation.Token);
             if (!_disposed && !Disabled && !ReadOnly && ReferenceEquals(_cts, cancellation))
                 CurrentValueAsString = value;
         }
         catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
         {
-            // A later keystroke or component disposal superseded this value.
+            // Superseded input and disposal are normal cancellation paths;
+            // do not propagate them to Blazor's event handler.
         }
         finally
         {

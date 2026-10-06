@@ -1,21 +1,61 @@
 <Project>
-  <PropertyGroup>
-    <GraphiteUiRepositoryRoot>$(MSBuildThisFileDirectory)../../</GraphiteUiRepositoryRoot>
-    <TailwindCliScript Condition="'$(TailwindCliScript)' == ''">$(GraphiteUiRepositoryRoot)node_modules/@tailwindcss/cli/dist/index.mjs</TailwindCliScript>
-    <TailwindInput>wwwroot/styles/app.css</TailwindInput>
-    <TailwindOutput>wwwroot/app.css</TailwindOutput>
-  </PropertyGroup>
-  <ItemGroup>
-    <TailwindInputs Include="$(MSBuildProjectDirectory)/wwwroot/styles/*.css" />
-    <TailwindInputs Include="$(GraphiteUiRepositoryRoot)GraphiteUi/Styles/*" />
-    <TailwindInputs Include="$(MSBuildProjectDirectory)/../GraphiteUi.Docs.Client/**/*.razor" />
-  </ItemGroup>
-  <Target Name="RunTailwind" BeforeTargets="PrepareForBuild"
-          DependsOnTargets="GraphiteUiDocs_CopyLocalThemeContents"
-          Condition="'$(DesignTimeBuild)' != 'true'"
-          Inputs="@(TailwindInputs);$(TailwindCliScript);$(MSBuildThisFileFullPath)"
-          Outputs="$(MSBuildProjectDirectory)/$(TailwindOutput)">
-    <Error Condition="!Exists('$(TailwindCliScript)')" Text="Run npm ci in the GraphiteUi repository before building the docs app." />
-    <Exec Command="node &quot;$(TailwindCliScript)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot; --minify" />
-  </Target>
+	<PropertyGroup>
+		<SolutionDir Condition="'$(SolutionDir)' == '' ">$(MSBuildThisFileDirectory)../../</SolutionDir>
+
+		<!-- Version -->
+		<TailwindVersion>v4.1.13</TailwindVersion>
+		<TailwindDir>$(ProjectDir)obj/</TailwindDir>
+
+		<!-- OS-specific binary name -->
+		<TailwindBinName Condition="'$(OS)' == 'Windows_NT'">tailwindcss.exe</TailwindBinName>
+		<TailwindBinName Condition="'$(OS)' != 'Windows_NT'">tailwindcss</TailwindBinName>
+
+		<!-- Full path to binary (CRUCIAL) -->
+		<TailwindBin>$(TailwindDir)$(TailwindBinName)</TailwindBin>
+
+		<!-- Single-line URLs (no newline/indent) -->
+		<TailwindUrl Condition="'$(OS)' == 'Windows_NT'">https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/tailwindcss-windows-x64.exe</TailwindUrl>
+		<TailwindUrl Condition="'$(OS)' != 'Windows_NT'">https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/tailwindcss-linux-x64</TailwindUrl>
+
+		<!-- Use full path to curl on Windows -->
+		<CurlExe Condition="'$(OS)' == 'Windows_NT'">%25SystemRoot%25\System32\curl.exe</CurlExe>
+		<CurlExe Condition="'$(OS)' != 'Windows_NT'">curl</CurlExe>
+
+		<!-- Your input/output -->
+		<TailwindInput>wwwroot/styles/app.css</TailwindInput>
+		<TailwindOutput>wwwroot/app.css</TailwindOutput>
+
+		<TailwindMinify Condition="'$(TailwindMinify)' == '' and '$(Configuration)' == 'Release'">true</TailwindMinify>
+		<TailwindMinify Condition="'$(TailwindMinify)' == ''">false</TailwindMinify>
+		<TailwindMinifyArg Condition="'$(TailwindMinify)' == 'true'"> --minify</TailwindMinifyArg>
+		<TailwindMinifyArg Condition="'$(TailwindMinify)' != 'true'"></TailwindMinifyArg>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\$(TailwindInput)" />
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\wwwroot\styles\**\*.css" />
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\..\GraphiteUi.Docs.Client\**\*.razor" />
+		<TailwindInputs Include="$(SolutionDir)GraphiteUi\Styles\**\*.cs" />
+		<TailwindInputs Include="$(SolutionDir)GraphiteUi\Styles\**\*.css" />
+	</ItemGroup>
+
+	<!-- Ensure CLI is present -->
+	<Target Name="EnsureTailwind"
+	        AfterTargets="Build;Publish"
+			Condition="'$(DesignTimeBuild)' != 'true' and !Exists('$(TailwindBin)')">
+		<Message Importance="High" Text="Downloading Tailwind CLI $(TailwindVersion) to $(TailwindBin)..." />
+		<MakeDir Directories="$(TailwindDir)" />
+		<Exec Command="&quot;$(CurlExe)&quot; -sSL -o &quot;$(TailwindBin)&quot; &quot;$(TailwindUrl)&quot;" />
+		<Exec Command="chmod +x &quot;$(TailwindBin)&quot;" Condition="'$(OS)' != 'Windows_NT'" />
+	</Target>
+
+	<!-- Build CSS with a FULL PATH to the binary -->
+	<Target Name="RunTailwind"
+			DependsOnTargets="EnsureTailwind;GraphiteUiDocs_CopyLocalThemeContents"
+			AfterTargets="Build;Publish"
+			Condition="'$(DesignTimeBuild)' != 'true'"
+			Inputs="@(TailwindInputs)"
+			Outputs="$(MSBuildProjectDirectory)\$(TailwindOutput)">
+		<Exec Command="&quot;$(TailwindBin)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot;$(TailwindMinifyArg)" />
+	</Target>
 </Project>

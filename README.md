@@ -22,5 +22,5 @@ Blazor UI component library targeting .NET 10 with support for static SSR and in
 
 See [docs/parcelstorage.md](docs/parcelstorage.md). Component CSS is now included
 as a Razor static web asset. To regenerate it, run `npm ci && npm run build:css`.
-The docs app also uses the pinned npm Tailwind CLI, on all supported platforms.
+The docs app downloads the standalone Tailwind CSS CLI through `Tailwindcss.targets`; its CSS build does not require Node.js or npm packages.
 Normal consumers only need .NET.
