@@ -10,6 +10,7 @@ public static class ButtonStyles
         .Add(Utils.InlineFlexCentered)
         .Add("min-w-max")
         .Add("font-medium")
+        .Add("no-underline")
         .Add("gap-1.5")
         .Add("appearance-none")
         .Add("select-none")

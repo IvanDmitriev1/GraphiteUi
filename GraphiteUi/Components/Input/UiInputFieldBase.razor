@@ -13,7 +13,7 @@
 
         @if (!string.IsNullOrEmpty(Label))
         {
-            <label class="@DefaultUiInputFieldStyles.LabelClass"
+            <label for="@InputId" class="@DefaultUiInputFieldStyles.LabelClass"
                    data-slot="label">
                 @Label
             </label>
@@ -21,35 +21,43 @@
 
         @if (IsMultiline)
         {
-            <textarea class="@InputElementClass"
+            <textarea @attributes="@AdditionalAttributes"
+                      id="@InputId"
+                      aria-describedby="@DescribedBy"
+                      aria-invalid="@IsInvalid.ToAttributeValue()"
+                      class="@InputElementClass"
                       placeholder="@Placeholder"
                       disabled="@Disabled"
                       readonly="@ReadOnly"
                       required="@Required"
-                      aria-disabled="@Disabled"
-                      aria-readonly="@ReadOnly"
-                      aria-label="@Label"
+                      aria-disabled="@Disabled.ToAttributeValue()"
+                      aria-readonly="@ReadOnly.ToAttributeValue()"
+                      aria-label="@AccessibleLabel"
                       name="@NameAttributeValue"
                       rows="@TextareaRows"
                       data-slot="input"
-                      @attributes="@AdditionalAttributes"
                       @oninput="@OnInputAsync">@CurrentValueAsString</textarea>
         }
         else
         {
-            <input type="@TypeString"
+            <input @attributes="@AdditionalAttributes"
+                   id="@InputId"
+                   aria-describedby="@DescribedBy"
+                   aria-invalid="@IsInvalid.ToAttributeValue()"
+                   inputmode="@InputMode"
+                   step="@InputStep"
+                   type="@TypeString"
                    class="@InputElementClass"
                    value="@CurrentValueAsString"
                    placeholder="@Placeholder"
                    disabled="@Disabled"
                    readonly="@ReadOnly"
                    required="@Required"
-                   aria-disabled="@Disabled"
-                   aria-readonly="@ReadOnly"
-                   aria-label="@Label"
+                   aria-disabled="@Disabled.ToAttributeValue()"
+                   aria-readonly="@ReadOnly.ToAttributeValue()"
+                   aria-label="@AccessibleLabel"
                    name="@NameAttributeValue"
                    data-slot="input"
-                   @attributes="@AdditionalAttributes"
                    @oninput="@OnInputAsync"/>
         }
 
@@ -61,4 +69,8 @@
             </span>
         }
     </div>
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <p id="@DescriptionId" class="@DefaultUiInputFieldStyles.DescriptionClass">@Description</p>
+    }
 </div>

@@ -29,6 +29,7 @@ public static class ButtonTypeExtensions
     {
         ButtonType.Button => "button",
         ButtonType.Submit => "submit",
+        ButtonType.Reset => "reset",
         _ => throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null)
     };
 }

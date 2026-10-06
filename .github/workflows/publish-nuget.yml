@@ -1,0 +1,57 @@
+name: Publish GraphiteUi to NuGet.org
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  nuget-org:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout merged commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/packages.lock.json', '**/NuGet.Config', '**/nuget.config', 'global.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore GraphiteUi.sln
+
+      - name: Build (Release)
+        run: dotnet build GraphiteUi.sln -c Release --no-restore
+
+      - name: Pack
+        run: dotnet pack GraphiteUi/GraphiteUi.csproj -c Release --no-build --no-restore -o ./artifacts
+
+      - name: NuGet login
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Publish to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push "./artifacts/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate

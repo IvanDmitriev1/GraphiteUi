@@ -1,10 +1,27 @@
 # GraphiteUi
 
-GraphiteUi is a Blazor UI component library for SSR and interactive rendering modes.
+GraphiteUi is a Blazor UI component library for static SSR and interactive rendering modes.
 
-## Package source setup (GitHub Packages)
+## Package feeds
 
-Create or update `nuget.config` with the GitHub Packages source and credentials:
+GitHub Actions publishes to two feeds:
+
+- **NuGet.org:** a pull request merged into `master` publishes the project's original `Version`, including a prerelease suffix. For example, `0.5.7-preview.1` remains `0.5.7-preview.1`.
+- **GitHub Packages:** pushes to `master` or `develop` publish a development package using `<major.minor.patch>-dev.<GITHUB_RUN_NUMBER>`. The workflow strips prerelease and build metadata from the evaluated project `Version`; for example, `0.5.7-preview.1` becomes `0.5.7-dev.42`. Direct pushes to `master` publish only this development package.
+
+Install the NuGet.org package:
+
+```bash
+dotnet add package GraphiteUi
+```
+
+For the current prerelease, request its version explicitly:
+
+```bash
+dotnet add package GraphiteUi --version 0.5.7-preview.1
+```
+
+To install a development build from GitHub Packages, add the source and credentials to `nuget.config`:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -22,12 +39,10 @@ Create or update `nuget.config` with the GitHub Packages source and credentials:
 </configuration>
 ```
 
-Use a PAT with `read:packages` scope (and `repo` if your package visibility/repo access requires it).
-
-## Install
+Use a GitHub token with `read:packages` (and `repo` if repository access is required), then install with:
 
 ```bash
-dotnet add package GraphiteUi --source "https://nuget.pkg.github.com/IvanDmitriev1/index.json"
+dotnet add package GraphiteUi --source "https://nuget.pkg.github.com/IvanDmitriev1/index.json" --prerelease
 ```
 
 ## Basic setup
@@ -45,3 +60,13 @@ builder.Services.AddGraphiteUi();
 ```
 
 Repository and docs: https://github.com/IvanDmitriev1/GraphiteUi
+
+## Styles
+
+Add this before your application stylesheet:
+
+```html
+<link rel="stylesheet" href="_content/GraphiteUi/css/graphite-ui.css" />
+```
+
+The package ships precompiled component utilities without a global CSS reset. Normal consumers do not need Node or Tailwind. For custom Tailwind utility classes, build consumer CSS as usual. Override GraphiteUi CSS primitives in app CSS to retune the palette. JS initializers are loaded by Blazor automatically.

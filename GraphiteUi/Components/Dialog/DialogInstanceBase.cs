@@ -42,6 +42,7 @@ internal abstract class DialogInstanceBase<TDialog> : IDialogInstance
         builder.AddAttribute(seq++, "style", $"z-index: {Id.Value + 100}");
         builder.AddAttribute(seq++, "id", Id.Value);
         builder.AddAttribute(seq++, "role", "dialog");
+        builder.AddAttribute(seq++, "data-slot", "dialog");
         builder.AddAttribute(seq++, "aria-modal", "true");
 
         builder.AddAttribute(seq++, "onclose", EventCallback.Factory.Create<EventArgs>(this, Close));

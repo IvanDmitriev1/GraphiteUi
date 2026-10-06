@@ -7,6 +7,7 @@ const BACKDROP_SELECTOR = '[data-slot="popup-backdrop"]';
 
 const POPUP_READY_EVENT = 'graphite:popup-ready';
 const POPUP_OPEN_CHANGE_EVENT = 'graphite:popup-open-change';
+const CLOSE_TRANSITION_BUFFER_MS = 50;
 
 let documentHandlersRegistered = false;
 
@@ -85,6 +86,7 @@ function destroyPopup(root) {
     }
 
     state.clearOpenAnimationFrame();
+    state.clearCloseTimer();
     state.trigger.removeEventListener('click', state.onTriggerClick);
     state.backdrop.removeEventListener('click', state.onBackdropClick);
 
@@ -123,6 +125,7 @@ function setupPopup(root) {
     registerDocumentHandlers();
 
     let openAnimationFrameId = 0;
+    let closeTimerId = 0;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const canInteract = () => !isTrue(root.getAttribute('data-disabled')) && !trigger.disabled;
@@ -141,12 +144,29 @@ function setupPopup(root) {
         openAnimationFrameId = 0;
     };
 
+    const clearCloseTimer = () => {
+        window.clearTimeout(closeTimerId);
+        closeTimerId = 0;
+    };
+
+    const getCloseDelay = () => {
+        const style = window.getComputedStyle(content);
+        const toMilliseconds = (value) => value.trim().endsWith('ms')
+            ? Number.parseFloat(value)
+            : Number.parseFloat(value) * 1000;
+        const durations = style.transitionDuration.split(',').map(toMilliseconds);
+        const delays = style.transitionDelay.split(',').map(toMilliseconds);
+        return Math.max(0, ...durations.map((duration, index) =>
+            duration + delays[index % delays.length])) + CLOSE_TRANSITION_BUFFER_MS;
+    };
+
     const hideElements = () => {
         content.hidden = true;
         backdrop.hidden = true;
     };
 
     const setOpen = (open, animate = true) => {
+        clearCloseTimer();
         const wasOpen = getOpen();
         const shouldOpen = open && canInteract();
 
@@ -154,6 +174,8 @@ function setupPopup(root) {
         trigger.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
 
         if (shouldOpen) {
+            content.inert = false;
+            content.removeAttribute('aria-hidden');
             clearOpenAnimationFrame();
 
             if (animate && !prefersReducedMotion && !wasOpen) {
@@ -203,6 +225,8 @@ function setupPopup(root) {
         }
 
         content.setAttribute('data-state', 'closed');
+        content.inert = true;
+        content.setAttribute('aria-hidden', 'true');
         backdrop.setAttribute('data-state', 'closed');
 
         clearOpenAnimationFrame();
@@ -217,6 +241,12 @@ function setupPopup(root) {
             return;
         }
 
+        closeTimerId = window.setTimeout(() => {
+            closeTimerId = 0;
+            if (!getOpen()) {
+                hideElements();
+            }
+        }, getCloseDelay());
         if (wasOpen !== shouldOpen) {
             dispatchOpenChange(root, false);
         }
@@ -273,6 +303,7 @@ function setupPopup(root) {
         onTriggerClick,
         onBackdropClick,
         clearOpenAnimationFrame,
+        clearCloseTimer,
         setOpen,
         getOpen,
         getCloseOnOutside,

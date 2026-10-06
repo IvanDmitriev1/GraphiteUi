@@ -20,7 +20,7 @@ public partial class UiSelectItem<TValue> : ComponentBase, IDisposable
 
     internal bool IsDisabled => Disabled || Parent.Disabled || Parent.ReadOnly;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         if (Parent is null)
         {
@@ -33,6 +33,8 @@ public partial class UiSelectItem<TValue> : ComponentBase, IDisposable
 
     private void OnClick()
     {
+        if (IsDisabled)
+            return;
         Parent.Select(Value, DisplayText);
     }
 

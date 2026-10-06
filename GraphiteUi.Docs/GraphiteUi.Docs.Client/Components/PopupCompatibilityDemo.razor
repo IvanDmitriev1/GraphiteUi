@@ -1,0 +1,18 @@
+<h1>Popup compatibility</h1>
+<p role="status">Rendering mode: @RendererInfo.Name</p>
+<UiPopup>
+    <TriggerContent>Open compatibility popup</TriggerContent>
+    <ChildContent>
+        <p>Popup content</p>
+        <UiButton OnClick="Choose">Choose option</UiButton>
+    </ChildContent>
+</UiPopup>
+<p role="status">@_result</p>
+
+<UiSelect TValue="string" Label="Compatibility choice" Placeholder="Choose location"
+          ClearText="Clear choice" @bind-Value="_selected">
+    <UiSelectItem TValue="string" Value='@("A-01")' Text="A-01" />
+    <UiSelectItem TValue="string" Value='@("A-02")' Text="A-02" />
+    <UiSelectItem TValue="string" Value='@("A-03")' Text="A-03" Disabled="true" />
+</UiSelect>
+<p role="status">Selected value: @(string.IsNullOrEmpty(_selected) ? "empty" : _selected)</p>
