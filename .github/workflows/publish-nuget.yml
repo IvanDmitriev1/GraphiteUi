@@ -1,28 +1,33 @@
 name: Publish GraphiteUi to NuGet.org
 
 on:
-  pull_request_target:
-    types:
-      - closed
-    branches:
-      - master
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
 
 jobs:
   nuget-org:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-      - name: Checkout merged commit
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+
+      - name: Require tagged commit on master
+        shell: bash
+        run: |
+          if ! git merge-base --is-ancestor HEAD origin/master; then
+            echo "::error::The tagged commit must be part of master before publishing."
+            exit 1
+          fi
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
