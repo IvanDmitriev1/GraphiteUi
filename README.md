@@ -10,7 +10,7 @@ Blazor UI component library targeting .NET 10, with support for static SSR and i
 GitHub Actions restores and builds the solution in Release on every branch push and pull request update. Package publishing uses two feeds:
 
 - **GitHub Packages development builds:** pushes to `master` or `develop` publish `<major.minor.patch>-dev.<GITHUB_RUN_NUMBER>`. The major, minor, and patch parts come from the evaluated `Version` in `GraphiteUi/GraphiteUi.csproj`; any prerelease or build metadata is removed. For example, `0.5.7-preview.1` publishes as `0.5.7-dev.42`. A direct push to `master` publishes only this development package.
-- **NuGet.org releases:** pushing a tag matching `v*` publishes the tagged commit using the original project `Version`, including any prerelease suffix. For example, push `v0.5.7-preview.1` for a commit whose project version is `0.5.7-preview.1`. Merging a pull request alone does not publish to NuGet.org.
+- **NuGet.org releases:** pushing a tag matching `v*` publishes only if the tagged commit belongs to `master` (its current tip or an ancestor). The package uses the original project `Version`, including any prerelease suffix. For example, push `v0.5.7-preview.1` for a commit on `master` whose project version is `0.5.7-preview.1`. Merging a pull request alone does not publish to NuGet.org.
 
 Install the NuGet.org package:
 

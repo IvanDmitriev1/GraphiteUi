@@ -6,7 +6,7 @@ GraphiteUi is a Blazor UI component library for static SSR and interactive rende
 
 GitHub Actions publishes to two feeds:
 
-- **NuGet.org:** pushing a tag matching `v*` publishes the tagged commit using the project's original `Version`, including a prerelease suffix. For example, push `v0.5.7-preview.1` for a commit whose project version is `0.5.7-preview.1`. Merging a pull request alone does not publish to NuGet.org.
+- **NuGet.org:** pushing a tag matching `v*` publishes only if the tagged commit belongs to `master` (its current tip or an ancestor). The package uses the project's original `Version`, including a prerelease suffix. For example, push `v0.5.7-preview.1` for a commit on `master` whose project version is `0.5.7-preview.1`. Merging a pull request alone does not publish to NuGet.org.
 - **GitHub Packages:** pushes to `master` or `develop` publish a development package using `<major.minor.patch>-dev.<GITHUB_RUN_NUMBER>`. The workflow strips prerelease and build metadata from the evaluated project `Version`; for example, `0.5.7-preview.1` becomes `0.5.7-dev.42`. Direct pushes to `master` publish only this development package.
 
 Install the NuGet.org package:
