@@ -1,0 +1,62 @@
+name: Publish GraphiteUi dev package
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  github-packages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/packages.lock.json', '**/NuGet.Config', '**/nuget.config', 'global.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore GraphiteUi.sln
+
+      - name: Compute development version
+        shell: bash
+        run: |
+          version="$(dotnet msbuild GraphiteUi/GraphiteUi.csproj -nologo -getProperty:Version)"
+          base_version="${version%%[-+]*}"
+
+          if [[ ! "$base_version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::Expected a SemVer major.minor.patch project Version, got: $version"
+            exit 1
+          fi
+
+          package_version="${base_version}-dev.${GITHUB_RUN_NUMBER}"
+          echo "PACKAGE_VERSION=$package_version" >> "$GITHUB_ENV"
+          echo "Using package version: $package_version (from project Version: $version)"
+
+      - name: Build (Release)
+        run: dotnet build GraphiteUi.sln -c Release --no-restore
+
+      - name: Pack
+        run: dotnet pack GraphiteUi/GraphiteUi.csproj -c Release --no-restore -p:Version="$PACKAGE_VERSION" -o ./artifacts
+
+      - name: Publish to GitHub Packages
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: dotnet nuget push "./artifacts/*.nupkg" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key "$GH_PACKAGES_TOKEN" --skip-duplicate

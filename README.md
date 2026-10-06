@@ -1,26 +1,42 @@
 # GraphiteUi
 
-Blazor UI component library targeting .NET 10 with support for static SSR and interactive rendering.
+Blazor UI component library targeting .NET 10, with support for static SSR and interactive rendering.
 
-- [docs/API.md](docs/API.md) - API reference: components and parameters, dialog/toast services, theme tokens, known gaps.
+- [docs/API.md](docs/API.md) - component and parameter reference, services, theme tokens, and known gaps.
 - [AGENTS.md](AGENTS.md) - contributor playbook and conventions.
 
-## Release flow (dev packages)
+## Builds and packages
 
-1. Update `<Version>` in `GraphiteUi/GraphiteUi.csproj` (base version only, for example `0.5`).
-2. Push to `master` or `develop`.
-3. GitHub Actions publishes a dev package to GitHub Packages using version:
-   - `<Version>-dev.<GITHUB_RUN_NUMBER>`
-   - Example: `0.5-dev.42`
+GitHub Actions restores and builds the solution in Release on every branch push and pull request update. Package publishing uses two feeds:
 
-### Publish target
+- **GitHub Packages development builds:** pushes to `master` or `develop` publish `<major.minor.patch>-dev.<GITHUB_RUN_NUMBER>`. The major, minor, and patch parts come from the evaluated `Version` in `GraphiteUi/GraphiteUi.csproj`; any prerelease or build metadata is removed. For example, `0.5.7-preview.1` publishes as `0.5.7-dev.42`. A direct push to `master` publishes only this development package.
+- **NuGet.org releases:** a pull request merged into `master` publishes the original project `Version`, including any prerelease suffix. For example, `0.5.7-preview.1` is published as `0.5.7-preview.1`.
 
-- GitHub Packages only: `https://nuget.pkg.github.com/<owner>/index.json`
-- Required GitHub Actions secret: `GH_PACKAGES_TOKEN`
+Install the NuGet.org package:
 
-## ParcelStorage adaptation
+```bash
+dotnet add package GraphiteUi
+```
 
-See [docs/parcelstorage.md](docs/parcelstorage.md). Component CSS is now included
-as a Razor static web asset. To regenerate it, run `npm ci && npm run build:css`.
-The docs app downloads the standalone Tailwind CSS CLI through `Tailwindcss.targets`; its CSS build does not require Node.js or npm packages.
-Normal consumers only need .NET.
+To install the current NuGet prerelease explicitly, use:
+
+```bash
+dotnet add package GraphiteUi --version 0.5.7-preview.1
+```
+
+Development builds are available from `https://nuget.pkg.github.com/IvanDmitriev1/index.json` and require a GitHub token with `read:packages` (and `repo` if repository access is required).
+
+```bash
+dotnet add package GraphiteUi --source "https://nuget.pkg.github.com/IvanDmitriev1/index.json" --prerelease
+```
+
+### Publishing setup
+
+Configure a NuGet.org trusted publishing policy for GitHub Actions with owner `IvanDmitriev1`, repository `GraphiteUi`, workflow file `publish-nuget.yml`, an empty environment, and package scope `GraphiteUi`. In GitHub repository settings, under **Secrets and variables > Actions**, add:
+
+- `NUGET_USER`: the NuGet.org profile username (not the email address) used by the trusted publishing policy.
+- `GH_PACKAGES_TOKEN`: the existing GitHub personal access token with `write:packages` (and `repo` if required by package visibility).
+
+The NuGet.org job uses OIDC through `NuGet/login@v1`; it does not need a long-lived NuGet API key.
+
+The library ships its component styles and JavaScript as package assets. Consumer applications need only .NET; the docs app uses the standalone Tailwind CLI target.

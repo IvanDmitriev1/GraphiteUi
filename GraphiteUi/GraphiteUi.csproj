@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>GraphiteUi</PackageId>
-    <Version>0.5.6-parcelstorage.2</Version>
+    <Version>0.5.7-preview.1</Version>
     <Authors>Ivan Dmitriev</Authors>
     <Description>GraphiteUi is a Blazor UI component library for SSR and interactive rendering modes.</Description>
     <PackageTags>blazor;ui;components;razor</PackageTags>
@@ -18,12 +18,6 @@
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
-
-	<!--<PropertyGroup>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-	</PropertyGroup>-->
 
 	<ItemGroup>
 		<None Include="GraphiteUi.targets" Pack="true" PackagePath="buildTransitive\GraphiteUi.targets" />
