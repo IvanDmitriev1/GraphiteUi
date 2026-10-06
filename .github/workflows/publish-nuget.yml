@@ -1,28 +1,23 @@
 name: Publish GraphiteUi to NuGet.org
 
 on:
-  pull_request_target:
-    types:
-      - closed
-    branches:
-      - master
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
 
 jobs:
   nuget-org:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-      - name: Checkout merged commit
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
