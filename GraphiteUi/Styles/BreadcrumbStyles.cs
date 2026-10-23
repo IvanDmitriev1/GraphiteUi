@@ -4,34 +4,15 @@ namespace GraphiteUi.Styles;
 
 public static class BreadcrumbStyles
 {
-    public static string RootClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("w-full")
-        .ToString();
+    public static string RootClass { get; } = "w-full";
 
-    public static string ListClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("gap-2")
-        .Add("text-body-sm")
-        .ToString();
+    public static string ListClass { get; } = "inline-flex items-center gap-2 text-body-sm";
 
-    public static string ItemClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("gap-2")
-        .ToString();
+    public static string ItemClass { get; } = "inline-flex items-center gap-2";
 
-    public static string LinkClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("text-muted-foreground")
-        .Add("transition-colors")
-        .Add("hover:text-foreground")
-        .ToString();
+    public static string LinkClass { get; } = "text-muted-foreground transition-colors hover:text-foreground";
 
-    public static string CurrentClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-foreground")
-        .ToString();
+    public static string CurrentClass { get; } = "text-foreground";
 
-    public static string SeparatorClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-subtle-foreground")
-        .ToString();
+    public static string SeparatorClass { get; } = "text-subtle-foreground";
 }

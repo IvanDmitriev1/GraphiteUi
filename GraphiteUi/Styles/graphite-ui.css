@@ -5,7 +5,7 @@
 @source "../Components";
 @source "./*.cs";
 
-/* Normalize library elements without resetting the consumer's page. */
+/* Normalize elements carrying GraphiteUi slot names. */
 @layer base {
     [data-slot] {
         box-sizing: border-box;
@@ -16,7 +16,10 @@
         display: none !important;
     }
 
-    input[data-slot], textarea[data-slot], select[data-slot], button[data-slot] {
+    input[data-slot],
+    textarea[data-slot],
+    select[data-slot],
+    button[data-slot] {
         margin: 0;
         padding: 0;
         font: inherit;

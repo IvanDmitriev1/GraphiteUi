@@ -2,18 +2,31 @@
 @using GraphiteUi.Components
 
 <EditForm EditContext="Context">
-    <UiTextbox @bind-Value="Model.Text" id="tracking" Label="Tracking" Description="Help text"
+    <UiTextbox @bind-Value="Model.Text" id="tracking" Label="Tracking" Description="Help text" Class="field-wrapper-probe px-2 px-4"
                aria-describedby="existing-help" />
     <UiNumbox @bind-Value="Model.Weight" id="weight" Label="Weight" step="0.01" min="0.01" />
     <UiTextbox @bind-Value="Model.Phone" id="phone" inputmode="tel" aria-label="Phone" />
     <UiSelect TValue="TestId?" @bind-Value="Model.Location" id="location" Label="Location" Description="Select help">
         <UiSelectItem TValue="TestId?" Value="LocationId" Text="A-01" />
     </UiSelect>
-    <UiPopup TriggerAs="div" TriggerMode="open" ContentClass="content-probe" TriggerClass="trigger-probe"
+    <UiButton id="merge-button" Class="px-2 px-4">Merged button</UiButton>
+    <UiCheckbox id="merge-input" Class="px-2 px-4" @bind-Value="Model.Checked" Disabled>Disabled input</UiCheckbox>
+    <UiPopup id="popup-root" Class="p-2 p-4" TriggerAs="div" TriggerMode="open"
+             ContentClass="content-probe p-2 p-4" TriggerClass="trigger-probe h-8" BackdropClass="z-30"
              ContentAttributes="ContentAttributes">
         <TriggerContent>Trigger</TriggerContent>
         <ChildContent>Popup content</ChildContent>
     </UiPopup>
+    <UiMenu id="menu-root" Class="menu-root-probe" TriggerClass="h-8" ContentClass="min-w-52 max-h-64"
+            BackdropClass="z-30" ContentAttributes="MenuContentAttributes" TriggerAttributes="MenuTriggerAttributes">
+        <TriggerContent>Menu trigger</TriggerContent>
+        <ChildContent>Menu content</ChildContent>
+    </UiMenu>
+    <UiMenu ContentAttributes="DefaultMenuContentAttributes">
+        <TriggerContent>Default menu</TriggerContent>
+        <ChildContent>Default content</ChildContent>
+    </UiMenu>
+    <UiToast Id="7" Options="SampleToast" AdditionalAttributes="ToastAttributes" />
 </EditForm>
 
 @code {
@@ -22,4 +35,13 @@
     private static readonly TestId LocationId = new(new Guid("11111111-1111-1111-1111-111111111111"));
     private static readonly IReadOnlyDictionary<string, object> ContentAttributes =
         new Dictionary<string, object> { ["aria-label"] = "Popup details" };
+    private static readonly ToastOptions SampleToast = new() { Title = "Toast", Class = "px-2 px-4" };
+    private static readonly IReadOnlyDictionary<string, object> ToastAttributes =
+        new Dictionary<string, object> { ["id"] = "merge-toast" };
+    private static readonly IReadOnlyDictionary<string, object> MenuContentAttributes =
+        new Dictionary<string, object> { ["id"] = "menu-content" };
+    private static readonly IReadOnlyDictionary<string, object> MenuTriggerAttributes =
+        new Dictionary<string, object> { ["id"] = "menu-trigger" };
+    private static readonly IReadOnlyDictionary<string, object> DefaultMenuContentAttributes =
+        new Dictionary<string, object> { ["id"] = "default-menu-content" };
 }

@@ -5,14 +5,9 @@ namespace GraphiteUi.Styles;
 internal static class DefaultUiInputFieldStyles
 {
     public static string InputWrapperClass { get; } = new CssClassBuilder(stackalloc char[768])
-        .Add("group")
-        .Add("relative")
+        .Add("group relative")
         .Add(Utils.InlineFlexStart)
-        .Add("w-full")
-        .Add("shadow-xs")
-        .Add("cursor-text")
-        .Add("px-3")
-        .Add("text-body")
+        .Add("w-full shadow-xs cursor-text px-3 text-body")
         .Add("transition-[background-color,border-color,box-shadow]")
         .Add(Utils.MotionReduceTransitionNone)
         .Add("has-[label]:mt-[calc(var(--text-body-sm)_+_10px)]")
@@ -33,9 +28,9 @@ internal static class DefaultUiInputFieldStyles
         .Add("data-disabled:border-transparent")
         .ToString();
 
-    private static readonly string SmallWrapperClass = InputWrapperClass + " h-8 min-h-8";
-    private static readonly string MediumWrapperClass = InputWrapperClass + " h-10 min-h-10";
-    private static readonly string LargeWrapperClass = InputWrapperClass + " h-12 min-h-12";
+    private static readonly string SmallWrapperClass = InputWrapperClass + " h-[var(--control-height-sm)] min-h-[var(--control-height-sm)]";
+    private static readonly string MediumWrapperClass = InputWrapperClass + " h-[var(--control-height-md)] min-h-[var(--control-height-md)]";
+    private static readonly string LargeWrapperClass = InputWrapperClass + " h-[var(--control-height-lg)] min-h-[var(--control-height-lg)]";
 
     public static string GetWrapperClass(GraphiteUi.Common.Size size) => size switch
     {
@@ -47,34 +42,16 @@ internal static class DefaultUiInputFieldStyles
     public const string DescriptionClass = "mt-1 mb-0 text-body-sm text-muted-foreground";
 
     public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[512])
-        .Add("absolute")
-        .Add("block")
-        .Add("origin-top-left")
-        .Add("pointer-events-none")
-        .Add("subpixel-antialiased")
-        .Add("pe-2")
-        .Add("max-w-full")
-        .Add("text-ellipsis")
+        .Add("absolute block origin-top-left pointer-events-none subpixel-antialiased pe-2 max-w-full text-ellipsis")
         .Add("transition-[transform,color,left,opacity,translate,scale]")
         .Add(Utils.MotionReduceTransitionNone)
-        .Add("z-20")
-        .Add("top-1/2")
-        .Add("-translate-y-1/2")
-        .Add("left-3")
-        .Add("text-body-sm")
-        .Add("text-muted-foreground")
-        .Add("group-data-active:left-0")
-        .Add("group-data-active:pointer-events-auto")
-        .Add("group-data-active:-translate-y-[calc(100%_+_var(--text-body-sm)/2_+_18px)]")
-        .Add("group-data-active:text-foreground")
-        .Add("group-focus-within:text-focus")
+        .Add("z-20 top-1/2 -translate-y-1/2 left-3 text-body-sm text-muted-foreground")
+        .Add("group-data-active:left-0 group-data-active:pointer-events-auto group-data-active:-translate-y-[calc(100%_+_var(--text-body-sm)/2_+_18px)] group-data-active:text-foreground group-focus-within:text-focus")
         .Add(ColorVariants.Disabled.GroupForeground)
         .ToString();
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("w-full")
-        .Add("bg-transparent")
-        .Add("outline-none")
+        .Add("w-full bg-transparent outline-none")
         // Must sit on the input itself. It used to be on the wrapper, where the
         // `placeholder:` variant matched nothing, so Tailwind's preflight default
         // (50% of currentColor) applied instead — 3.35:1 on the light theme.
@@ -82,9 +59,5 @@ internal static class DefaultUiInputFieldStyles
         .Add("group-data-[trailing=true]:pe-8")
         .ToString();
 
-    public static string InputTrailingClass { get; } = new CssClassBuilder(stackalloc char[192])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("shrink-0")
-        .ToString();
+    public static string InputTrailingClass { get; } = "inline-flex items-center shrink-0";
 }

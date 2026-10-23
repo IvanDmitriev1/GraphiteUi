@@ -4,9 +4,7 @@ namespace GraphiteUi.Styles;
 
 public static class Utils
 {
-    public static readonly string VisuallyHidden = new CssClassBuilder(stackalloc char[32])
-        .Add("sr-only")
-        .ToString();
+    public static readonly string VisuallyHidden = "sr-only";
 
     public const string InlineFlexCentered = "inline-flex items-center justify-center";
     public const string InlineFlexStart = "inline-flex items-center justify-start";
@@ -22,10 +20,7 @@ public static class Utils
     /// declared as a custom utility in <c>_theme.css</c>; before that it silently
     /// compiled to nothing.
     /// </summary>
-    public static readonly string Disabled = new CssClassBuilder(stackalloc char[128])
-        .Add("opacity-disabled")
-        .Add("pointer-events-none")
-        .ToString();
+    public static readonly string Disabled = "opacity-disabled pointer-events-none";
 
     /// <summary>Same as <see cref="Disabled"/>, driven by <c>data-disabled="true"</c>.</summary>
     public const string DataDisabled =
@@ -37,11 +32,9 @@ public static class Utils
     /// indicators and fires on mouse click as well as keyboard.
     /// </summary>
     public static readonly string FocusVisible = new CssClassBuilder(stackalloc char[192])
-        .Add("outline-hidden")
-        .Add("focus-visible:z-10")
+        .Add("outline-hidden focus-visible:z-10")
         .Add(ColorVariants.Ring.Focus)
-        .Add("focus-visible:ring-offset-2")
-        .Add("focus-visible:ring-offset-background")
+        .Add("focus-visible:ring-offset-2 focus-visible:ring-offset-background")
         .ToString();
 
     /// <summary>
@@ -50,8 +43,7 @@ public static class Utils
     /// would create a dark gap and make the focus state look like a double border.
     /// </summary>
     public static readonly string FocusWithin = new CssClassBuilder(stackalloc char[192])
-        .Add("outline-hidden")
-        .Add("focus-within:z-10")
+        .Add("outline-hidden focus-within:z-10")
         .Add(ColorVariants.Ring.FocusWithin)
         .Add("focus-within:ring-offset-0")
         .ToString();

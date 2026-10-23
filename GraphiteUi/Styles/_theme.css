@@ -1,4 +1,5 @@
 @import "./_dark";
+@import "./_skeleton";
 
 @custom-variant dark (&:where(.dark, [data-theme="dark"]));
 
@@ -9,6 +10,13 @@
    Everything a component consumes goes through the --color-* aliases in the
    @theme block below, never through --graphite-* directly. */
 :root {
+    --control-height-sm: calc(var(--spacing, 0.25rem) * 8);
+    --control-height-md: calc(var(--spacing, 0.25rem) * 10);
+    --control-height-lg: calc(var(--spacing, 0.25rem) * 12);
+    --popup-backdrop-duration: 220ms;
+    --popup-content-duration: 240ms;
+    --popup-easing: cubic-bezier(0.16, 1, 0.3, 1);
+
     /* Page + surfaces. Explicit values, not alpha overlays — that is what keeps
        surface1 and surface2 from composing to the same color. */
     --graphite-background: #FFFFFF;
@@ -413,15 +421,5 @@
         background: var(--color-background);
         color: var(--color-foreground);
         font-family: var(--font-family-sans);
-    }
-}
-
-@keyframes graphite-skeleton-shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
     }
 }

@@ -23,14 +23,6 @@ public partial class UiMenu : UiComponentBase
     [Parameter] public bool CloseOnEscape { get; set; } = true;
     [Parameter] public bool ShowBackdrop { get; set; } = true;
 
-    private string RootClass => MergeRootClass(MenuStyles.RootClass);
-
-    private string TriggerClassValue =>
-        Merge(MenuStyles.TriggerClass, TriggerClass);
-
     private string ContentClassValue =>
-        Merge(MenuStyles.ContentClass, ContentClass);
-
-    private string BackdropClassValue =>
-        Merge(PopupStyles.BackdropClass, BackdropClass);
+        Merge(MenuStyles.ContentDelta, ContentClass);
 }

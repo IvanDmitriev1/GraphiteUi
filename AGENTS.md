@@ -55,7 +55,9 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 
 ## Styling Rules
 - Keep class composition in `Styles/*.cs`, not inline in component markup.
-- Use `CssClassBuilder` (stackalloc-friendly) for class assembly.
+- Use plain string initializers for fixed, literal-only classes; preserve public property/field kinds. Use `CssClassBuilder` (stackalloc-friendly) when assembling shared fragments or conditional classes.
+- Keep internal class composition free of conflicting utilities. Share a common base and add the intended variant once; concatenation order does not resolve CSS conflicts.
+- Style helpers should accept the enum/boolean values they need rather than component instances. Preserve existing public component-taking overloads as forwarding methods when adding value-based overloads.
 - Prefer precomputed class tables for variants (for example color by size matrices).
 - Merge consumer classes via `MergeRootClass` with injected `TwMerge`; return core classes directly when no consumer override exists.
 - **Role tokens only.** Class strings may name a role (`bg-surface-hover`, `text-muted-foreground`, `border-control`, `bg-control-checked`) and never a numbered ramp step (`bg-neutral-10`, `text-accent-700`) or a raw `--graphite-*` primitive. The ramps are the palette; the roles are the vocabulary. A build warning (`GRAPHITE001`, defined in `GraphiteUi.csproj`) enforces this, including inside comments — Tailwind scans these files as plain text, so a step named in a comment still compiles a utility.

@@ -1,0 +1,113 @@
+@layer theme {
+    :root {
+        --skeleton-shimmer-image: linear-gradient(110deg, var(--color-shimmer-from) 0%, var(--color-shimmer-via) 50%, var(--color-shimmer-from) 100%);
+        --skeleton-shimmer-size: 200% 100%;
+        --skeleton-shimmer-animation: graphite-skeleton-shimmer 1.2s linear infinite;
+    }
+}
+
+@layer utilities {
+    .graphite-skeleton-mimic [data-slot=input-wrapper],
+    .graphite-skeleton-mimic [data-slot=popup-trigger] {
+        background-color: var(--color-skeleton);
+        background-image: var(--skeleton-shimmer-image);
+        background-size: var(--skeleton-shimmer-size);
+        animation: var(--skeleton-shimmer-animation);
+        border-color: transparent;
+        --tw-shadow: 0 0 #0000;
+        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+
+    .graphite-skeleton-mimic [data-slot=label] {
+        top: calc(var(--spacing) * 0) !important;
+        left: calc(var(--spacing) * 0) !important;
+        height: calc(var(--spacing) * 4) !important;
+        width: calc(var(--spacing) * 28) !important;
+        max-width: none !important;
+        --tw-translate-y: -24px !important;
+        translate: var(--tw-translate-x) var(--tw-translate-y) !important;
+        animation: var(--skeleton-shimmer-animation) !important;
+        overflow: hidden !important;
+        border-radius: var(--radius-md) !important;
+        background-color: var(--color-skeleton) !important;
+        background-image: var(--skeleton-shimmer-image) !important;
+        background-size: var(--skeleton-shimmer-size) !important;
+        padding-inline-end: calc(var(--spacing) * 0) !important;
+        color: transparent !important;
+    }
+
+    .graphite-skeleton-mimic [data-slot=input],
+    .graphite-skeleton-mimic [data-slot=select-input] {
+        background-color: transparent;
+        opacity: 0%;
+    }
+
+    .graphite-skeleton-mimic [data-slot=popup-content],
+    .graphite-skeleton-mimic [data-slot=popup-backdrop] {
+        display: none;
+    }
+
+    .graphite-skeleton-mimic button {
+        background-color: var(--color-skeleton);
+        background-image: var(--skeleton-shimmer-image);
+        background-size: var(--skeleton-shimmer-size);
+        animation: var(--skeleton-shimmer-animation);
+        border-color: transparent;
+        --tw-shadow: 0 0 #0000;
+        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+
+    .graphite-skeleton-mimic input,
+    .graphite-skeleton-mimic textarea,
+    .graphite-skeleton-mimic select,
+    .graphite-skeleton-mimic button,
+    .graphite-skeleton-mimic label,
+    .graphite-skeleton-mimic span,
+    .graphite-skeleton-mimic p,
+    .graphite-skeleton-mimic a,
+    .graphite-skeleton-mimic option {
+        color: transparent;
+    }
+
+    .graphite-skeleton-mimic textarea,
+    .graphite-skeleton-mimic select {
+        background-color: transparent;
+    }
+
+    .graphite-skeleton-mimic input::placeholder,
+    .graphite-skeleton-mimic textarea::placeholder {
+        color: transparent;
+    }
+
+    .graphite-skeleton-mimic input,
+    .graphite-skeleton-mimic textarea {
+        caret-color: transparent;
+    }
+
+    .graphite-skeleton-mimic svg,
+    .graphite-skeleton-mimic img {
+        opacity: 0%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .graphite-skeleton-mimic [data-slot=input-wrapper],
+        .graphite-skeleton-mimic [data-slot=popup-trigger],
+        .graphite-skeleton-mimic button {
+            animation: none;
+        }
+
+        .graphite-skeleton-mimic [data-slot=label] {
+            animation: none !important;
+        }
+    }
+}
+
+@keyframes graphite-skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

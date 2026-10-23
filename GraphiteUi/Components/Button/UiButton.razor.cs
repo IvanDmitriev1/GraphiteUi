@@ -57,7 +57,7 @@ public partial class UiButton : UiComponentBase
     /// </summary>
     [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-    private protected string RootClass => MergeRootClass(ButtonStyles.GetRootClasses(this));
+    private protected string RootClass => MergeRootClass(ButtonStyles.GetRootClasses(Color, Size));
 
     public UiButton()
     {

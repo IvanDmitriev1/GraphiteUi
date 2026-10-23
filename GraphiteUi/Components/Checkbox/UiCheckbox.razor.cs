@@ -12,7 +12,7 @@ public partial class UiCheckbox : UiInputBase<bool>
     /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private protected string RootClass => MergeRootClass(CheckBoxStyles.GetRootClasses(this));
+    private protected string RootClass => MergeRootClass(CheckBoxStyles.GetRootClasses());
 
     private protected string InputClass = CheckBoxStyles.InputClass;
     private protected string ControlClass = CheckBoxStyles.ControlClass;

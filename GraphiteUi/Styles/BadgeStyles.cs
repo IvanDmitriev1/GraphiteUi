@@ -6,14 +6,7 @@ namespace GraphiteUi.Styles;
 
 public static class BadgeStyles
 {
-    private static readonly string BaseClass = new CssClassBuilder(stackalloc char[256])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("rounded-full")
-        .Add("border")
-        .Add("font-medium")
-        .Add("whitespace-nowrap")
-        .ToString();
+    private static readonly string BaseClass = "inline-flex items-center rounded-full border font-medium whitespace-nowrap";
 
     private static readonly string[] SizeClasses =
     [
@@ -24,10 +17,13 @@ public static class BadgeStyles
 
     private static readonly string[] RootClassesByColorAndSize = BuildRootClasses();
 
-    public static string GetRootClasses(UiBadge component)
+    public static string GetRootClasses(UiBadge component) =>
+        GetRootClasses(component.Color, component.Size);
+
+    public static string GetRootClasses(ThemeColor color, Size size)
     {
-        int colorIndex = (int)NormalizeColor(component.Color);
-        int sizeIndex = (int)component.Size;
+        int colorIndex = (int)NormalizeColor(color);
+        int sizeIndex = (int)size;
         int sizeCount = SizeClasses.Length;
 
         if ((uint)colorIndex >= (uint)SemanticTones.Count)

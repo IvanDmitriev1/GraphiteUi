@@ -1,0 +1,29 @@
+@using GraphiteUi.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm EditContext="_editContext">
+    <UiTextbox @bind-Value="_model.Small" Size="@GraphiteUi.Common.Size.Small" id="control-small" />
+    <UiTextbox @bind-Value="_model.Medium" Size="@GraphiteUi.Common.Size.Medium" id="control-medium" />
+    <UiTextbox @bind-Value="_model.Large" Size="@GraphiteUi.Common.Size.Large" id="control-large" />
+    <UiTextbox @bind-Value="_model.Negative" Size="@((GraphiteUi.Common.Size)(-1))" id="control-negative" />
+    <UiTextbox @bind-Value="_model.Invalid" Size="@((GraphiteUi.Common.Size)99)" id="control-invalid" />
+</EditForm>
+
+@code {
+    private readonly ControlTokenModel _model = new();
+    private readonly EditContext _editContext;
+
+    public ControlTokenProbe()
+    {
+        _editContext = new EditContext(_model);
+    }
+
+    private sealed class ControlTokenModel
+    {
+        public string Small { get; set; } = string.Empty;
+        public string Medium { get; set; } = string.Empty;
+        public string Large { get; set; } = string.Empty;
+        public string Negative { get; set; } = string.Empty;
+        public string Invalid { get; set; } = string.Empty;
+    }
+}

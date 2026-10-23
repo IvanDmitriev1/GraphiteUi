@@ -42,8 +42,41 @@
                 </UiSelect>
 
                 <UiButton>Save</UiButton>
+
+                <label for="profile-notes" class="text-body-sm">Profile notes</label>
+                <textarea id="profile-notes"
+                          rows="2"
+                          placeholder="Add a short note"
+                          class="w-full rounded-md border border-control bg-surface1 px-3 py-2 text-body-sm text-foreground"></textarea>
+
+                <label for="native-country" class="text-body-sm">Native select</label>
+                <select id="native-country"
+                        class="w-full rounded-md border border-control bg-surface1 px-3 py-2 text-body-sm text-foreground">
+                    <option>Canada</option>
+                    <option>Japan</option>
+                    <option>Norway</option>
+                </select>
+
+                <p class="text-body-sm">Alex is available for a quick introduction.</p>
+                <div class="flex items-center gap-2">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='24' fill='%236b7280'/%3E%3Ccircle cx='24' cy='17' r='8' fill='white'/%3E%3Cpath d='M8 48c0-11 7-18 16-18s16 7 16 18' fill='white'/%3E%3C/svg%3E"
+                         alt="Profile illustration"
+                         class="size-12 rounded-full" />
+                    <svg aria-hidden="true" class="size-5 text-accent" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
+                    </svg>
+                    <span class="text-body-sm">Profile photo and location icon</span>
+                </div>
             </div>
         </UiSkeleton>
+    </section>
+
+    <section class="flex flex-col gap-2">
+        <h2 class="text-h5">Outside Auto Mimic</h2>
+        <label for="outside-notes" class="text-body-sm">This textarea stays interactive</label>
+        <textarea id="outside-notes"
+                  rows="2"
+                  class="w-full rounded-md border border-control bg-surface1 px-3 py-2 text-body-sm text-foreground">Outside the loading skeleton.</textarea>
     </section>
 
     <section class="flex flex-col gap-2">
@@ -76,6 +109,7 @@
             <UiSkeletonLine Class="h-4 w-56" />
             <UiSkeletonBlock Class="h-10 rounded-md" />
             <UiSkeletonBlock Class="h-16 rounded-lg" />
+            <UiSkeletonBlock Class="h-14 w-40 bg-none bg-[length:3rem_1rem] animate-none rounded-md" />
         </div>
     </section>
 </div>

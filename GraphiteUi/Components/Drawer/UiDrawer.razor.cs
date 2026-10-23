@@ -20,5 +20,5 @@ public partial class UiDrawer : UiComponentBase
     private string ToggleId => _toggleId;
 
     private string RootClass => MergeRootClass(DrawerStyles.RootClass);
-    private string PanelClass => DrawerStyles.GetPanelClass(this);
+    private string PanelClass => DrawerStyles.GetPanelClass(Side);
 }

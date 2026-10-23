@@ -11,7 +11,7 @@ public partial class UiBadge : UiComponentBase
     [Parameter] public Size Size { get; set; } = Size.Small;
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private protected string RootClass => MergeRootClass(BadgeStyles.GetRootClasses(this));
+    private protected string RootClass => MergeRootClass(BadgeStyles.GetRootClasses(Color, Size));
 
     public UiBadge()
     {

@@ -25,12 +25,13 @@
 		<None Include="Styles\*.cs" Pack="true" PackagePath="theme\components\%(Filename)%(Extension)" />
 		<None Include="Styles\_theme.css" Pack="true" PackagePath="theme\theme.css" />
 		<None Include="Styles\_dark.css" Pack="true" PackagePath="theme\_dark.css" />
+		<None Include="Styles\_skeleton.css" Pack="true" PackagePath="theme\_skeleton.css" />
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LinkDotNet.StringBuilder" Version="3.4.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
-    <PackageReference Include="TwMerge" Version="1.0.7" />
+    <PackageReference Include="LinkDotNet.StringBuilder" Version="3.7.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
+    <PackageReference Include="TailwindMerge.NET" Version="1.5.0" />
   </ItemGroup>
 
   <ItemGroup>

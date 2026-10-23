@@ -3,7 +3,7 @@
 Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 
 - Works in **static SSR**, **Interactive Server**, and **Interactive WebAssembly**. Most components render usable markup under static SSR and are enhanced by JS after load.
-- **Ready-to-use CSS ships with the package** at `_content/GraphiteUi/css/graphite-ui.css`. Add its stylesheet before application CSS. It contains library utilities without Tailwind preflight, so it does not reset the consuming application. Custom Tailwind class strings still require the consumer's own CSS build. Regenerate library CSS with `npm ci && npm run build:css`.
+- **Generate CSS during the consuming application's server build.** Import the GraphiteUi theme and include its copied component class sources in Tailwind's source scan. The package supplies theme files and class sources; generated stylesheets are build output and are not committed. The docs application's `Tailwindcss.targets` and `wwwroot/styles/app.css` demonstrate this pipeline.
 - **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios and selects on `enhancedload`.
 - Namespaces: components/services in `GraphiteUi.Components`, enums in `GraphiteUi.Common`, style class constants in `GraphiteUi.Styles`.
 
@@ -14,11 +14,17 @@ Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 ```csharp
 using GraphiteUI.Extensions;   // NOTE: capital "UI" — see Known gaps
 
-builder.Services.AddGraphiteUi();          // optional: AddGraphiteUi(cfg => ...) for TwConfig
+builder.Services.AddGraphiteUi();          // optional: AddGraphiteUi(cfg => cfg.CacheSize = 500)
 ```
 
-Registers `TwMerge` with bounded cache size 500 by default (customizable through `AddGraphiteUi` options), scoped `IDialogService`, scoped `IToastService`.
-Services are **scoped**, so call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` **and** `.Client/Program.cs` for an Auto/WASM app).
+Registers the singleton `TailwindMerge.NET` `TwMerge` service with a bounded cache of 500 entries by default, scoped `IDialogService`, and scoped `IToastService`. Graphite typography extends the standard Tailwind rules; the optional consumer callback runs afterward.
+Call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` **and** `.Client/Program.cs` for an Auto/WASM app).
+
+**Migration:** `TwMerge` 1.0.7 has been replaced by `TailwindMerge.NET` 1.5.0. Configuration callbacks now receive `TailwindMerge.TwMergeConfig` instead of `TwConfig`; use its properties and `Extend`/`Override` methods. Parameterless calls remain source-compatible, but consuming projects must rebuild. Configure once during registration; do not mutate the configuration afterward.
+
+Class composition uses the merger directly with no additional component cache. Empty overrides return existing style strings, and finite style variants are precomputed. The merger's own cache avoids repeated conflict parsing, but merge calls can still allocate argument arrays and lookup strings.
+
+Style helpers also accept presentation values directly: button/badge `GetRootClasses(ThemeColor color, Size size)`, avatar `GetRootClasses(Size size)`, alert `GetRootClasses(ThemeColor color)` and `GetIndicatorClass(ThemeColor color)`, drawer `GetPanelClass(Align side)`, tooltip `GetBubbleClass(Align align, bool bottom)`, toast `GetHostRootClasses(ToastPlacement placement)`, and checkbox `GetRootClasses()`. Existing component-taking overloads remain available and forward to these methods. Enum fallback behavior is unchanged.
 
 `_Imports.razor`:
 
@@ -692,6 +698,38 @@ Never referenced as classes. Redefine them to retheme.
 | Lines | `--graphite-divider`, `--graphite-control-border`, `--graphite-scrim` |
 | Semantic fills | `--graphite-success/warning/danger/info` (+ `-foreground`, `-subtle`, `-subtle-foreground`, `-border`, `-hover`, `-active`) |
 | Focus, shimmer, shadows | `--graphite-focus`, `--graphite-shimmer-from/via`, `--graphite-shadow-xs`…`-2xl` |
+
+### Control sizes and popup motion
+
+These inherited CSS properties can be overridden after the stylesheet import or on a containing element. They remain variable references in generated CSS and do not require rebuilding GraphiteUi.
+
+| Property | Default | Applies to |
+|---|---|---|
+| `--control-height-sm` | `calc(var(--spacing, 0.25rem) * 8)` | Small buttons and input wrappers |
+| `--control-height-md` | `calc(var(--spacing, 0.25rem) * 10)` | Medium buttons/input wrappers and popup, drawer, menu, and select triggers |
+| `--control-height-lg` | `calc(var(--spacing, 0.25rem) * 12)` | Large buttons and input wrappers |
+| `--popup-backdrop-duration` | `220ms` | Popup backdrop open/close transitions |
+| `--popup-content-duration` | `240ms` | Popup/menu content open/close transitions |
+| `--popup-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Popup backdrop/content easing |
+
+At the standard spacing and 16px root font size, control heights are 32/40/48px. Input wrappers use the same property for height and minimum height. Option rows and unrelated component animations retain their own sizing and motion. Reduced-motion preferences still disable popup transitions.
+
+```css
+.compact-form {
+    --control-height-md: 2.25rem;
+    --popup-backdrop-duration: 120ms;
+    --popup-content-duration: 140ms;
+    --popup-easing: ease-out;
+}
+```
+
+Consumer utility overrides continue through the existing `Class`/slot-class merge paths. Input-field wrapper `Class` retains its documented raw pass-through behavior.
+
+### Style ownership and normalization
+
+Card root, header, body, and footer definitions live in `CardStyles`. Existing `CommonStyles.Card*` properties remain compatible aliases.
+
+The optional library stylesheet entrypoint (`GraphiteUi/Styles/graphite-ui.css`) applies normalization rules to elements carrying `data-slot`. These selectors are unnamespaced, so consumer elements that use `data-slot` also receive those resets when the entrypoint is included. The entrypoint does not scope the application's Tailwind Preflight, theme variables, or utilities.
 
 ### 8.3 Rebranding without touching the library
 

@@ -5,15 +5,7 @@ namespace GraphiteUi.Styles;
 
 public static class ToastStyles
 {
-    private static readonly string HostBaseClass = new CssClassBuilder(stackalloc char[256])
-        .Add("fixed")
-        .Add("z-[120]")
-        .Add("flex")
-        .Add("w-full")
-        .Add("p-2")
-        .Add("sm:p-4")
-        .Add("pointer-events-none")
-        .ToString();
+    private static readonly string HostBaseClass = "fixed z-[120] flex w-full p-2 sm:p-4 pointer-events-none";
 
     private static readonly string[] HostPlacementClasses =
     [
@@ -24,28 +16,15 @@ public static class ToastStyles
 
     private static readonly string[] HostClassesByPlacement = BuildHostClassesByPlacement();
 
-    private static readonly string ItemBaseClass = new CssClassBuilder(stackalloc char[384])
-        .Add("relative")
-        .Add("pointer-events-auto")
-        .Add("w-full")
-        .Add("[&_[data-slot=alert-dismissButton]]:size-10")
-        .Add("sm:[&_[data-slot=alert-dismissButton]]:size-7")
-        .ToString();
+    private static readonly string ItemBaseClass = "relative pointer-events-auto w-full [&_[data-slot=alert-dismissButton]]:size-10 sm:[&_[data-slot=alert-dismissButton]]:size-7";
 
-    public static string StackClass { get; } = new CssClassBuilder(stackalloc char[256])
-        .Add("flex")
-        .Add("w-[calc(100dvw-1rem)]")
-        .Add("sm:w-[min(100dvw-2rem,28rem)]")
-        .Add("max-w-full")
-        .Add("flex-col")
-        .Add("gap-2")
-        .Add("[&>[data-slot=toast-item]:nth-child(n+3)]:hidden")
-        .Add("sm:[&>[data-slot=toast-item]:nth-child(n+3)]:flex")
-        .ToString();
+    public static string StackClass { get; } = "flex w-[calc(100dvw-1rem)] sm:w-[min(100dvw-2rem,28rem)] max-w-full flex-col gap-2 [&>[data-slot=toast-item]:nth-child(n+3)]:hidden sm:[&>[data-slot=toast-item]:nth-child(n+3)]:flex";
 
-    public static string GetHostRootClasses(UiToastHost host)
+    public static string GetHostRootClasses(UiToastHost host) => GetHostRootClasses(host.Placement);
+
+    public static string GetHostRootClasses(ToastPlacement placement)
     {
-        int placementIndex = (int)host.Placement;
+        int placementIndex = (int)placement;
 
         if ((uint)placementIndex >= (uint)HostClassesByPlacement.Length)
         {

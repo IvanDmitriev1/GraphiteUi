@@ -23,7 +23,7 @@ public partial class UiToastHost : UiComponentBase, IAsyncDisposable
     [Parameter] public bool DangerStickyByDefault { get; set; } = true;
     [Parameter] public bool NewestOnTop { get; set; } = true;
 
-    private protected string RootClass => MergeRootClass(ToastStyles.GetHostRootClasses(this));
+    private protected string RootClass => MergeRootClass(ToastStyles.GetHostRootClasses(Placement));
 
     public void Show(ToastOptions options)
     {

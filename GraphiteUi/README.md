@@ -63,10 +63,13 @@ Repository and docs: https://github.com/IvanDmitriev1/GraphiteUi
 
 ## Styles
 
-Add this before your application stylesheet:
+Generate application CSS with Tailwind during the server build. Import the theme and scan the component class sources copied by `GraphiteUi.targets`. For an entrypoint at `Styles/app.css` and the default theme output directory:
 
-```html
-<link rel="stylesheet" href="_content/GraphiteUi/css/graphite-ui.css" />
+```css
+@import "tailwindcss";
+@import "../bin/GraphiteUi/theme.css";
+@source "../bin/GraphiteUi/components/*.cs";
+@source "../Components";
 ```
 
-The package ships precompiled component utilities without a global CSS reset. Normal consumers do not need Node or Tailwind. For custom Tailwind utility classes, build consumer CSS as usual. Override GraphiteUi CSS primitives in app CSS to retune the palette. JS initializers are loaded by Blazor automatically.
+Run Tailwind after the theme assets have been copied, and include any other application or client-project source directories in its scan. Link the generated application stylesheet from the host page. Generated CSS is build output and should not be committed. The docs application's build targets provide a working example. Override GraphiteUi CSS primitives in app CSS to retune the palette. JS initializers are loaded by Blazor automatically.

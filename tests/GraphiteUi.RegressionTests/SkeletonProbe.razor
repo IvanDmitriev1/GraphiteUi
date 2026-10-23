@@ -1,0 +1,25 @@
+@namespace GraphiteUi.RegressionTests
+@using GraphiteUi.Components
+
+<UiSkeleton id="automatic-root" IsLoading="true">
+    <span id="automatic-child">Automatic child</span>
+</UiSkeleton>
+
+<UiSkeleton id="loaded-root" IsLoading="false">
+    <span id="loaded-child">Loaded child</span>
+</UiSkeleton>
+
+<UiSkeleton id="custom-root" IsLoading="true">
+    <ChildContent><span id="custom-child">Custom child</span></ChildContent>
+    <SkeletonContent><span id="custom-skeleton">Custom skeleton</span></SkeletonContent>
+</UiSkeleton>
+
+<UiSkeleton id="loaded-template-root" IsLoading="false">
+    <ChildContent><span id="loaded-template-child">Loaded template child</span></ChildContent>
+    <SkeletonContent><span id="loaded-template-skeleton">Loaded template skeleton</span></SkeletonContent>
+</UiSkeleton>
+
+<UiSkeletonBlock id="default-block" />
+<UiSkeletonLine id="default-line" />
+<UiSkeletonBlock id="block" Class="w-48 h-10 bg-[image:url(/block.png)] bg-[length:12px_8px] animate-[pulse_2s_linear_infinite]" />
+<UiSkeletonLine id="line" Class="w-56 h-6 bg-[image:url(/line.png)] bg-[length:16px_10px] animate-[bounce_3s_ease-in-out_infinite]" />

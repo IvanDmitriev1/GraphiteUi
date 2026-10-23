@@ -7,14 +7,7 @@ namespace GraphiteUi.Styles;
 public static class AvatarStyles
 {
     private static readonly string BaseClass = new CssClassBuilder(stackalloc char[256])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("justify-center")
-        .Add("overflow-hidden")
-        .Add("rounded-full")
-        .Add("bg-surface2")
-        .Add("text-surface2-foreground")
-        .Add("border")
+        .Add("inline-flex items-center justify-center overflow-hidden rounded-full bg-surface2 text-surface2-foreground border")
         .Add(ColorVariants.Border.Default)
         .ToString();
 
@@ -27,14 +20,13 @@ public static class AvatarStyles
 
     private static readonly string[] RootClassesBySize = BuildRootClassesBySize();
 
-    public static string ImageClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("size-full")
-        .Add("object-cover")
-        .ToString();
+    public static string ImageClass { get; } = "size-full object-cover";
 
-    public static string GetRootClasses(UiAvatar component)
+    public static string GetRootClasses(UiAvatar component) => GetRootClasses(component.Size);
+
+    public static string GetRootClasses(Size size)
     {
-        int sizeIndex = (int)component.Size;
+        int sizeIndex = (int)size;
         if ((uint)sizeIndex >= (uint)RootClassesBySize.Length)
         {
             sizeIndex = (int)Size.Medium;

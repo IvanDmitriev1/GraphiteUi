@@ -1,4 +1,3 @@
-using GraphiteUi.Utilities;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 using TailwindMerge;
@@ -45,7 +44,7 @@ public abstract class UiComponentBase : ComponentBase, IUiComponent
     private protected string Merge(string first, string? second) =>
         string.IsNullOrWhiteSpace(second)
             ? first
-            : TwMerge.Merge(first, second);
+            : TwMerge.Merge(first, second) ?? string.Empty;
 
     /// <summary>
     /// Triggers a re-render of the component.

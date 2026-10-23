@@ -36,5 +36,5 @@ public abstract class UiInputBase<TValue> : InputBase<TValue>, IUiComponent
     private protected string MergeRootClass(string coreClasses) =>
         string.IsNullOrWhiteSpace(Class)
             ? coreClasses
-            : TwMerge.Merge(coreClasses, Class);
+            : TwMerge.Merge(coreClasses, Class) ?? string.Empty;
 }

@@ -12,7 +12,7 @@ public partial class UiAvatar : UiComponentBase
     [Parameter] public string? Name { get; set; }
     [Parameter] public Size Size { get; set; } = Size.Medium;
 
-    private string RootClass => MergeRootClass(AvatarStyles.GetRootClasses(this));
+    private string RootClass => MergeRootClass(AvatarStyles.GetRootClasses(Size));
 
     private string Initials
     {

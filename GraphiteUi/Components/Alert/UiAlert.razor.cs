@@ -18,8 +18,8 @@ public partial class UiAlert : UiComponentBase
     [Parameter] public EventCallback OnDismiss { get; set; }
 
     private string ResolvedRole => Color == ThemeColor.Danger ? "alert" : "status";
-    private protected string RootClass => MergeRootClass(AlertStyles.GetRootClasses(this));
-    private protected string IndicatorClass => AlertStyles.GetIndicatorClass(this);
+    private protected string RootClass => MergeRootClass(AlertStyles.GetRootClasses(Color));
+    private protected string IndicatorClass => AlertStyles.GetIndicatorClass(Color);
 
     public UiAlert()
     {

@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /GraphiteUi.Docs/GraphiteUi.Docs/wwwroot/app.css
+/GraphiteUi/wwwroot/css/graphite-ui.css

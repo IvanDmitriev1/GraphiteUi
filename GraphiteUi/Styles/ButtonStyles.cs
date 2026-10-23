@@ -8,23 +8,12 @@ public static class ButtonStyles
 {
     private static readonly string RootBaseClass = new CssClassBuilder(stackalloc char[384])
         .Add(Utils.InlineFlexCentered)
-        .Add("min-w-max")
-        .Add("font-medium")
-        .Add("no-underline")
-        .Add("gap-1.5")
-        .Add("appearance-none")
-        .Add("select-none")
-        .Add("rounded-md")
-        .Add("whitespace-nowrap")
-        .Add("subpixel-antialiased")
-        .Add("overflow-hidden")
-        .Add("cursor-pointer")
+        .Add("min-w-max font-medium no-underline gap-1.5 appearance-none select-none rounded-md whitespace-nowrap subpixel-antialiased overflow-hidden cursor-pointer")
         // Border WIDTH only. The color comes from the tone, so the box is always
         // allocated but only Secondary draws an edge. Keeping `border-transparent`
         // here would leave two border-color utilities on the element, and these are
         // concatenated, not TwMerge'd — stylesheet order would decide the winner.
-        .Add("border")
-        .Add("shadow-xs")
+        .Add("border shadow-xs")
         // transition
         .Add("transition-colors-transform-opacity")
         .Add(Utils.MotionReduceTransitionNone)
@@ -40,25 +29,27 @@ public static class ButtonStyles
     /// </summary>
     private static readonly string[] SizeClasses =
     [
-        "h-8 min-w-16 px-3 text-body-sm",
-        "h-10 min-w-20 px-4 text-body-sm",
-        "h-12 min-w-24 px-5 text-body"
+        "h-[var(--control-height-sm)] min-w-16 px-3 text-body-sm",
+        "h-[var(--control-height-md)] min-w-20 px-4 text-body-sm",
+        "h-[var(--control-height-lg)] min-w-24 px-5 text-body"
     ];
 
     private static readonly string DisabledClass = new CssClassBuilder(stackalloc char[224])
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
-        .Add("disabled:shadow-none")
-        .Add("disabled:border-transparent")
+        .Add("disabled:shadow-none disabled:border-transparent")
         .Add(Utils.DisabledCursorDefault)
         .ToString();
 
     private static readonly string[] RootClassesByColorAndSize = BuildRootClasses();
 
-    public static string GetRootClasses(UiButton component)
+    public static string GetRootClasses(UiButton component) =>
+        GetRootClasses(component.Color, component.Size);
+
+    public static string GetRootClasses(ThemeColor color, Size size)
     {
-        int colorIndex = (int)component.Color;
-        int sizeIndex = (int)component.Size;
+        int colorIndex = (int)color;
+        int sizeIndex = (int)size;
         int sizeCount = SizeClasses.Length;
 
         if ((uint)colorIndex >= (uint)SemanticTones.Count)

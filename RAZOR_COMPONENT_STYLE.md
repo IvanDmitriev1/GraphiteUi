@@ -28,7 +28,12 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 
 ## Memory and Allocation Discipline
 - Do not build class strings with per-render interpolation in markup.
-- Compose classes with `CssClassBuilder` and size stackalloc buffers to expected output.
+- Use plain string initializers for fixed, literal-only classes; keep existing public properties and readonly fields in their current form.
+- Use `CssClassBuilder` for shared-fragment or conditional composition and size stackalloc buffers to expected output.
+- Group consecutive literal utilities into readable strings; do not use one builder call per utility unless a comment separates them.
+- Keep component-specific definitions in that component's style class. `CommonStyles.Card*` members are compatibility aliases for `CardStyles`; shared frame styles remain in `CommonStyles`.
+- Keep internal defaults free of conflicting utilities; class attribute order does not determine CSS precedence.
+- Pass only the required enum/boolean values into style helpers. Keep existing public component-taking overloads as forwarders when adding value-based overloads.
 - Merge consumer class overrides through `MergeRootClass`; return static core classes directly when no override exists.
 - Avoid per-render `new Dictionary<>` / `new List<>` in hot paths.
 - Avoid avoidable lambda captures in frequently rendered markup/event wiring.
@@ -40,6 +45,7 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 - Keep markup SSR-usable without requiring JavaScript for baseline functionality.
 - Pass through common parameters/attributes consistently (`Class`, `AdditionalAttributes`, `ChildContent`, `Disabled`, `ReadOnly`, `Required` as applicable).
 - Keep stable `data-slot` naming for elements that styles or JS depend on.
+- Use `data-slot` to identify library elements for optional stylesheet normalization. The standalone entrypoint applies its reset rules to every matching slot in the document, including consumer elements.
 - Use `ToAttributeValue()` when boolean values must be represented as string attributes (`data-*`, `aria-*`).
 - Prefer simple ultra-cheap expression paths directly in markup when logic is trivial (for example `Type.ToHtmlValue()`).
 - Keep root element responsibilities clear: attributes, classes, and accessibility metadata should be predictable.
@@ -80,17 +86,11 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 ## Examples
 
 ```csharp
-using GraphiteUi.Utilities;
-
 namespace GraphiteUi.Styles;
 
 public static class TagStyles
 {
-    public static string RootClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("inline-flex")
-        .Add("items-center")
-        .Add("rounded-md")
-        .ToString();
+    public static string RootClass { get; } = "inline-flex items-center rounded-md";
 }
 ```
 

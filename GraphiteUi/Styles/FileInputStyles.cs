@@ -4,44 +4,18 @@ namespace GraphiteUi.Styles;
 
 public static class FileInputStyles
 {
-    public static string RootClass { get; } = new CssClassBuilder(stackalloc char[384])
-        .Add("flex")
-        .Add("w-full")
-        .Add("flex-col")
-        .Add("gap-1")
-        .ToString();
+    public static string RootClass { get; } = "flex w-full flex-col gap-1";
 
-    public static string LabelClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-body-sm")
-        .Add("text-muted-foreground")
-        .ToString();
+    public static string LabelClass { get; } = "text-body-sm text-muted-foreground";
 
     public static string InputClass { get; } = new CssClassBuilder(stackalloc char[768])
         .Add(CommonStyles.ControlFrameRegularClass)
-        .Add("w-full")
-        .Add("px-3")
-        .Add("py-2")
-        .Add("file:mr-3")
-        .Add("file:rounded-md")
-        .Add("file:border")
-        .Add("file:border-border")
-        .Add("file:bg-surface2")
-        .Add("file:px-2")
-        .Add("file:py-1")
-        .Add("file:text-body-sm")
-        .Add("file:text-surface2-foreground")
-        .Add("file:transition-colors")
-        .Add("hover:file:bg-surface-active")
-        .Add("file:cursor-pointer")
-        .Add("aria-[invalid=true]:border-invalid")
+        .Add("w-full px-3 py-2 file:mr-3 file:rounded-md file:border file:border-border file:bg-surface2 file:px-2 file:py-1 file:text-body-sm file:text-surface2-foreground file:transition-colors hover:file:bg-surface-active file:cursor-pointer aria-[invalid=true]:border-invalid")
         .Add(Utils.FocusVisible)
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add(Utils.DisabledCursorDefault)
         .ToString();
 
-    public static string InfoClass { get; } = new CssClassBuilder(stackalloc char[128])
-        .Add("text-body-sm")
-        .Add("text-muted-foreground")
-        .ToString();
+    public static string InfoClass { get; } = "text-body-sm text-muted-foreground";
 }

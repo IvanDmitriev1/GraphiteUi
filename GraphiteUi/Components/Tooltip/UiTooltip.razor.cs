@@ -13,7 +13,7 @@ public partial class UiTooltip : UiComponentBase
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     private string RootClass => MergeRootClass(TooltipStyles.RootClass);
-    private string BubbleClass => TooltipStyles.GetBubbleClass(this);
+    private string BubbleClass => TooltipStyles.GetBubbleClass(Align, Bottom);
 
     public UiTooltip()
     {
