@@ -1,0 +1,18 @@
+@layer components {
+    :where([data-ui="alert"]) { @apply relative flex w-full items-start gap-3 rounded-lg border p-3 shadow-xs; }
+    :where([data-ui="alert"][data-color="primary"]) { @apply bg-accent-subtle text-accent-subtle-foreground border-accent-border; }
+    :where([data-ui="alert"][data-color="secondary"]) { @apply bg-secondary-subtle text-secondary-subtle-foreground border-secondary-border-subtle; }
+    :where([data-ui="alert"][data-color="success"]) { @apply bg-success-subtle text-success-subtle-foreground border-success-border; }
+    :where([data-ui="alert"][data-color="warning"]) { @apply bg-warning-subtle text-warning-subtle-foreground border-warning-border; }
+    :where([data-ui="alert"][data-color="danger"]) { @apply bg-danger-subtle text-danger-subtle-foreground border-danger-border; }
+    :where([data-ui="alert"][data-color="info"]) { @apply bg-info-subtle text-info-subtle-foreground border-info-border; }
+    :where([data-ui="alert"] > [data-part="start-content"]) { @apply mt-0.5 shrink-0; }
+    :where([data-ui="alert"] > [data-part="content"]) { @apply flex min-w-0 flex-1 flex-col gap-1; }
+    :where([data-ui="alert"] > [data-part="content"] > [data-part="title"]) { @apply text-body-sm font-semibold text-current; }
+    :where([data-ui="alert"] > [data-part="content"] > [data-part="body"]) { @apply text-body-sm text-current opacity-90; }
+    :where([data-ui="alert"] > [data-part="dismiss"]) { @apply inline-flex size-7 shrink-0 items-center justify-center rounded-md text-current opacity-75 cursor-pointer transition-[color,background-color,box-shadow]; }
+    @media (hover: hover) { :where([data-ui="alert"] > [data-part="dismiss"]:hover) { @apply bg-surface-active opacity-100; } }
+    :where([data-ui="alert"] > [data-part="dismiss"]:focus-visible) { @apply z-10 ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="alert"] > [data-part="dismiss"] > [data-part="dismiss-icon"]) { @apply size-4; }
+    @media (prefers-reduced-motion: reduce) { :where([data-ui="alert"] > [data-part="dismiss"]) { transition: none; } }
+}

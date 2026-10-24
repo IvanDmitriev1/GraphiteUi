@@ -1,5 +1,4 @@
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -12,9 +11,7 @@ public partial class UiSkeleton : UiComponentBase
 
     private bool UseCustomSkeleton => IsLoading && SkeletonContent is not null;
 
-    private string ContentClass => IsLoading ? SkeletonStyles.AutoMimicClass : SkeletonStyles.ContentClass;
-
-    private protected string RootClass => MergeRootClass(SkeletonStyles.RootClass);
+    private bool UseAutoMimic => IsLoading && SkeletonContent is null;
 
     public UiSkeleton()
     {

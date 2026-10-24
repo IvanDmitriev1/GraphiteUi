@@ -1,6 +1,5 @@
 ﻿using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -66,8 +65,6 @@ public partial class UiButton : UiComponentBase
     /// </summary>
     [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-    private protected string RootClass => MergeRootClass(ButtonStyles.GetRootClasses(Color, Size, Variant, IconOnly));
-    private protected string ContentClass => ButtonStyles.GetContentSlotClass(IconOnly, IsLoading);
     private protected bool IsUnavailable => Disabled || IsLoading;
     private protected bool NativeDisabled => Disabled
         || (IsLoading && string.Equals(As, "button", StringComparison.OrdinalIgnoreCase));

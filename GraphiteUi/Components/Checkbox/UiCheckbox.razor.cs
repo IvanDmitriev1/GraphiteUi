@@ -1,4 +1,3 @@
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
@@ -11,13 +10,6 @@ public partial class UiCheckbox : UiInputBase<bool>
     /// Gets or sets content to be rendered inside the input.
     /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    private protected string RootClass => MergeRootClass(CheckBoxStyles.GetRootClasses());
-
-    private protected string InputClass = CheckBoxStyles.InputClass;
-    private protected string ControlClass = CheckBoxStyles.ControlClass;
-    private protected string IconClass = CheckBoxStyles.IconClass;
-    private protected string LabelClass = CheckBoxStyles.LabelClass;
 
     protected override bool TryParseValueFromString(string? value, out bool result, [NotNullWhen(false)] out string? validationErrorMessage)
     {

@@ -1,4 +1,3 @@
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -12,7 +11,6 @@ public partial class UiRadio<TValue> : ComponentBase
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private string RootClass => RadioStyles.ItemClass;
     private bool IsDisabled => Disabled || (Group?.Disabled ?? false);
     internal string FormValue =>
         !string.IsNullOrWhiteSpace(ValueKey)

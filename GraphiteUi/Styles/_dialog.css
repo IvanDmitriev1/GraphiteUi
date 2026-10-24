@@ -1,0 +1,6 @@
+@layer components {
+    :where([data-ui="dialog"]) {
+        @apply p-6 box-border overflow-auto rounded-xl border shadow-2xl m-auto w-full max-w-[min(100dvw-2rem,42rem)] max-h-[min(100dvh-2rem,80vh)] outline-none bg-surface3 text-surface3-foreground border-border-strong;
+    }
+    :where([data-ui="dialog"])::backdrop { @apply bg-scrim backdrop-blur-[2px]; }
+}

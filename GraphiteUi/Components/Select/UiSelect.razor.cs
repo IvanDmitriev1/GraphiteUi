@@ -1,5 +1,4 @@
 using GraphiteUi.Extensions;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -15,9 +14,6 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string ClearText { get; set; } = "Clear value";
     [Parameter] public string NoSuggestionsText { get; set; } = "No suggestions";
-
-    private protected string RootClass => MergeRootClass(SelectStyles.RootClass);
-    private protected string TriggerClass => SelectStyles.GetTriggerClass(Size);
 
     private bool HasSelectedItem => CurrentValue is not null;
     private string HiddenValue => HasSelectedItem ? CurrentValueAsString ?? string.Empty : string.Empty;

@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -8,8 +7,6 @@ namespace GraphiteUi.Components;
 public partial class UiSwitch : UiInputBase<bool>
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    private protected string RootClass => MergeRootClass(SwitchStyles.RootClass);
 
     protected override bool TryParseValueFromString(string? value,
         out bool result,

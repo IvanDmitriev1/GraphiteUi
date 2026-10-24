@@ -1,0 +1,40 @@
+@layer components {
+    :where([data-ui="select"]) { @apply flex w-full min-w-0 flex-col; }
+    :where([data-ui="select"] > [data-part="label"]) { @apply mb-1 block text-body-sm text-muted-foreground; }
+    :where([data-ui="select"] > [data-part="description"]) { @apply mt-1 mb-0 text-body-sm text-muted-foreground; }
+    :where([data-ui="select"] > [data-select-root="true"]) { @apply w-full min-w-0; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="trigger"]) {
+        @apply relative z-50 inline-flex items-center justify-center gap-2 w-full min-w-0 rounded-md border border-control bg-surface1 text-surface1-foreground text-body-sm font-medium px-4 cursor-pointer transition-[background-color,border-color,box-shadow] outline-hidden;
+    }
+    :where([data-ui="select"][data-size="small"] > [data-select-root="true"] > [data-part="trigger"]) { height: var(--control-height-sm); }
+    :where([data-ui="select"][data-size="medium"] > [data-select-root="true"] > [data-part="trigger"]) { height: var(--control-height-md); }
+    :where([data-ui="select"][data-size="large"] > [data-select-root="true"] > [data-part="trigger"]) { height: var(--control-height-lg); }
+    @media (hover: hover) {
+        :where([data-ui="select"] > [data-select-root="true"] > [data-part="trigger"]:hover) { @apply border-control-hover; }
+    }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="trigger"][data-open="true"]) { @apply bg-surface-hover border-control-hover; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="trigger"]:focus-within) { @apply z-10 ring-1 ring-focus ring-offset-0 border-control-hover; }
+    :where([data-ui="select"][data-invalid="true"] > [data-select-root="true"] > [data-part="trigger"]) { @apply border-invalid; }
+    :where([data-ui="select"][data-invalid="true"] > [data-select-root="true"] > [data-part="trigger"]:focus-within) { @apply ring-focus-invalid; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="trigger"] > [data-part="input"]) { @apply w-full min-w-0 flex-1 bg-transparent outline-none appearance-none text-body text-surface1-foreground placeholder:text-muted-foreground; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="trigger"] > [data-part="search-icon"]) { @apply size-5 shrink-0 text-muted-foreground; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"]) { @apply flex flex-col gap-1 max-h-60 overflow-auto; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="empty"]) { @apply px-4 py-3 text-body-sm text-muted-foreground; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="divider"]) { @apply my-1 h-px w-full bg-divider; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"]) { @apply inline-flex h-10 w-full items-center gap-2 rounded-md px-2 text-left text-body cursor-pointer transition-[color,background-color] outline-hidden; }
+    @media (hover: hover) {
+        :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"]:hover) { @apply bg-surface-hover; }
+        :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"]:hover) { @apply bg-surface-hover; }
+    }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"]:focus-visible, [data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"]:focus-visible) { @apply z-10 ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"]:disabled) { @apply text-disabled-foreground cursor-default; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"]:disabled:hover) { background-color: transparent; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"] > [data-part="clear-icon"]) { @apply size-5; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"]) { @apply inline-flex w-full h-10 items-center rounded-md px-2.5 text-left text-body cursor-pointer transition-[background-color,color] outline-hidden; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"][data-selected="true"], [data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"][data-active="true"]) { @apply bg-selected text-selected-foreground; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"][data-disabled="true"]) { @apply text-disabled-foreground pointer-events-none cursor-default; }
+    :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"][data-disabled="true"]:hover) { background-color: transparent; }
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="clear"], [data-ui="select"] > [data-select-root="true"] > [data-part="content"] > [data-part="list"] > [data-part="option"]) { transition: none; }
+    }
+}

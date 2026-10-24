@@ -6,166 +6,102 @@
     }
 }
 
-@layer utilities {
-    .graphite-skeleton-mimic [data-slot=input-wrapper],
-    .graphite-skeleton-mimic [data-slot=popup-trigger],
-    .graphite-skeleton-mimic textarea,
-    .graphite-skeleton-mimic select,
-    .graphite-skeleton-mimic p {
-        background-color: var(--color-skeleton);
+@layer components {
+    :where([data-ui="skeleton"]) { @apply relative transition-opacity duration-150 ease-out; }
+    :where([data-ui="skeleton"][data-loading="true"]) { @apply pointer-events-none select-none cursor-wait overflow-hidden; }
+    :where([data-ui="skeleton"] > [data-part="content"]) { @apply relative transition-[opacity,color,background-color,border-color] duration-150 ease-out; }
+    :where([data-ui="skeleton-block"], [data-ui="skeleton-line"]) {
+        @apply relative w-full overflow-hidden rounded-md bg-skeleton text-transparent pointer-events-none;
         background-image: var(--skeleton-shimmer-image);
         background-size: var(--skeleton-shimmer-size);
         animation: var(--skeleton-shimmer-animation);
     }
-
-    .graphite-skeleton-mimic [data-slot=input-wrapper],
-    .graphite-skeleton-mimic [data-slot=popup-trigger],
-    .graphite-skeleton-mimic textarea,
-    .graphite-skeleton-mimic select {
-        border-color: transparent;
-        --tw-shadow: 0 0 #0000;
-        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-
-    .graphite-skeleton-mimic [data-slot=input-wrapper] [data-slot=label] {
-        top: calc(var(--spacing) * 0) !important;
-        left: calc(var(--spacing) * 0) !important;
-        --tw-translate-y: -24px !important;
-        translate: var(--tw-translate-x) var(--tw-translate-y) !important;
-    }
-
-    .graphite-skeleton-mimic [data-slot=label] {
-        height: calc(var(--spacing) * 4) !important;
-        width: calc(var(--spacing) * 28) !important;
-        max-width: none !important;
-        animation: var(--skeleton-shimmer-animation) !important;
-        overflow: hidden !important;
-        border-radius: var(--radius-md) !important;
-        background-color: var(--color-skeleton) !important;
-        background-image: var(--skeleton-shimmer-image) !important;
-        background-size: var(--skeleton-shimmer-size) !important;
-        padding-inline-end: calc(var(--spacing) * 0) !important;
-        color: transparent !important;
-    }
-
-    .graphite-skeleton-mimic [data-slot=input],
-    .graphite-skeleton-mimic [data-slot=select-input] {
-        background-color: transparent;
-        opacity: 0%;
-    }
-
-    .graphite-skeleton-mimic [data-slot=popup-content],
-    .graphite-skeleton-mimic [data-slot=popup-backdrop] {
-        display: none;
-    }
-
-    .graphite-skeleton-mimic button {
-        background-color: var(--color-skeleton);
-        background-image: var(--skeleton-shimmer-image);
-        background-size: var(--skeleton-shimmer-size);
-        animation: var(--skeleton-shimmer-animation);
-        border-color: transparent;
-        --tw-shadow: 0 0 #0000;
-        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-
-    .graphite-skeleton-mimic span:not(button span):not([data-slot=input-wrapper] span):not([data-slot=popup-trigger] span),
-    .graphite-skeleton-mimic a:not(button a):not([data-slot=input-wrapper] a):not([data-slot=popup-trigger] a),
-    .graphite-skeleton-mimic strong:not(button strong):not([data-slot=input-wrapper] strong):not([data-slot=popup-trigger] strong),
-    .graphite-skeleton-mimic em:not(button em):not([data-slot=input-wrapper] em):not([data-slot=popup-trigger] em),
-    .graphite-skeleton-mimic code:not(button code):not([data-slot=input-wrapper] code):not([data-slot=popup-trigger] code),
-    .graphite-skeleton-mimic label:not([data-slot=label]) {
-        border-radius: var(--radius-sm);
-        background-color: var(--color-skeleton);
-        background-image: var(--skeleton-shimmer-image);
-        background-size: var(--skeleton-shimmer-size);
-        animation: var(--skeleton-shimmer-animation);
-        box-decoration-break: clone;
-    }
-
-    .graphite-skeleton-mimic input,
-    .graphite-skeleton-mimic textarea,
-    .graphite-skeleton-mimic select,
-    .graphite-skeleton-mimic button,
-    .graphite-skeleton-mimic label,
-    .graphite-skeleton-mimic span,
-    .graphite-skeleton-mimic p,
-    .graphite-skeleton-mimic a,
-    .graphite-skeleton-mimic option {
-        color: transparent;
-    }
-
-    .graphite-skeleton-mimic strong,
-    .graphite-skeleton-mimic em,
-    .graphite-skeleton-mimic code {
-        color: transparent;
-    }
-
-    .graphite-skeleton-mimic textarea,
-    .graphite-skeleton-mimic select {
-        appearance: none;
-    }
-
-    .graphite-skeleton-mimic textarea {
-        resize: none;
-    }
-
-    .graphite-skeleton-mimic input::placeholder,
-    .graphite-skeleton-mimic textarea::placeholder {
-        color: transparent;
-    }
-
-    .graphite-skeleton-mimic input,
-    .graphite-skeleton-mimic textarea {
-        caret-color: transparent;
-    }
-
-    .graphite-skeleton-mimic img:not(button img):not([data-slot=input-wrapper] img):not([data-slot=popup-trigger] img),
-    .graphite-skeleton-mimic svg:not(button svg):not([data-slot=input-wrapper] svg):not([data-slot=popup-trigger] svg) {
-        background-color: var(--color-skeleton);
-        background-image: var(--skeleton-shimmer-image);
-        background-size: var(--skeleton-shimmer-size);
-        animation: var(--skeleton-shimmer-animation);
-    }
-
-    .graphite-skeleton-mimic img {
-        object-position: 100000px 100000px;
-    }
-
-    .graphite-skeleton-mimic svg > * {
-        visibility: hidden;
-    }
+    :where([data-ui="skeleton-block"]) { @apply min-h-4; }
+    :where([data-ui="skeleton-line"]) { @apply h-4; }
 
     @media (prefers-reduced-motion: reduce) {
-        .graphite-skeleton-mimic [data-slot=input-wrapper],
-        .graphite-skeleton-mimic [data-slot=popup-trigger],
-        .graphite-skeleton-mimic button,
-        .graphite-skeleton-mimic textarea,
-        .graphite-skeleton-mimic select,
-        .graphite-skeleton-mimic p,
-        .graphite-skeleton-mimic span:not(button span):not([data-slot=input-wrapper] span):not([data-slot=popup-trigger] span),
-        .graphite-skeleton-mimic a:not(button a):not([data-slot=input-wrapper] a):not([data-slot=popup-trigger] a),
-        .graphite-skeleton-mimic strong:not(button strong):not([data-slot=input-wrapper] strong):not([data-slot=popup-trigger] strong),
-        .graphite-skeleton-mimic em:not(button em):not([data-slot=input-wrapper] em):not([data-slot=popup-trigger] em),
-        .graphite-skeleton-mimic code:not(button code):not([data-slot=input-wrapper] code):not([data-slot=popup-trigger] code),
-        .graphite-skeleton-mimic label:not([data-slot=label]),
-        .graphite-skeleton-mimic img:not(button img):not([data-slot=input-wrapper] img):not([data-slot=popup-trigger] img),
-        .graphite-skeleton-mimic svg:not(button svg):not([data-slot=input-wrapper] svg):not([data-slot=popup-trigger] svg) {
-            animation: none;
-        }
+        :where([data-ui="skeleton"], [data-ui="skeleton"] > [data-part="content"]) { transition: none; }
+        :where([data-ui="skeleton-block"], [data-ui="skeleton-line"]) { animation: none; }
+    }
 
-        .graphite-skeleton-mimic [data-slot=label] {
-            animation: none !important;
+    :where([data-ui="skeleton"][data-loading="true"] > [data-part="content"][data-skeleton-mimic="true"]) {
+        :where([data-slot="input-wrapper"], [data-slot="popup-trigger"], textarea, select, p) {
+            background-color: var(--color-skeleton) !important;
+            background-image: var(--skeleton-shimmer-image) !important;
+            background-size: var(--skeleton-shimmer-size) !important;
+            animation: var(--skeleton-shimmer-animation) !important;
         }
+        :where([data-slot="input-wrapper"], [data-slot="popup-trigger"], textarea, select) {
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+        :where([data-slot="input-wrapper"] [data-slot="label"]) {
+            top: 0 !important;
+            left: 0 !important;
+            translate: 0 -24px !important;
+        }
+        :where([data-slot="label"]) {
+            height: calc(var(--spacing) * 4) !important;
+            width: calc(var(--spacing) * 28) !important;
+            max-width: none !important;
+            animation: var(--skeleton-shimmer-animation) !important;
+            overflow: hidden !important;
+            border-radius: var(--radius-md) !important;
+            background-color: var(--color-skeleton) !important;
+            background-image: var(--skeleton-shimmer-image) !important;
+            background-size: var(--skeleton-shimmer-size) !important;
+            padding-inline-end: 0 !important;
+            color: transparent !important;
+        }
+        :where([data-slot="input"], [data-slot="select-input"]) {
+            background-color: transparent !important;
+            opacity: 0 !important;
+        }
+        :where([data-slot="popup-content"], [data-slot="popup-backdrop"]) { display: none !important; }
+        :where(button) {
+            background-color: var(--color-skeleton) !important;
+            background-image: var(--skeleton-shimmer-image) !important;
+            background-size: var(--skeleton-shimmer-size) !important;
+            animation: var(--skeleton-shimmer-animation) !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+        :where(
+            span:not(button span):not([data-slot="input-wrapper"] span):not([data-slot="popup-trigger"] span),
+            a:not(button a):not([data-slot="input-wrapper"] a):not([data-slot="popup-trigger"] a),
+            strong:not(button strong):not([data-slot="input-wrapper"] strong):not([data-slot="popup-trigger"] strong),
+            em:not(button em):not([data-slot="input-wrapper"] em):not([data-slot="popup-trigger"] em),
+            code:not(button code):not([data-slot="input-wrapper"] code):not([data-slot="popup-trigger"] code),
+            label:not([data-slot="label"])
+        ) {
+            border-radius: var(--radius-sm) !important;
+            background-color: var(--color-skeleton) !important;
+            background-image: var(--skeleton-shimmer-image) !important;
+            background-size: var(--skeleton-shimmer-size) !important;
+            animation: var(--skeleton-shimmer-animation) !important;
+            box-decoration-break: clone !important;
+        }
+        :where(input, textarea, select, button, label, span, p, a, option, strong, em, code) { color: transparent !important; }
+        :where(textarea, select) { appearance: none !important; }
+        :where(textarea) { resize: none !important; }
+        :where(input::placeholder, textarea::placeholder) { color: transparent !important; }
+        :where(input, textarea) { caret-color: transparent !important; }
+        :where(
+            img:not(button img):not([data-slot="input-wrapper"] img):not([data-slot="popup-trigger"] img),
+            svg:not(button svg):not([data-slot="input-wrapper"] svg):not([data-slot="popup-trigger"] svg)
+        ) {
+            background-color: var(--color-skeleton) !important;
+            background-image: var(--skeleton-shimmer-image) !important;
+            background-size: var(--skeleton-shimmer-size) !important;
+            animation: var(--skeleton-shimmer-animation) !important;
+        }
+        :where(img) { object-position: 100000px 100000px !important; }
+        :where(svg > *) { visibility: hidden !important; }
+        @media (prefers-reduced-motion: reduce) { :where(*) { animation: none !important; } }
     }
 }
 
 @keyframes graphite-skeleton-shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }

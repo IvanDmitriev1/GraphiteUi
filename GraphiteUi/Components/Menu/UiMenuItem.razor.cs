@@ -1,5 +1,4 @@
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -18,8 +17,6 @@ public partial class UiMenuItem : UiComponentBase
 
     private string ResolvedAs => string.IsNullOrWhiteSpace(Href) ? "button" : "a";
     private string? ResolvedHref => Disabled || ResolvedAs != "a" ? null : Href;
-
-    private string RootClass => MergeRootClass(MenuStyles.ItemClass);
 
     private Task OnClickAsync(MouseEventArgs args)
     {

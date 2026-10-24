@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
-using TailwindMerge;
 
 namespace GraphiteUi.Components.Bases;
 
@@ -35,16 +34,6 @@ public abstract class UiComponentBase : ComponentBase, IUiComponent
     /// </summary>
     [DisallowNull]
     public ElementReference? ElementReference { get; protected set; }
-
-    [Inject] internal TwMerge TwMerge { get; set; } = null!;
-
-    private protected string MergeRootClass(string coreClasses) =>
-        Merge(coreClasses, Class);
-
-    private protected string Merge(string first, string? second) =>
-        string.IsNullOrWhiteSpace(second)
-            ? first
-            : TwMerge.Merge(first, second) ?? string.Empty;
 
     /// <summary>
     /// Triggers a re-render of the component.

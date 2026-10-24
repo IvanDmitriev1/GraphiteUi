@@ -1,0 +1,22 @@
+@layer components {
+    :where([data-ui="radio-group"]) { @apply flex flex-col gap-2; }
+    :where([data-ui="radio"]) { @apply inline-flex items-center gap-2 cursor-pointer select-none; }
+    :where([data-ui="radio"] > [data-part="input"]) { @apply sr-only; }
+    :where([data-ui="radio"] > [data-part="control"]) {
+        @apply relative inline-flex size-5 shrink-0 items-center justify-center rounded-full border border-control bg-surface1 transition-[background-color,border-color,border-width,box-shadow];
+    }
+    :where([data-ui="radio"]:has(> [data-part="input"]:checked) > [data-part="control"]) { @apply border-control-checked border-[6px]; }
+    @media (hover: hover) {
+        :where([data-ui="radio"]:hover > [data-part="control"]) { @apply border-control-hover; }
+        :where([data-ui="radio"]:hover:has(> [data-part="input"]:checked) > [data-part="control"]) { @apply border-control-checked-hover; }
+    }
+    :where([data-ui="radio"] > [data-part="control"][data-invalid="true"]) { @apply border-invalid; }
+    :where([data-ui="radio"]:has(> [data-part="input"]:focus-visible) > [data-part="control"]) { @apply ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="radio"] > [data-part="label"]) { @apply text-body text-foreground; }
+    :where([data-ui="radio"]:has(> [data-part="input"]:disabled) > [data-part="control"]) { @apply border-disabled bg-disabled-surface; }
+    :where([data-ui="radio"]:has(> [data-part="input"]:disabled) > [data-part="label"]) { @apply text-disabled-foreground; }
+    :where([data-ui="radio"][data-disabled="true"], [data-ui="radio"]:has(> [data-part="input"]:disabled)) { @apply opacity-disabled pointer-events-none cursor-default; }
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="radio"] > [data-part="control"]) { transition: none; }
+    }
+}

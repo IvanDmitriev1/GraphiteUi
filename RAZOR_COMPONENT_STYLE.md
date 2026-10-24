@@ -6,7 +6,7 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 - This guide covers component authoring across:
   - `GraphiteUi/Components/*.razor`
   - `GraphiteUi/Components/*.razor.cs`
-  - `GraphiteUi/Styles/*.cs`
+  - `GraphiteUi/Styles/*.css`
 - This document complements `AGENTS.md` and `GraphiteUi/wwwroot/js/JS_CODE_STYLE.md`.
 - Use this guide for implementation details and review consistency without duplicating broader repo policies.
 - Guidance is best-practice oriented.
@@ -24,20 +24,17 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 - DOM nesting target:
   - Default target: `<= 4` levels.
   - Exception target: `5` levels only with explicit PR rationale.
-- Keep styling composition in `Styles/*.cs`; keep `.razor` markup focused on structure and attributes.
+- Keep component appearance in one `Styles/_<family>.css` file per family; keep `.razor` markup focused on structure and data attributes.
 
 ## Memory and Allocation Discipline
 - Do not build class strings with per-render interpolation in markup.
-- Use plain string initializers for fixed, literal-only classes; keep existing public properties and readonly fields in their current form.
-- Use `CssClassBuilder` for shared-fragment or conditional composition and size stackalloc buffers to expected output.
-- Group consecutive literal utilities into readable strings; do not use one builder call per utility unless a comment separates them.
-- Keep component-specific definitions in that component's style class. `CommonStyles.Card*` members are compatibility aliases for `CardStyles`; shared frame styles remain in `CommonStyles`.
-- Keep internal defaults free of conflicting utilities; class attribute order does not determine CSS precedence.
-- Pass only the required enum/boolean values into style helpers. Keep existing public component-taking overloads as forwarders when adding value-based overloads.
-- Merge consumer class overrides through `MergeRootClass`; return static core classes directly when no override exists.
+- Compose Tailwind utilities with `@apply` in the `components` layer. Prefer `:where([data-ui="..."])` for roots and native selectors (`:checked`, `:disabled`, `:focus-visible`, `:has`) for state.
+- Scope `data-part` styling to the component root and direct ownership relationship. Do not let part selectors leak into nested components.
+- Normalize enum attributes to lowercase kebab-case and boolean attributes to `true`/`false`; encode finite fallbacks in the component and CSS.
+- Keep internal styles free of conflicting declarations; consumers pass `Class` and part classes through unchanged, with low-specificity selectors enabling overrides.
 - Avoid per-render `new Dictionary<>` / `new List<>` in hot paths.
 - Avoid avoidable lambda captures in frequently rendered markup/event wiring.
-- Precompute variant class tables in style classes when combinations are finite.
+- Use finite normalized data attributes for variants whose values are known.
 - Keep `OnParametersSet` work incremental and cache derived values when inputs are unchanged.
 
 ## Razor Markup Rules
@@ -45,7 +42,7 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 - Keep markup SSR-usable without requiring JavaScript for baseline functionality.
 - Pass through common parameters/attributes consistently (`Class`, `AdditionalAttributes`, `ChildContent`, `Disabled`, `ReadOnly`, `Required` as applicable).
 - Keep stable `data-slot` naming for elements that styles or JS depend on.
-- Use `data-slot` to identify library elements for optional stylesheet normalization. The standalone entrypoint applies its reset rules to every matching slot in the document, including consumer elements.
+- Use `data-ui` for stable component identity and `data-part` for styled descendants. Scope base normalization to library roots and owned parts; preserve `data-slot` only where existing markup, JS, or consumers depend on it.
 - Use `ToAttributeValue()` when boolean values must be represented as string attributes (`data-*`, `aria-*`).
 - Prefer simple ultra-cheap expression paths directly in markup when logic is trivial (for example `Type.ToHtmlValue()`).
 - Keep root element responsibilities clear: attributes, classes, and accessibility metadata should be predictable.
@@ -77,7 +74,7 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 - [ ] Component structure follows direct-child-first approach and avoids convenience wrappers.
 - [ ] Nesting depth target is met (`<= 4`) or `5`-depth usage includes PR rationale.
 - [ ] No avoidable render-path allocations (dynamic class interpolation, repeated collection allocation).
-- [ ] Class composition is centralized in `Styles/*.cs` and merged via `MergeRootClass` with bounded TwMerge caching.
+- [ ] Appearance is centralized in the component family's CSS and uses low-specificity root/part selectors.
 - [ ] Interop setup is idempotent and does not create duplicate handlers/listeners.
 - [ ] SSR baseline behavior remains usable.
 - [ ] Accessibility semantics and keyboard behavior remain correct.
@@ -85,19 +82,18 @@ Best-practice guide for authoring Razor components in GraphiteUi with a performa
 
 ## Examples
 
-```csharp
-namespace GraphiteUi.Styles;
-
-public static class TagStyles
-{
-    public static string RootClass { get; } = "inline-flex items-center rounded-md";
+```css
+@layer components {
+    :where([data-ui="tag"]) {
+        @apply inline-flex items-center rounded-md;
+    }
 }
 ```
 
 ### 1) Good input component split
 - Keep `.razor` focused on structure and binding.
 - Keep `.razor.cs` focused on parsing/state transitions.
-- Keep classes and variants in `Styles/*.cs` and merge root class via `MergeRootClass`.
+- Keep appearance in the family's CSS; pass normalized state through stable root and part attributes.
 
 ### 2) Avoid pattern
 ```razor
@@ -113,7 +109,7 @@ public static class TagStyles
 
 Use:
 - flat structure where possible
-- static/precomputed class composition in style classes
+- CSS family selectors and normalized component state attributes
 - cached or parameter-derived attributes without repeated allocations
 
 ## Appendix: Quick Audit Commands

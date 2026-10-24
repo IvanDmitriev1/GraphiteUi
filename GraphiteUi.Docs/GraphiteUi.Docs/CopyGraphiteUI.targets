@@ -5,11 +5,12 @@
 
 	<Target Name="GraphiteUiDocs_CopyLocalThemeContents" BeforeTargets="Build">
 		<ItemGroup>
-			<GraphiteUiDocsThemeFiles Include="$(SolutionDir)/GraphiteUi/Styles/**/*" />
+			<GraphiteUiDocsCssSources Include="$(SolutionDir)/GraphiteUi/Styles/*.css" />
 		</ItemGroup>
 
-		<Copy SourceFiles="@(GraphiteUiDocsThemeFiles)"
-		      DestinationFolder="$(MSBuildProjectDirectory)/bin/GraphiteUi"
+		<MakeDir Directories="$(MSBuildProjectDirectory)/bin/GraphiteUi/Styles" />
+		<Copy SourceFiles="@(GraphiteUiDocsCssSources)"
+		      DestinationFiles="@(GraphiteUiDocsCssSources->'$(MSBuildProjectDirectory)/bin/GraphiteUi/Styles/%(Filename)%(Extension)')"
 		      SkipUnchangedFiles="true" />
 	</Target>
 </Project>

@@ -5,7 +5,7 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 ## Scope & Goals
 - Ship cohesive, high-quality components with minimal allocations and predictable performance.
 - Support all rendering modes: static SSR, Interactive Server, Interactive WebAssembly.
-- Keep styling centralized and composable with predictable class merging.
+- Keep styling centralized in CSS and make consumer classes predictable to override.
 
 ## Design Principles (Required)
 - Apply GRASP when introducing behavior:
@@ -27,8 +27,8 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - `docs/API.md` - public API reference (components, parameters, services, theme tokens, known gaps). Read before writing GraphiteUi markup.
 - `GraphiteUi/` - Razor Class Library.
 - `GraphiteUi/Components/**` - components (`Ui*.razor` + `.razor.cs`), base types in `Components/Bases`.
-- `GraphiteUi/Styles/*.cs` - class strings and style variants.
-- `GraphiteUi/Styles/_theme.css` and `GraphiteUi/Styles/_dark.css` - theme tokens.
+- `GraphiteUi/Styles/*.css` - centralized theme and component-family styles.
+- `GraphiteUi/Styles/graphite-ui.css` - library stylesheet entrypoint.
 - `GraphiteUi/wwwroot/js/*.js` - interop modules.
 - `GraphiteUi/wwwroot/GraphiteUi.lib.module.js` - JS boot hooks for web start/enhanced navigation.
 - `GraphiteUi/GraphiteUi.targets` - copies theme assets to consumer output.
@@ -40,7 +40,7 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - Prerequisite: .NET 10 SDK.
 - Required before merge: `dotnet build GraphiteUi.sln`
 - Optional: build docs app when UX/samples changed.
-- Tailwind/CSS artifacts are checked in; no required formatting tool.
+- Library CSS sources are checked in; generated docs CSS is build output. No required formatting tool.
 
 ## Component Conventions
 - Use paired files: `UiThing.razor` + `UiThing.razor.cs`.
@@ -54,15 +54,12 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - Use `ToAttributeValue()` for boolean data/aria attributes when string values are needed.
 
 ## Styling Rules
-- Keep class composition in `Styles/*.cs`, not inline in component markup.
-- Use plain string initializers for fixed, literal-only classes; preserve public property/field kinds. Use `CssClassBuilder` (stackalloc-friendly) when assembling shared fragments or conditional classes.
-- Keep internal class composition free of conflicting utilities. Share a common base and add the intended variant once; concatenation order does not resolve CSS conflicts.
-- Style helpers should accept the enum/boolean values they need rather than component instances. Preserve existing public component-taking overloads as forwarding methods when adding value-based overloads.
-- Prefer precomputed class tables for variants (for example color by size matrices).
-- Merge consumer classes via `MergeRootClass` with injected `TwMerge`; return core classes directly when no consumer override exists.
-- **Role tokens only.** Class strings may name a role (`bg-surface-hover`, `text-muted-foreground`, `border-control`, `bg-control-checked`) and never a numbered ramp step (`bg-neutral-10`, `text-accent-700`) or a raw `--graphite-*` primitive. The ramps are the palette; the roles are the vocabulary. A build warning (`GRAPHITE001`, defined in `GraphiteUi.csproj`) enforces this, including inside comments — Tailwind scans these files as plain text, so a step named in a comment still compiles a utility.
-- Need a look the vocabulary does not cover? Add a role token to the `@theme` block in `Styles/_theme.css` and bind it to a primitive there. Do not reach for a step. This is what keeps a color retune a one-line CSS edit instead of a library rebuild and a NuGet republish.
-- Naming a new role: Tailwind derives `bg-X`/`text-X`/`border-X`/`ring-X` from one `--color-X`, so the token name must exclude the property prefix. A border role is `--color-control` (utility `border-control`), never `--color-border-control` — that compiles to `border-border-control` and leaves `border-control` undefined with no error. Verify the utility actually appears in the generated `GraphiteUi.Docs/GraphiteUi.Docs/wwwroot/app.css` after adding one.
+- Keep component appearance in one `Styles/_<family>.css` file per component family. Compose Tailwind utilities with `@apply` inside `@layer components` and use `:where([data-ui=...])` roots plus scoped native nesting for low-specificity styling.
+- Put stable `data-ui` identities on roots after attribute splats; identify owned descendants with `data-part`. Preserve existing `data-slot` and JS state attributes when they are part of the runtime contract.
+- Normalize finite enum values to lowercase kebab-case data attributes and booleans to `true`/`false`; CSS owns appearance and fallback values.
+- Keep all visual roles in CSS. Use semantic role tokens such as `bg-surface-hover`, `text-muted-foreground`, `border-control`, and `bg-control-checked`; bind new roles in `Styles/_theme.css` and theme values in `_dark.css`.
+- `Class` and component part-class parameters pass through unchanged. Keep their selectors low specificity so consumer utilities can override the library appearance without a merge service.
+- `Styles/graphite-ui.css` imports the library CSS files; consumers import it after their own `tailwindcss` import. Do not scan library C#, Razor, or component files from the entrypoint.
 
 ## JS and Rendering Modes
 - Put JS modules in `GraphiteUi/wwwroot/js`.
@@ -83,21 +80,19 @@ Field manual for contributors to the GraphiteUi Blazor UI library (targets .NET 
 - Compatibility aliases are allowed when renaming interop exports.
 
 ## Performance and Allocation Discipline
-- Avoid per-render string interpolation for classes.
-- Prefer stackalloc + `CssClassBuilder`/`ValueStringBuilder` patterns.
-- Use precomputed static class strings and finite variant tables; rely on TwMerge bounded LRU only for consumer overrides.
-- Keep TwMerge cache bounded; `AddGraphiteUi` defaults to cache size 500 and honors callback overrides.
+- Avoid per-render string interpolation for attributes when a direct enum/boolean mapping is enough.
+- Use finite normalized data-attribute values and CSS selectors for appearance variants.
 - Minimize unnecessary `StateHasChanged` calls.
 - Use `UiDebouncedInputBase` for debounced input behavior where applicable.
 
 ## Theme and Assets
 - Keep semantic token changes in `_theme.css` and `_dark.css`.
 - If theme asset paths change, update packing/copy rules in `GraphiteUi.csproj` and `GraphiteUi.targets`.
-- Consumers rely on `GraphiteUi.targets` for `theme/**` copy behavior.
+- Consumers rely on `GraphiteUi.targets` for `theme/Styles/*.css` copy behavior into `bin/GraphiteUi` (or `GraphiteUiThemeDir`).
 
 ## Services and DI
 - Keep DI registration centralized in `AddGraphiteUi` (`GraphiteUI.Extensions`).
-- Existing registrations include TwMerge, `IDialogService`, and `IToastService`.
+- `AddGraphiteUi()` registers `IDialogService` and `IToastService`.
 - Register new cross-cutting services in the same extension method.
 
 ## Docs and Examples

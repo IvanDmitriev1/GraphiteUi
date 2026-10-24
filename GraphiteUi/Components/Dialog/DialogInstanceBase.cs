@@ -1,4 +1,3 @@
-﻿using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -41,13 +40,13 @@ internal abstract class DialogInstanceBase<TDialog> : IDialogInstance
         int seq = 0;
 
         builder.OpenElement(seq++, "dialog");
-        builder.AddAttribute(seq++, "class", string.IsNullOrWhiteSpace(Options.Classes)
-            ? DialogStyles.Classes
-            : $"{DialogStyles.Classes} {Options.Classes}");
+        builder.AddAttribute(seq++, "class", Options.Classes);
         builder.AddAttribute(seq++, "style", _zIndexStyle);
         builder.AddAttribute(seq++, "id", Id.Value);
         builder.AddAttribute(seq++, "role", "dialog");
         builder.AddAttribute(seq++, "data-slot", "dialog");
+        builder.AddAttribute(seq++, "data-ui", "dialog");
+        builder.AddAttribute(seq++, "data-part", "surface");
         builder.AddAttribute(seq++, "aria-modal", "true");
 
         builder.AddAttribute(seq++, "onclose", EventCallback.Factory.Create<EventArgs>(this, Close));

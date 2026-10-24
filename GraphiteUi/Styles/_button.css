@@ -1,0 +1,167 @@
+@layer components {
+    :where([data-ui="button"]) {
+        @apply relative inline-flex items-center justify-center appearance-none select-none overflow-hidden whitespace-nowrap subpixel-antialiased rounded-md border cursor-pointer transition-colors-transform-opacity duration-150 outline-hidden;
+    }
+
+    :where([data-ui="button"][data-variant="solid"][data-icon-only="false"]) {
+        @apply no-underline gap-1.5 shadow-sm;
+    }
+
+    :where([data-ui="button"][data-variant="solid"][data-icon-only="true"]) {
+        @apply no-underline shadow-sm;
+    }
+
+    :where([data-ui="button"][data-variant="outline"], [data-ui="button"][data-variant="ghost"], [data-ui="button"][data-variant="link"]) {
+        @apply bg-transparent;
+    }
+
+    :where([data-ui="button"][data-variant="outline"][data-icon-only="false"], [data-ui="button"][data-variant="ghost"][data-icon-only="false"], [data-ui="button"][data-variant="link"][data-icon-only="false"]) {
+        @apply gap-1.5;
+    }
+
+    :where([data-ui="button"][data-variant="outline"]) { @apply no-underline; }
+
+    :where([data-ui="button"][data-variant="link"]) {
+        @apply underline underline-offset-4;
+    }
+
+    :where([data-ui="button"][data-variant="ghost"]) {
+        @apply no-underline border-transparent;
+    }
+
+    :where([data-ui="button"][data-variant="link"]) { @apply bg-transparent border-transparent; }
+    :where([data-ui="button"][data-variant="outline"]) { @apply shadow-xs; }
+
+    :where([data-ui="button"][data-size="small"][data-icon-only="false"]:not([data-variant="link"])) {
+        @apply h-[var(--control-height-sm)] min-w-16 px-3 text-body-sm;
+    }
+
+    :where([data-ui="button"][data-size="medium"][data-icon-only="false"]:not([data-variant="link"])) {
+        @apply h-[var(--control-height-md)] min-w-20 px-4 text-body-sm;
+    }
+
+    :where([data-ui="button"][data-size="large"][data-icon-only="false"]:not([data-variant="link"])) {
+        @apply h-[var(--control-height-lg)] min-w-24 px-5 text-body;
+    }
+
+    :where([data-ui="button"][data-size="small"][data-variant="link"][data-icon-only="false"]) {
+        @apply h-[var(--control-height-sm)] text-body-sm;
+    }
+
+    :where([data-ui="button"][data-size="medium"][data-variant="link"][data-icon-only="false"]) {
+        @apply h-[var(--control-height-md)] text-body-sm;
+    }
+
+    :where([data-ui="button"][data-size="large"][data-variant="link"][data-icon-only="false"]) {
+        @apply h-[var(--control-height-lg)] text-body;
+    }
+
+    :where([data-ui="button"][data-size="small"][data-icon-only="true"]) {
+        @apply size-[var(--control-height-sm)] p-0 text-body-sm;
+    }
+
+    :where([data-ui="button"][data-size="medium"][data-icon-only="true"]) {
+        @apply size-[var(--control-height-md)] p-0 text-body-sm;
+    }
+
+    :where([data-ui="button"][data-size="large"][data-icon-only="true"]) {
+        @apply size-[var(--control-height-lg)] p-0 text-body;
+    }
+
+    :where([data-ui="button"]) { @apply font-medium; }
+
+    :where([data-ui="button"][data-variant="solid"][data-color="primary"]) {
+        @apply bg-accent text-accent-foreground border-transparent;
+    }
+    :where([data-ui="button"][data-variant="solid"][data-color="inherit"]) { @apply border-transparent; }
+    :where([data-ui="button"][data-variant="solid"][data-color="secondary"]) {
+        @apply bg-secondary text-secondary-foreground border-secondary-border;
+    }
+    :where([data-ui="button"][data-variant="solid"][data-color="success"]) {
+        @apply bg-success text-success-foreground border-transparent;
+    }
+    :where([data-ui="button"][data-variant="solid"][data-color="warning"]) {
+        @apply bg-warning text-warning-foreground border-transparent;
+    }
+    :where([data-ui="button"][data-variant="solid"][data-color="danger"]) {
+        @apply bg-danger text-danger-foreground border-transparent;
+    }
+    :where([data-ui="button"][data-variant="solid"][data-color="info"]) {
+        @apply bg-info text-info-foreground border-transparent;
+    }
+
+    @media (hover: hover) {
+        :where([data-ui="button"][data-variant="solid"][data-color="primary"]:hover) { @apply bg-accent-hover; }
+        :where([data-ui="button"][data-variant="solid"][data-color="secondary"]:hover) { @apply bg-secondary-hover border-secondary-border-hover; }
+        :where([data-ui="button"][data-variant="solid"][data-color="success"]:hover) { @apply bg-success-hover; }
+        :where([data-ui="button"][data-variant="solid"][data-color="warning"]:hover) { @apply bg-warning-hover; }
+        :where([data-ui="button"][data-variant="solid"][data-color="danger"]:hover) { @apply bg-danger-hover; }
+        :where([data-ui="button"][data-variant="solid"][data-color="info"]:hover) { @apply bg-info-hover; }
+
+        :where([data-ui="button"][data-variant="outline"][data-color="inherit"]:hover, [data-ui="button"][data-variant="outline"][data-color="secondary"]:hover, [data-ui="button"][data-variant="ghost"][data-color="inherit"]:hover, [data-ui="button"][data-variant="ghost"][data-color="secondary"]:hover) { @apply bg-secondary-subtle-hover; }
+        :where([data-ui="button"][data-variant="outline"][data-color="primary"]:hover, [data-ui="button"][data-variant="ghost"][data-color="primary"]:hover) { @apply bg-accent-subtle-hover; }
+        :where([data-ui="button"][data-variant="outline"][data-color="success"]:hover, [data-ui="button"][data-variant="ghost"][data-color="success"]:hover) { @apply bg-success-subtle-hover; }
+        :where([data-ui="button"][data-variant="outline"][data-color="warning"]:hover, [data-ui="button"][data-variant="ghost"][data-color="warning"]:hover) { @apply bg-warning-subtle-hover; }
+        :where([data-ui="button"][data-variant="outline"][data-color="danger"]:hover, [data-ui="button"][data-variant="ghost"][data-color="danger"]:hover) { @apply bg-danger-subtle-hover; }
+        :where([data-ui="button"][data-variant="outline"][data-color="info"]:hover, [data-ui="button"][data-variant="ghost"][data-color="info"]:hover) { @apply bg-info-subtle-hover; }
+    }
+    :where([data-ui="button"][data-variant="solid"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply translate-y-px shadow-xs; }
+    :where([data-ui="button"][data-variant="outline"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply translate-y-px shadow-none; }
+    :where([data-ui="button"][data-variant="ghost"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="link"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply translate-y-px; }
+
+    :where([data-ui="button"][data-variant="solid"][data-color="primary"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-accent-active; }
+    :where([data-ui="button"][data-variant="solid"][data-color="secondary"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-secondary-active; }
+    :where([data-ui="button"][data-variant="solid"][data-color="success"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-success-active; }
+    :where([data-ui="button"][data-variant="solid"][data-color="warning"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-warning-active; }
+    :where([data-ui="button"][data-variant="solid"][data-color="danger"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-danger-active; }
+    :where([data-ui="button"][data-variant="solid"][data-color="info"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-info-active; }
+
+    :where([data-ui="button"][data-variant="outline"][data-color="inherit"]) { @apply border-control; }
+    :where([data-ui="button"][data-variant="outline"][data-color="primary"], [data-ui="button"][data-variant="outline"][data-color="secondary"]) {
+        @apply text-foreground border-control;
+    }
+    :where([data-ui="button"][data-variant="outline"][data-color="success"]) { @apply text-success-subtle-foreground border-success-subtle-foreground; }
+    :where([data-ui="button"][data-variant="outline"][data-color="warning"]) { @apply text-warning-subtle-foreground border-warning-subtle-foreground; }
+    :where([data-ui="button"][data-variant="outline"][data-color="danger"]) { @apply text-danger-subtle-foreground border-danger-subtle-foreground; }
+    :where([data-ui="button"][data-variant="outline"][data-color="info"]) { @apply text-info-subtle-foreground border-info-subtle-foreground; }
+    :where([data-ui="button"][data-variant="ghost"][data-color="primary"], [data-ui="button"][data-variant="ghost"][data-color="secondary"], [data-ui="button"][data-variant="link"][data-color="primary"], [data-ui="button"][data-variant="link"][data-color="secondary"]) { @apply text-foreground; }
+    :where([data-ui="button"][data-variant="ghost"][data-color="success"], [data-ui="button"][data-variant="link"][data-color="success"]) { @apply text-success-subtle-foreground; }
+    :where([data-ui="button"][data-variant="ghost"][data-color="warning"], [data-ui="button"][data-variant="link"][data-color="warning"]) { @apply text-warning-subtle-foreground; }
+    :where([data-ui="button"][data-variant="ghost"][data-color="danger"], [data-ui="button"][data-variant="link"][data-color="danger"]) { @apply text-danger-subtle-foreground; }
+    :where([data-ui="button"][data-variant="ghost"][data-color="info"], [data-ui="button"][data-variant="link"][data-color="info"]) { @apply text-info-subtle-foreground; }
+
+    :where([data-ui="button"][data-variant="outline"][data-color="inherit"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="outline"][data-color="secondary"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="inherit"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="secondary"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-secondary-subtle-active; }
+    :where([data-ui="button"][data-variant="outline"][data-color="primary"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="primary"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-accent-subtle-active; }
+    :where([data-ui="button"][data-variant="outline"][data-color="success"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="success"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-success-subtle-active; }
+    :where([data-ui="button"][data-variant="outline"][data-color="warning"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="warning"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-warning-subtle-active; }
+    :where([data-ui="button"][data-variant="outline"][data-color="danger"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="danger"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-danger-subtle-active; }
+    :where([data-ui="button"][data-variant="outline"][data-color="info"]:not([data-disabled="true"]):not([data-loading="true"]):active, [data-ui="button"][data-variant="ghost"][data-color="info"]:not([data-disabled="true"]):not([data-loading="true"]):active) { @apply bg-info-subtle-active; }
+
+    :where([data-ui="button"][data-disabled="true"]) {
+        @apply bg-disabled-surface text-disabled-foreground border-transparent shadow-none cursor-default;
+    }
+
+    :where([data-ui="button"]:focus:not(:focus-visible):not(:disabled):not([data-disabled="true"]):not([data-loading="true"]):not([data-variant="link"])) { @apply z-10 ring-2 ring-secondary ring-offset-0; }
+    :where([data-ui="button"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply z-10 ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="button"][data-color="primary"]:focus:not(:focus-visible)) { @apply ring-accent/10; }
+    :where([data-ui="button"][data-color="success"]:focus:not(:focus-visible)) { @apply ring-success/10; }
+    :where([data-ui="button"][data-color="warning"]:focus:not(:focus-visible)) { @apply ring-warning/10; }
+    :where([data-ui="button"][data-color="danger"]:focus:not(:focus-visible)) { @apply ring-danger/10; }
+    :where([data-ui="button"][data-color="info"]:focus:not(:focus-visible)) { @apply ring-info/10; }
+    :where([data-ui="button"][data-color="primary"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-accent; }
+    :where([data-ui="button"][data-color="success"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-success; }
+    :where([data-ui="button"][data-color="warning"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-warning; }
+    :where([data-ui="button"][data-color="danger"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-danger; }
+    :where([data-ui="button"][data-color="info"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-info; }
+
+    :where([data-ui="button"] > [data-part="content"]) { @apply inline-flex items-center justify-center gap-1.5; }
+    :where([data-ui="button"][data-icon-only="true"] > [data-part="content"]) { @apply gap-0; }
+    :where([data-ui="button"][data-loading="true"] > [data-part="content"]) { @apply opacity-0; }
+    :where([data-ui="button"] > [data-part="loading"]) { @apply pointer-events-none absolute inset-0 inline-flex items-center justify-center; }
+    :where([data-ui="button"] > [data-part="loading"] > [data-part="spinner"]) { @apply size-4 animate-spin rounded-full border-2 border-current border-r-transparent; }
+
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="button"], [data-ui="button"] > [data-part="loading"] > [data-part="spinner"]) { transition: none; animation: none; }
+        :where([data-ui="button"]:active) { @apply translate-y-0; }
+    }
+}

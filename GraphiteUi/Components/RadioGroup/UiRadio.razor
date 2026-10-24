@@ -1,11 +1,12 @@
 @namespace GraphiteUi.Components
 @typeparam TValue
 
-<label class="@RootClass"
+<label data-ui="radio"
+       data-part="item"
        data-disabled="@IsDisabled.ToAttributeValue()">
 
 	<input type="radio"
-	       class="@RadioStyles.InputClass"
+	       data-part="input"
 	       data-slot="radio-input"
 	       name="@Group!.InputGroupName"
 	       value="@FormValue"
@@ -13,12 +14,12 @@
 	       disabled="@IsDisabled"
 		   @onchange="() => Group?.Select(Value)" />
 
-	<span class="@RadioStyles.ControlClass"
+	<span data-part="control"
 	      data-invalid="@Group!.IsInvalid.ToAttributeValue()">
 	</span>
 
 	@if (ChildContent is not null)
 	{
-		<span class="@RadioStyles.LabelClass">@ChildContent</span>
+		<span data-part="label">@ChildContent</span>
 	}
 </label>

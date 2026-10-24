@@ -2,19 +2,19 @@
 @inherits UiDebouncedInputBase<TValue>
 @typeparam TValue
 
-<div class="@Class">
+<div class="@Class" data-ui="input-field">
     <div data-slot="input-wrapper"
-         data-invalid="@IsInvalid"
-         data-readonly="@ReadOnly"
-         data-disabled="@Disabled"
+         data-part="wrapper"
+         data-size="@Size.ToAttributeValue()"
+         data-invalid="@IsInvalid.ToAttributeValue()"
+         data-readonly="@ReadOnly.ToAttributeValue()"
+         data-disabled="@Disabled.ToAttributeValue()"
          data-trailing="@((TrailingContent is not null).ToAttributeValue())"
-         data-active="@(!string.IsNullOrWhiteSpace(CurrentValueAsString) || !string.IsNullOrWhiteSpace(Placeholder))"
-         class="@InputWrapperClass">
+         data-active="@((!string.IsNullOrWhiteSpace(CurrentValueAsString) || !string.IsNullOrWhiteSpace(Placeholder)).ToAttributeValue())">
 
         @if (!string.IsNullOrEmpty(Label))
         {
-            <label for="@InputId" class="@DefaultUiInputFieldStyles.LabelClass"
-                   data-slot="label">
+            <label for="@InputId" data-part="label" data-slot="label">
                 @Label
             </label>
         }
@@ -25,7 +25,6 @@
                       id="@InputId"
                       aria-describedby="@DescribedBy"
                       aria-invalid="@IsInvalid.ToAttributeValue()"
-                      class="@InputElementClass"
                       placeholder="@Placeholder"
                       disabled="@Disabled"
                       readonly="@ReadOnly"
@@ -36,6 +35,7 @@
                       name="@NameAttributeValue"
                       rows="@TextareaRows"
                       data-slot="input"
+                      data-part="input"
                       @oninput="@OnInputAsync">@CurrentValueAsString</textarea>
         }
         else
@@ -47,7 +47,6 @@
                    inputmode="@InputMode"
                    step="@InputStep"
                    type="@TypeString"
-                   class="@InputElementClass"
                    value="@CurrentValueAsString"
                    placeholder="@Placeholder"
                    disabled="@Disabled"
@@ -58,19 +57,19 @@
                    aria-label="@AccessibleLabel"
                    name="@NameAttributeValue"
                    data-slot="input"
+                   data-part="input"
                    @oninput="@OnInputAsync"/>
         }
 
         @if (TrailingContent is not null)
         {
-            <span data-slot="input-trailing"
-                  class="@DefaultUiInputFieldStyles.InputTrailingClass">
+            <span data-slot="input-trailing" data-part="trailing">
                 @TrailingContent
             </span>
         }
     </div>
     @if (!string.IsNullOrWhiteSpace(Description))
     {
-        <p id="@DescriptionId" class="@DefaultUiInputFieldStyles.DescriptionClass">@Description</p>
+        <p id="@DescriptionId" data-part="description">@Description</p>
     }
 </div>

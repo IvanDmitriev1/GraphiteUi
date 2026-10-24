@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -11,8 +10,6 @@ public partial class UiFileInput : UiInputBase<IReadOnlyList<IBrowserFile>>
     [Parameter] public bool Multiple { get; set; }
     [Parameter] public int MaxFiles { get; set; } = 10;
     [Parameter] public EventCallback<IReadOnlyList<IBrowserFile>> FilesChanged { get; set; }
-
-    private protected string RootClass => MergeRootClass(FileInputStyles.RootClass);
 
     protected override void OnInitialized()
     {

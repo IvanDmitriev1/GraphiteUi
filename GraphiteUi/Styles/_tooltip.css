@@ -1,0 +1,18 @@
+@layer components {
+    :where([data-ui="tooltip"]) { @apply relative inline-flex; }
+    :where([data-ui="tooltip"] > [data-part="bubble"]) {
+        @apply pointer-events-none absolute z-[130] w-max max-w-[min(14rem,calc(100vw-1rem))] rounded-md border border-border bg-surface3 text-surface3-foreground px-2 py-1 text-body-sm shadow-md whitespace-normal [overflow-wrap:anywhere] opacity-0 scale-[0.98] transition-[opacity,transform] duration-150 ease-out;
+    }
+    :where([data-ui="tooltip"][data-bottom="false"] > [data-part="bubble"]) { @apply bottom-full mb-2; }
+    :where([data-ui="tooltip"][data-bottom="true"] > [data-part="bubble"]) { @apply top-full mt-2; }
+    :where([data-ui="tooltip"][data-align="start"] > [data-part="bubble"]) { @apply left-0; }
+    :where([data-ui="tooltip"][data-align="end"] > [data-part="bubble"]) { @apply right-0; }
+    :where([data-ui="tooltip"][data-align="center"] > [data-part="bubble"]) { @apply left-1/2 -translate-x-1/2; }
+    @media (hover: hover) {
+        :where([data-ui="tooltip"]:hover > [data-part="bubble"]) { @apply opacity-100 scale-100; }
+    }
+    :where([data-ui="tooltip"]:focus-within > [data-part="bubble"]) { @apply opacity-100 scale-100; }
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="tooltip"] > [data-part="bubble"]) { transition: none; }
+    }
+}

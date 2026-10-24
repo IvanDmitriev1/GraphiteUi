@@ -2,29 +2,30 @@
 @inherits UiComponentBase
 
 <UiComponent As="@As"
-             Class="@RootClass"
+             Class="@Class"
+             DataUi="card"
              @attributes="@AdditionalAttributes">
     @if (HeaderContent is not null || !string.IsNullOrWhiteSpace(Title))
     {
-        <div class="@CardStyles.HeaderClass">
+        <div data-part="header">
             @if (HeaderContent is not null)
             {
                 @HeaderContent
             }
             else
             {
-                <div class="@CardStyles.TitleClass">@Title</div>
+                <div data-part="title">@Title</div>
             }
         </div>
     }
 
-    <div class="@CardStyles.BodyClass">
+    <div data-part="body">
         @ChildContent
     </div>
 
     @if (FooterContent is not null)
     {
-        <div class="@CardStyles.FooterClass">
+        <div data-part="footer">
             @FooterContent
         </div>
     }

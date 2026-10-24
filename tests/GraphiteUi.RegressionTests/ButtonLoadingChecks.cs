@@ -23,17 +23,18 @@ internal static class ButtonLoadingChecks
         Require(native.Contains("data-disabled=\"false\"", StringComparison.Ordinal)
             && native.Contains("data-loading=\"true\"", StringComparison.Ordinal),
             "Loading and explicit disabled states were not emitted separately.");
-        string classes = Regex.Match(native, "\\bclass=\"([^\"]*)\"").Groups[1].Value;
-        Require(classes.Contains("data-[disabled=true]:bg-disabled-surface", StringComparison.Ordinal)
-            && !classes.Contains("disabled:bg-disabled-surface", StringComparison.Ordinal)
-            && !classes.Contains("data-disabled:bg-disabled-surface", StringComparison.Ordinal),
-            "Loading or a false data-disabled flag matched generic disabled styling.");
+        Require(native.Contains("data-ui=\"button\"", StringComparison.Ordinal)
+            && native.Contains("data-color=\"primary\"", StringComparison.Ordinal)
+            && native.Contains("data-size=\"medium\"", StringComparison.Ordinal)
+            && native.Contains("data-variant=\"solid\"", StringComparison.Ordinal),
+            "Loading button presentation attributes were not emitted.");
         Require(html.Contains("Save document", StringComparison.Ordinal) && Count(html, "Save document") == 1,
             "Loading removed or duplicated the original button label.");
-        Require(html.Contains("opacity-0", StringComparison.Ordinal), "Loading did not visually conceal its retained content slot.");
-        Require(html.Contains("aria-hidden=\"true\"", StringComparison.Ordinal)
-            && html.Contains("motion-reduce:animate-none", StringComparison.Ordinal),
-            "Loading spinner is not hidden from assistive technology or lacks a reduced-motion state.");
+        Require(html.Contains("data-part=\"content\"", StringComparison.Ordinal)
+            && html.Contains("data-part=\"loading\"", StringComparison.Ordinal)
+            && html.Contains("aria-hidden=\"true\"", StringComparison.Ordinal)
+            && html.Contains("data-part=\"spinner\"", StringComparison.Ordinal),
+            "Loading content/spinner parts are missing or not hidden from assistive technology.");
 
         string icon = Element(html, "loading-icon");
         Require(icon.Contains("aria-label=\"Refresh list\"", StringComparison.Ordinal)

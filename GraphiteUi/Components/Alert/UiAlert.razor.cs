@@ -1,6 +1,5 @@
 using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -18,9 +17,6 @@ public partial class UiAlert : UiComponentBase
     [Parameter] public EventCallback OnDismiss { get; set; }
 
     private string ResolvedRole => Color == ThemeColor.Danger ? "alert" : "status";
-    private protected string RootClass => MergeRootClass(AlertStyles.GetRootClasses(Color));
-    private protected string IndicatorClass => AlertStyles.GetIndicatorClass(Color);
-
     public UiAlert()
     {
         As = "section";

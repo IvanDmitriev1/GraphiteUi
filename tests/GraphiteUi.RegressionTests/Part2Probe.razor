@@ -1,0 +1,60 @@
+@using GraphiteUi.Common
+@using GraphiteUi.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm EditContext="@_editContext">
+    <UiTextbox id="field-probe" @bind-Value="_model.Name" Label="Name" Placeholder="Enter a name" Description="Name help"
+               Size="Size.Small" Class="field-raw px-2 px-4" />
+    <UiNumbox id="number-probe" @bind-Value="_model.Amount" Size="Size.Large" />
+    <UiFileInput id="file-probe" @bind-Value="_model.Files" Label="Files" Class="file-raw px-2 px-4" Disabled />
+    <UiCheckbox id="checkbox-probe" @bind-Value="_model.Checked" data-ui="consumer-value">Agree</UiCheckbox>
+    <UiSwitch id="switch-probe" @bind-Value="_model.Switched">Notify</UiSwitch>
+    <UiRadioGroup id="radio-group-probe" TValue="string" @bind-Value="_model.Radio" Name="choice" Disabled>
+        <UiRadio Value="@("first")" ValueKey="first">First</UiRadio>
+        <UiRadio Value="@("second")" ValueKey="second">Second</UiRadio>
+    </UiRadioGroup>
+    <UiDrawer id="drawer-probe" Class="drawer-raw px-2 px-4" Side="@((Align)99)" Disabled ShowBackdrop Title="Details">
+        <TriggerContent>Open drawer</TriggerContent>
+        <ChildContent>Drawer content</ChildContent>
+    </UiDrawer>
+    <UiTooltip id="tooltip-probe" Class="tooltip-raw px-2 px-4" Align="@((Align)99)" Bottom Text="Tooltip text">
+        <span>Tooltip trigger</span>
+    </UiTooltip>
+    <UiToast Id="9" Options="Toast" AdditionalAttributes="ToastAttributes" />
+    <UiToastHost id="toast-host-probe" Placement="@((ToastPlacement)99)" Class="toast-host-raw px-2 px-4" />
+</EditForm>
+
+@code {
+    private readonly Model _model;
+    private readonly EditContext _editContext;
+    private readonly ValidationMessageStore _validationMessages;
+
+    public Part2Probe()
+    {
+        _model = new Model { Checked = true, Switched = true, Radio = "second" };
+        _editContext = new EditContext(_model);
+        _validationMessages = new ValidationMessageStore(_editContext);
+        _validationMessages.Add(new FieldIdentifier(_model, nameof(Model.Files)), "A file is required.");
+        _validationMessages.Add(new FieldIdentifier(_model, nameof(Model.Switched)), "A notification preference is required.");
+        _editContext.NotifyValidationStateChanged();
+    }
+
+    private static readonly ToastOptions Toast = new()
+    {
+        Title = "Saved",
+        Content = builder => builder.AddContent(0, "Record saved"),
+        Class = "toast-raw px-2 px-4"
+    };
+    private static readonly IReadOnlyDictionary<string, object> ToastAttributes =
+        new Dictionary<string, object> { ["id"] = "toast-probe" };
+
+    private sealed class Model
+    {
+        public string Name { get; set; } = string.Empty;
+        public decimal Amount { get; set; } = 1m;
+        public IReadOnlyList<IBrowserFile> Files { get; set; } = [];
+        public bool Checked { get; set; }
+        public bool Switched { get; set; }
+        public string Radio { get; set; } = string.Empty;
+    }
+}

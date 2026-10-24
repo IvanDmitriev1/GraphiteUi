@@ -1,16 +1,17 @@
 @namespace GraphiteUi.Components
 @inherits UiInputBase<bool>
 
-<label class="@RootClass"
+<label class="@Class"
+       @attributes="@AdditionalAttributes"
+       data-ui="checkbox"
        data-slot="checkbox"
        data-checked="@CurrentValue.ToAttributeValue()"
        data-disabled="@Disabled.ToAttributeValue()"
        data-invalid="@IsInvalid.ToAttributeValue()"
-       data-readonly="@ReadOnly.ToAttributeValue()"
-       @attributes="@AdditionalAttributes">
+       data-readonly="@ReadOnly.ToAttributeValue()">
     <input type="checkbox"
+           data-part="input"
            data-slot="checkbox-input"
-           class="@InputClass"
            value="true"
            checked="@CurrentValue"
            disabled="@Disabled"
@@ -20,11 +21,11 @@
            name="@NameAttributeValue"
            @onchange="@OnChangeAsync" />
 
-    <span class="@ControlClass"
+    <span data-part="control"
           data-slot="checkbox-control"
           data-invalid="@IsInvalid.ToAttributeValue()"
           aria-hidden="true">
-        <svg class="@IconClass"
+        <svg data-part="icon"
              viewBox="0 0 16 16"
              fill="none"
              xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +39,7 @@
 
     @if (ChildContent is not null)
     {
-        <span class="@LabelClass">
+        <span data-part="label">
             @ChildContent
         </span>
     }

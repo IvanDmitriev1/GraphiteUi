@@ -1,5 +1,4 @@
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -22,10 +21,6 @@ public partial class UiPopup : UiComponentBase
     [Parameter] public IReadOnlyDictionary<string, object>? ContentAttributes { get; set; }
     [Parameter] public IReadOnlyDictionary<string, object>? BackdropAttributes { get; set; }
 
-    private string TriggerClassValue => Merge(PopupStyles.TriggerClass, TriggerClass);
-    private string ContentClassValue => Merge(PopupStyles.ContentClass, ContentClass);
-    private string BackdropClassValue => Merge(PopupStyles.BackdropClass, BackdropClass);
-
     [Parameter] public bool Disabled { get; set; }
 
     [Parameter] public bool CloseOnOutsideClick { get; set; } = true;
@@ -36,10 +31,4 @@ public partial class UiPopup : UiComponentBase
 
     private bool IsButtonTrigger => string.Equals(TriggerAs, "button", StringComparison.OrdinalIgnoreCase);
 
-    private string RootClassValue { get; set; } = string.Empty;
-
-    protected override void OnParametersSet()
-    {
-        RootClassValue = MergeRootClass(PopupStyles.RootClass);
-    }
 }

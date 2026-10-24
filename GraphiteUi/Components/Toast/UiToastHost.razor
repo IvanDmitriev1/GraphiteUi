@@ -1,11 +1,13 @@
 @namespace GraphiteUi.Components
 @inherits UiComponentBase
 
-<div class="@RootClass"
-     data-slot="toast-host"
+<div class="@Class"
      @attributes="@AdditionalAttributes"
+     data-ui="toast-host"
+     data-slot="toast-host"
+     data-placement="@Placement.ToAttributeValue()"
      @ref="_rootReference">
-    <div class="@ToastStyles.StackClass"
+    <div data-part="stack"
          data-slot="toast-stack"
          aria-live="polite"
          aria-atomic="false">

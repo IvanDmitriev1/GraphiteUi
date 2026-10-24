@@ -2,7 +2,11 @@
 @inherits UiComponentBase
 
 <UiComponent As="@ResolvedAs"
-             Class="@RootClass"
+             Class="@Class"
+             DataUi="menu-item"
+             data-part="root"
+             data-disabled="@Disabled.ToAttributeValue()"
+             data-slot="menu-item"
              disabled="@(ResolvedAs == "button" ? Disabled : null)"
              href="@ResolvedHref"
              target="@Target"

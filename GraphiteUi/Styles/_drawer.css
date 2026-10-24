@@ -1,0 +1,27 @@
+@layer components {
+    :where([data-ui="drawer"]) { display: contents; }
+    :where([data-ui="drawer"] > [data-part="toggle"]) { @apply sr-only; }
+    :where([data-ui="drawer"] > [data-part="trigger"]) {
+        @apply relative z-50 inline-flex items-center justify-center gap-2 h-[var(--control-height-md)] rounded-md border border-control bg-surface1 text-surface1-foreground text-body-sm font-medium px-4 cursor-pointer transition-[background-color,border-color,box-shadow] outline-hidden;
+    }
+    @media (hover: hover) {
+        :where([data-ui="drawer"] > [data-part="trigger"]:hover) { @apply bg-surface-hover border-control-hover; }
+    }
+    :where([data-ui="drawer"] > [data-part="trigger"]:focus-visible) { @apply z-10 ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="drawer"] > [data-part="toggle"]:disabled + [data-part="trigger"]) { @apply opacity-disabled pointer-events-none; }
+    :where([data-ui="drawer"] > [data-part="overlay"]) { @apply fixed inset-0 z-[110] pointer-events-none; }
+    :where([data-ui="drawer"]:has(> [data-part="toggle"]:checked) > [data-part="overlay"]) { @apply pointer-events-auto; }
+    :where([data-ui="drawer"] > [data-part="overlay"] > [data-part="backdrop"]) { @apply absolute inset-0 bg-scrim pointer-events-none opacity-0 transition-opacity duration-150 ease-out; }
+    :where([data-ui="drawer"]:has(> [data-part="toggle"]:checked) > [data-part="overlay"] > [data-part="backdrop"]) { @apply opacity-100 pointer-events-auto; }
+    :where([data-ui="drawer"] > [data-part="overlay"] > [data-part="panel"]) {
+        @apply absolute top-0 h-full w-[min(90dvw,24rem)] max-w-full rounded-lg border border-border bg-surface3 text-surface3-foreground text-body p-4 shadow-xl transition-transform duration-150 ease-out;
+    }
+    :where([data-ui="drawer"] > [data-part="overlay"][data-side="start"] > [data-part="panel"]) { @apply left-0 -translate-x-full; }
+    :where([data-ui="drawer"] > [data-part="overlay"][data-side="end"] > [data-part="panel"]) { @apply right-0 translate-x-full; }
+    :where([data-ui="drawer"]:has(> [data-part="toggle"]:checked) > [data-part="overlay"] > [data-part="panel"]) { @apply translate-x-0; }
+    :where([data-ui="drawer"] > [data-part="overlay"] > [data-part="panel"] > [data-part="header"]) { @apply mb-3 text-h6 text-foreground; }
+    :where([data-ui="drawer"] > [data-part="overlay"] > [data-part="panel"] > [data-part="content"]) { @apply flex flex-col gap-2; }
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="drawer"] > [data-part="overlay"] > [data-part="backdrop"], [data-ui="drawer"] > [data-part="overlay"] > [data-part="panel"]) { transition: none; }
+    }
+}

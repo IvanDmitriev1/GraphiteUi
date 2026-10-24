@@ -3,9 +3,9 @@
 Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 
 - Works in **static SSR**, **Interactive Server**, and **Interactive WebAssembly**. Most components render usable markup under static SSR and are enhanced by JS after load.
-- **Generate CSS during the consuming application's server build.** Import the GraphiteUi theme and include its copied component class sources in Tailwind's source scan. The package supplies theme files and class sources; generated stylesheets are build output and are not committed. The docs application's `Tailwindcss.targets` and `wwwroot/styles/app.css` demonstrate this pipeline.
+- **Generate CSS during the consuming application's server build.** Import Tailwind first, then the copied `Styles/graphite-ui.css` entrypoint. It imports GraphiteUi's theme and per-family component CSS. The package ships CSS source files; generated application stylesheets are build output. The docs app's `Tailwindcss.targets` and `wwwroot/styles/app.css` demonstrate this pipeline.
 - **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios, selects and tooltips on `enhancedload`.
-- Namespaces: components/services in `GraphiteUi.Components`, enums in `GraphiteUi.Common`, style class constants in `GraphiteUi.Styles`.
+- Namespaces: components/services in `GraphiteUi.Components` and enums in `GraphiteUi.Common`.
 
 ---
 
@@ -14,24 +14,27 @@ Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 ```csharp
 using GraphiteUI.Extensions;   // NOTE: capital "UI" — see Known gaps
 
-builder.Services.AddGraphiteUi();          // optional: AddGraphiteUi(cfg => cfg.CacheSize = 500)
+builder.Services.AddGraphiteUi();
 ```
 
-Registers the singleton `TailwindMerge.NET` `TwMerge` service with a bounded cache of 500 entries by default, scoped `IDialogService`, and scoped `IToastService`. Graphite typography extends the standard Tailwind rules; the optional consumer callback runs afterward.
+In the consuming Tailwind input, import the library entrypoint after Tailwind and scan the app's Razor sources:
+
+```css
+@import "tailwindcss";
+@import "../../bin/GraphiteUi/Styles/graphite-ui.css";
+@source "../../../MyApp.Client/**/*.razor";
+```
+
+`GraphiteUi.targets` copies package CSS files to `bin/GraphiteUi/Styles` by default. Set `GraphiteUiThemeDir` to choose another copy directory and update the CSS import accordingly. Keep the entrypoint import after Tailwind and do not scan GraphiteUi source files from the consumer stylesheet.
+
+Registers scoped `IDialogService` and `IToastService` services.
 Call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` **and** `.Client/Program.cs` for an Auto/WASM app).
-
-**Migration:** `TwMerge` 1.0.7 has been replaced by `TailwindMerge.NET` 1.5.0. Configuration callbacks now receive `TailwindMerge.TwMergeConfig` instead of `TwConfig`; use its properties and `Extend`/`Override` methods. Parameterless calls remain source-compatible, but consuming projects must rebuild. Configure once during registration; do not mutate the configuration afterward.
-
-Class composition uses the merger directly with no additional component cache. Empty overrides return existing style strings, and finite style variants are precomputed. The merger's own cache avoids repeated conflict parsing, but merge calls can still allocate argument arrays and lookup strings.
-
-Style helpers also accept presentation values directly: button `GetRootClasses(ThemeColor color, Size size, ButtonVariant variant, bool iconOnly)` (the existing two-argument overload forwards to Solid/labeled), badge `GetRootClasses(ThemeColor color, Size size)`, avatar `GetRootClasses(Size size)`, alert `GetRootClasses(ThemeColor color)` and `GetIndicatorClass(ThemeColor color)`, drawer `GetPanelClass(Align side)`, tooltip `GetBubbleClass(Align align, bool bottom)`, toast `GetHostRootClasses(ToastPlacement placement)`, and checkbox `GetRootClasses()`. Existing component-taking overloads remain available and forward to these methods. Enum fallback behavior is unchanged.
 
 `_Imports.razor`:
 
 ```razor
 @using GraphiteUi.Components
 @using GraphiteUi.Common
-@using GraphiteUi.Styles   @* only if you use CommonStyles etc. *@
 ```
 
 Layout — both hosts need an interactive render mode:
@@ -82,7 +85,7 @@ ComponentBase
 | Member | Type | Default | Notes |
 |---|---|---|---|
 | `As` | `string` | `"div"` | Root HTML tag. Most components override in their constructor. |
-| `Class` | `string?` | `null` | Merged into core classes via TwMerge — **your classes win conflicts**. |
+| `Class` | `string?` | `null` | Passed to component roots unchanged. Component styles use low-specificity selectors so consumer utilities can override appearance. |
 | `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | `null` | `CaptureUnmatchedValues`, splatted on root. |
 | `ElementReference` | `ElementReference?` | `null` | Public, `protected set`. Not a parameter. Only populated by `UiComponent` and `UiToastHost`. |
 | `Rerender()` | `void` | — | Public. Calls `StateHasChanged()`. |
@@ -115,7 +118,7 @@ Plus Blazor's `Value`, `ValueChanged`, `ValueExpression` (`@bind-Value`), `Displ
 | `Description` | `string?` | `null` | Rendered below Textbox/Numbox/Select and linked with `aria-describedby`. |
 | `Size` | `Size` | `Medium` | Controls Textbox/Numbox height and Select trigger height (32/40/48px). |
 
-Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` merges `Class` with its existing Popup root; the visible label and description sit in a field wrapper around it.
+Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` passes `Class` raw to its Popup root; the visible label and description sit in a field wrapper around it.
 
 ---
 
@@ -655,7 +658,7 @@ Custom placeholder:
         </div>
     </SkeletonContent>
     <ChildContent>
-        <div class="@CommonStyles.SurfaceFrameRegularPaddedClass">Loaded: <strong>@Summary</strong></div>
+        <div class="rounded-md border border-border bg-surface1 p-3 text-body text-foreground">Loaded: <strong>@Summary</strong></div>
     </ChildContent>
 </UiSkeleton>
 ```
@@ -735,13 +738,13 @@ At the standard spacing and 16px root font size, control heights are 32/40/48px.
 }
 ```
 
-Consumer utility overrides continue through the existing `Class`/slot-class merge paths. Input-field wrapper `Class` retains its documented raw pass-through behavior.
+Component root and part classes are passed through unchanged. Consumer utility classes can override library appearance because GraphiteUi component selectors use the `components` layer with low specificity.
 
 ### Style ownership and normalization
 
-Card root, header, body, and footer definitions live in `CardStyles`. Existing `CommonStyles.Card*` properties remain compatible aliases.
+Component roots expose stable `data-ui` identities, and their styled children expose `data-part` markers. For example, Menu keeps `data-ui="popup"` and adds `data-menu="true"`; JS continues to use the existing `data-slot` and state attributes. Enum state attributes use normalized lowercase kebab-case values, and boolean state attributes use `true` or `false`.
 
-The optional library stylesheet entrypoint (`GraphiteUi/Styles/graphite-ui.css`) applies normalization rules to elements carrying `data-slot`. These selectors are unnamespaced, so consumer elements that use `data-slot` also receive those resets when the entrypoint is included. The entrypoint does not scope the application's Tailwind Preflight, theme variables, or utilities.
+The required library stylesheet entrypoint is `GraphiteUi/Styles/graphite-ui.css`. It does not import Tailwind itself; import it after `tailwindcss`. It imports per-family styles from the same `Styles/` directory and scopes base normalization to library roots and their owned parts.
 
 ### 8.3 Rebranding without touching the library
 
@@ -749,7 +752,7 @@ The optional library stylesheet entrypoint (`GraphiteUi/Styles/graphite-ui.css`)
 
 ```css
 @import "tailwindcss";
-@import "GraphiteUi/theme";
+@import "../../bin/GraphiteUi/Styles/graphite-ui.css";
 
 /* Swap the graphite accent for a real hue. */
 :root {
@@ -820,7 +823,7 @@ Parameters that compile but do nothing, and behaviours that will surprise you. D
 
 | Item | Detail |
 |---|---|
-| `UiInputFieldBase.Class` | Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` merges it on its existing Popup root. |
+| `UiInputFieldBase.Class` | Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` passes it unchanged to its existing Popup root. |
 | `UiDrawer.CloseOnEscape` | Never read — the drawer is pure CSS with no JS or data attribute. |
 | `UiDrawer` open state | No `Open` / `OpenChanged` parameter. `@bind-Open` compiles (falls into `AdditionalAttributes`) and silently does nothing. |
 | `UiSelect.UnregisterItem` | Empty body, so `UiSelectItem.Dispose()` is a no-op. |

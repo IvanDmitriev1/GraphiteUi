@@ -2,10 +2,11 @@
 @inherits UiComponentBase
 
 <UiComponent As="@As"
-             Class="@RootClass"
+             Class="@Class"
+             DataUi="breadcrumb"
              aria-label="@AriaLabel"
              @attributes="@AdditionalAttributes">
-    <ol class="@BreadcrumbStyles.ListClass">
+    <ol data-part="list">
         @ChildContent
     </ol>
 </UiComponent>

@@ -2,13 +2,15 @@
 @inherits UiInputBase<TValue>
 @typeparam TValue
 
-<div class="@RootClass"
+<div class="@Class"
      role="radiogroup"
      aria-invalid="@IsInvalid.ToAttributeValue()"
      data-slot="radio-group"
-     @attributes="@AdditionalAttributes">
+     @attributes="@AdditionalAttributes"
+     data-ui="radio-group">
 	 
 	<input type="hidden"
+	       data-part="form-value"
 	       data-slot="radio-value"
 	       name="@FormFieldName"
 	       value="@FormFieldValue"/>

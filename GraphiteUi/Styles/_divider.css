@@ -1,0 +1,4 @@
+@layer components {
+    :where([data-ui="divider"][data-orientation="horizontal"]) { @apply h-px w-full border-0 bg-divider; }
+    :where([data-ui="divider"][data-orientation="vertical"]) { @apply h-full min-h-4 w-px bg-divider; }
+}

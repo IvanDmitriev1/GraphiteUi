@@ -14,14 +14,20 @@ public sealed class UiComponent : UiComponentBase
     /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    [Parameter] public string? DataUi { get; set; }
+
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, As);
         builder.AddAttribute(1, "class", Class);
         builder.AddMultipleAttributes(2, AdditionalAttributes);
-        builder.AddElementReferenceCapture(3, er => ElementReference = er);
-        builder.AddContent(4, ChildContent);
+        if (DataUi is not null)
+        {
+            builder.AddAttribute(3, "data-ui", DataUi);
+        }
+        builder.AddElementReferenceCapture(4, er => ElementReference = er);
+        builder.AddContent(5, ChildContent);
         builder.CloseElement();
     }
 }

@@ -1,31 +1,32 @@
 @namespace GraphiteUi.Components
 @inherits UiInputBase<bool>
 
-<label class="@RootClass"
+<label class="@Class"
+       @attributes="@AdditionalAttributes"
+       data-ui="switch"
        data-checked="@CurrentValue.ToAttributeValue()"
        data-disabled="@Disabled.ToAttributeValue()"
        data-invalid="@IsInvalid.ToAttributeValue()"
-       data-readonly="@ReadOnly.ToAttributeValue()"
-       @attributes="@AdditionalAttributes">
+       data-readonly="@ReadOnly.ToAttributeValue()">
 
 	<input type="checkbox"
-	       class="@SwitchStyles.InputClass"
+	       data-part="input"
 	       value="true"
 	       checked="@CurrentValue"
 	       disabled="@Disabled"
-	       aria-disabled="@Disabled"
-	       aria-invalid="@IsInvalid"
-	       aria-readonly="@ReadOnly"
+	       aria-disabled="@Disabled.ToAttributeValue()"
+	       aria-invalid="@IsInvalid.ToAttributeValue()"
+	       aria-readonly="@ReadOnly.ToAttributeValue()"
 	       name="@NameAttributeValue"
 	       @onchange="@OnChangeAsync"/>
 
-	<span class="@SwitchStyles.TrackClass"
+	<span data-part="track"
 	      data-invalid="@IsInvalid.ToAttributeValue()">
-		<span class="@SwitchStyles.ThumbClass"></span>
+		<span data-part="thumb"></span>
 	</span>
 
 	@if (ChildContent is not null)
 	{
-		<span class="@SwitchStyles.LabelClass">@ChildContent</span>
+		<span data-part="label">@ChildContent</span>
 	}
 </label>

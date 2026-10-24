@@ -3,13 +3,19 @@
 
 @if (Vertical)
 {
-    <div class="@RootClass"
+    <div class="@Class"
          role="separator"
          aria-orientation="vertical"
-         @attributes="@AdditionalAttributes"></div>
+         @attributes="@AdditionalAttributes"
+         data-ui="divider"
+         data-orientation="vertical"
+         data-part="root"></div>
 }
 else
 {
-    <hr class="@RootClass"
-        @attributes="@AdditionalAttributes" />
+    <hr class="@Class"
+        @attributes="@AdditionalAttributes"
+        data-ui="divider"
+        data-orientation="horizontal"
+        data-part="root" />
 }

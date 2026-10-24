@@ -2,9 +2,10 @@
 @inherits UiComponentBase
 
 <UiPopup Class="@Class"
+         data-menu="true"
          TriggerAs="@TriggerAs"
          TriggerClass="@TriggerClass"
-         ContentClass="@ContentClassValue"
+         ContentClass="@ContentClass"
          BackdropClass="@BackdropClass"
          Disabled="@Disabled"
          CloseOnOutsideClick="@CloseOnOutsideClick"
@@ -18,7 +19,7 @@
         @TriggerContent
     </TriggerContent>
     <ChildContent>
-        <div class="@MenuStyles.ListClass">
+        <div data-part="items">
             @ChildContent
         </div>
     </ChildContent>
