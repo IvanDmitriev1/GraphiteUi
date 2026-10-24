@@ -27,7 +27,7 @@ public partial class UiPopup : UiComponentBase
 
     [Parameter] public bool CloseOnEscape { get; set; } = true;
 
-    [Parameter] public bool ShowBackdrop { get; set; } = true;
+    [Parameter] public bool ShowBackdrop { get; set; }
 
     private bool IsButtonTrigger => string.Equals(TriggerAs, "button", StringComparison.OrdinalIgnoreCase);
 

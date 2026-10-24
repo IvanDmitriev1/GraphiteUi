@@ -38,6 +38,15 @@ var phone = Regex.Match(html, "<input[^>]*id=\"phone\"[^>]*>").Value;
 Assert(phone.Contains("inputmode=\"tel\"", StringComparison.Ordinal), "Textbox dropped caller inputmode.");
 Assert(phone.Contains("aria-label=\"Phone\"", StringComparison.Ordinal), "Textbox dropped caller accessible label.");
 Assert(Regex.Matches(html, "id=\"location\"").Count == 1, "Select has a duplicate input ID.");
+var selectPopupRoot = Regex.Match(html, "<div[^>]*data-select-root=\"true\"[^>]*>").Value;
+Assert(selectPopupRoot.Contains("data-show-backdrop=\"false\"", StringComparison.Ordinal), "Select popup enables a backdrop by default.");
+Assert(selectPopupRoot.Contains("data-trigger-mode=\"none\"", StringComparison.Ordinal), "Select popup trigger must defer click handling to the select.");
+var defaultPopupRoot = Regex.Match(html, "<div[^>]*id=\"popup-root\"[^>]*>").Value;
+Assert(defaultPopupRoot.Contains("data-show-backdrop=\"false\"", StringComparison.Ordinal), "Popup enables a backdrop by default.");
+var explicitBackdropRoot = Regex.Match(html, "<div[^>]*id=\"backdrop-popup\"[^>]*>").Value;
+Assert(explicitBackdropRoot.Contains("data-show-backdrop=\"true\"", StringComparison.Ordinal), "Popup cannot explicitly enable its backdrop.");
+var defaultMenuRoot = Regex.Match(html, "<div[^>]*id=\"menu-root\"[^>]*>").Value;
+Assert(defaultMenuRoot.Contains("data-show-backdrop=\"false\"", StringComparison.Ordinal), "Menu enables a backdrop by default.");
 Assert(html.Contains("data-trigger-mode=\"open\"", StringComparison.Ordinal), "Popup ignored TriggerMode.");
 Assert(html.Contains("trigger-probe", StringComparison.Ordinal) && html.Contains("content-probe", StringComparison.Ordinal)
     && html.Contains("aria-label=\"Popup details\"", StringComparison.Ordinal), "Popup slot properties did not reach their elements.");

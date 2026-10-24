@@ -250,7 +250,7 @@ Bind with `@bind-Value`. `TryParseValueFromString` throws `NotSupportedException
 | `Disabled` | `bool` | `false` |
 | `CloseOnOutsideClick` | `bool` | `true` |
 | `CloseOnEscape` | `bool` | `true` |
-| `ShowBackdrop` | `bool` | `true` |
+| `ShowBackdrop` | `bool` | `false` |
 
 Per-slot classes, attributes and `TriggerAs` are forwarded to `UiPopup`.
 
@@ -282,7 +282,7 @@ No own parameters. Surface = `UiInputFieldBase<TValue>` + `DebounceDelay` + `UiI
 | `Disabled` | `bool` | `false` | → `data-disabled` |
 | `CloseOnOutsideClick` | `bool` | `true` | → `data-close-outside` |
 | `CloseOnEscape` | `bool` | `true` | → `data-close-escape` |
-| `ShowBackdrop` | `bool` | `true` | → `data-show-backdrop` |
+| `ShowBackdrop` | `bool` | `false` | → `data-show-backdrop` |
 
 `TriggerClass`, `ContentClass`, `BackdropClass`, `ContentAttributes` and `BackdropAttributes` are accepted and applied to the corresponding elements.
 

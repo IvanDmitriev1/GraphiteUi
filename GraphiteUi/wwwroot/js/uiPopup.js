@@ -40,12 +40,16 @@ function onDocumentClick(event) {
         return;
     }
 
+    // Native label activation forwards another click to its associated control.
+    const targetElement = target instanceof Element ? target : target.parentElement;
+    const labelControl = targetElement?.closest('label')?.control;
+
     for (const { root, state } of getLivePopupStates()) {
         if (!state.getCloseOnOutside() || !state.getOpen()) {
             continue;
         }
 
-        if (!root.contains(target)) {
+        if (!root.contains(target) && !root.contains(labelControl)) {
             state.setOpen(false);
         }
     }

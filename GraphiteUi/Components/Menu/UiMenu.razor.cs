@@ -20,6 +20,6 @@ public partial class UiMenu : UiComponentBase
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public bool CloseOnOutsideClick { get; set; } = true;
     [Parameter] public bool CloseOnEscape { get; set; } = true;
-    [Parameter] public bool ShowBackdrop { get; set; } = true;
+    [Parameter] public bool ShowBackdrop { get; set; }
 
 }
