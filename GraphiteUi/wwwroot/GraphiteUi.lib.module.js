@@ -2,6 +2,7 @@ import { refreshUiInputFields } from './js/uiInputField.js';
 import { refreshUiPopups } from './js/uiPopup.js';
 import { refreshUiRadios } from './js/uiRadio.js';
 import { refreshUiSelects } from './js/uiSelect.js';
+import { refreshUiTooltips } from './js/uiTooltip.js';
 
 let enhancedLoadRegistered = false;
 
@@ -10,6 +11,7 @@ function refreshAll() {
     refreshUiPopups(document);
     refreshUiRadios(document);
     refreshUiSelects(document);
+    refreshUiTooltips(document);
 }
 
 export function beforeWebStart() {

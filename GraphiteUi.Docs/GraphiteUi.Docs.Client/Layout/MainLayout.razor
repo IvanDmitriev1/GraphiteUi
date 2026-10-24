@@ -3,8 +3,8 @@
 <DialogHost @rendermode="InteractiveServer"/>
 <UiToastHost @rendermode="InteractiveServer" />
 
-<div class="p-2">
-    <div class="mb-4 flex items-center justify-end">
+<div class="docs-shell">
+    <div class="mb-6 flex items-center justify-end">
         <UiButton Color="ThemeColor.Secondary"
                   Size="Size.Small"
                   id="graphite-theme-toggle">
@@ -12,7 +12,9 @@
         </UiButton>
     </div>
 
-    @Body
+    <main class="docs-content">
+        @Body
+    </main>
 </div>
 
 @* Plain JS, no interop: the toggle has to work on statically rendered pages too.

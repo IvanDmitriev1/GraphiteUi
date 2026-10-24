@@ -8,7 +8,7 @@ public static class ButtonStyles
 {
     private static readonly string RootBaseClass = new CssClassBuilder(stackalloc char[384])
         .Add(Utils.InlineFlexCentered)
-        .Add("min-w-max font-medium no-underline gap-1.5 appearance-none select-none rounded-md whitespace-nowrap subpixel-antialiased overflow-hidden cursor-pointer")
+        .Add("font-medium no-underline gap-1.5 appearance-none select-none rounded-md whitespace-nowrap subpixel-antialiased overflow-hidden cursor-pointer")
         // Border WIDTH only. The color comes from the tone, so the box is always
         // allocated but only Secondary draws an edge. Keeping `border-transparent`
         // here would leave two border-color utilities on the element, and these are

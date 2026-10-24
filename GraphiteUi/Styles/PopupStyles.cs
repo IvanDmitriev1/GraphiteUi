@@ -16,7 +16,7 @@ public static class PopupStyles
         .Add(Utils.MotionReduceTransitionNone)
         .Add(ColorVariants.Surface.HoverSurfaceClass)
         .Add(Utils.FocusVisible)
-        .Add("data-[open=true]:bg-surface-hover data-[open=true]:border-border-strong")
+        .Add("data-[open=true]:bg-surface-hover data-[open=true]:border-control-hover")
         .Add(ColorVariants.Disabled.Background)
         .Add(ColorVariants.Disabled.Foreground)
         .Add(Utils.DisabledCursorDefault)

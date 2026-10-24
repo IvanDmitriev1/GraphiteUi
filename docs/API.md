@@ -4,7 +4,7 @@ Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 
 - Works in **static SSR**, **Interactive Server**, and **Interactive WebAssembly**. Most components render usable markup under static SSR and are enhanced by JS after load.
 - **Generate CSS during the consuming application's server build.** Import the GraphiteUi theme and include its copied component class sources in Tailwind's source scan. The package supplies theme files and class sources; generated stylesheets are build output and are not committed. The docs application's `Tailwindcss.targets` and `wwwroot/styles/app.css` demonstrate this pipeline.
-- **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios and selects on `enhancedload`.
+- **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios, selects and tooltips on `enhancedload`.
 - Namespaces: components/services in `GraphiteUi.Components`, enums in `GraphiteUi.Common`, style class constants in `GraphiteUi.Styles`.
 
 ---
@@ -356,6 +356,8 @@ Same binding rule as `UiCheckbox`.
 | `Align` | `Align` | `Center` | |
 | `Bottom` | `bool` | `false` | Places the bubble below instead of above. |
 | `ChildContent` | `RenderFragment?` | `null` | The hover target. |
+
+Tooltip text wraps, including unbroken strings, within a 14rem maximum width constrained by the viewport. CSS provides hover and keyboard-focus visibility; the JS initializer enhances horizontal placement to keep an 8px viewport gutter. `Align` remains the preferred placement, adjusted near viewport edges; `Bottom` is unchanged.
 
 ### `UiToastHost` — `UiComponentBase, IAsyncDisposable`
 

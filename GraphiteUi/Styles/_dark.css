@@ -8,6 +8,8 @@
    would tie :root on specificity and lose on source order. */
 :root.dark,
 :root[data-theme="dark"] {
+    color-scheme: dark;
+
     /* ---- Page + surfaces (explicit, so elevation steps stay distinct).
             Each surface must stay lighter than the page or elevation inverts, so
             the steps move with the background. ---- */

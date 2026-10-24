@@ -9,10 +9,10 @@ public static class TooltipStyles
     public static string RootClass { get; } = "group relative inline-flex";
 
     public static string BubbleBaseClass { get; } = new CssClassBuilder(stackalloc char[768])
-        .Add("pointer-events-none absolute z-[130] max-w-56 rounded-md border")
+        .Add("pointer-events-none absolute z-[130] w-max max-w-[min(14rem,calc(100vw-1rem))] rounded-md border")
         .Add(ColorVariants.Border.Default)
         .Add(ColorVariants.Surface.PopupBackground)
-        .Add("px-2 py-1 text-body-sm shadow-md whitespace-nowrap opacity-0 scale-[0.98] transition-[opacity,transform] duration-150 ease-out")
+        .Add("px-2 py-1 text-body-sm shadow-md whitespace-normal [overflow-wrap:anywhere] opacity-0 scale-[0.98] transition-[opacity,transform] duration-150 ease-out")
         .Add(Utils.MotionReduceTransitionNone)
         .Add("group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100")
         .ToString();

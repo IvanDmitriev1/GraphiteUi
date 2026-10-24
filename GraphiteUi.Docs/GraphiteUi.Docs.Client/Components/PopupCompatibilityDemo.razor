@@ -16,3 +16,41 @@
     <UiSelectItem TValue="string" Value='@("A-03")' Text="A-03" Disabled="true" />
 </UiSelect>
 <p role="status">Selected value: @(string.IsNullOrEmpty(_selected) ? "empty" : _selected)</p>
+
+<section class="mt-8 flex flex-col gap-4">
+    <h2 class="text-h5">Tooltip and button compatibility</h2>
+
+    <div class="flex flex-wrap gap-2">
+        <UiButton Size="Size.Small">Go</UiButton>
+        <UiButton Size="Size.Medium">Go</UiButton>
+        <UiButton Size="Size.Large">Go</UiButton>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+        <div class="flex flex-col items-start gap-3">
+            <h3 class="text-body-sm font-semibold">Left viewport edge</h3>
+            <UiTooltip Align="Align.Start" Text="A long tooltip description that should wrap while staying inside the viewport.">
+                <span class="inline-flex rounded-md border border-divider px-2 py-1 text-body-sm">Start, above</span>
+            </UiTooltip>
+            <UiTooltip Align="Align.Center" Bottom="true" Text="TooltipUnbrokenTextThatMustWrapWithoutOverflowingTheViewportEdge1234567890">
+                <span class="inline-flex rounded-md border border-divider px-2 py-1 text-body-sm">Center, below</span>
+            </UiTooltip>
+            <UiTooltip Align="Align.End" Text="Tooltip content with enough words to exercise wrapping near the left edge.">
+                <span class="inline-flex rounded-md border border-divider px-2 py-1 text-body-sm">End, above</span>
+            </UiTooltip>
+        </div>
+
+        <div class="flex flex-col items-end gap-3">
+            <h3 class="text-body-sm font-semibold">Right viewport edge</h3>
+            <UiTooltip Align="Align.Start" Bottom="true" Text="TooltipUnbrokenTextThatMustWrapWithoutOverflowingTheViewportEdge1234567890">
+                <span class="inline-flex rounded-md border border-divider px-2 py-1 text-body-sm">Start, below</span>
+            </UiTooltip>
+            <UiTooltip Align="Align.Center" Text="A long tooltip description that should wrap while staying inside the viewport.">
+                <span class="inline-flex rounded-md border border-divider px-2 py-1 text-body-sm">Center, above</span>
+            </UiTooltip>
+            <UiTooltip Align="Align.End" Bottom="true" Text="Tooltip content with enough words to exercise wrapping near the right edge.">
+                <span class="inline-flex rounded-md border border-divider px-2 py-1 text-body-sm">End, below</span>
+            </UiTooltip>
+        </div>
+    </div>
+</section>

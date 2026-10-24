@@ -4,15 +4,16 @@
 
 <PageTitle>Simple Form</PageTitle>
 
-<h3>Simple Form Example</h3>
+<h1>Simple Form Example</h1>
 
 <EditForm Model="@FormData"
+          class="max-w-xl"
           FormName="one"
           OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
     
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-4">
 	    <UiTextbox Label="Name:"
                    Placeholder="Some text"
 	               @bind-Value="FormData!.Name" />

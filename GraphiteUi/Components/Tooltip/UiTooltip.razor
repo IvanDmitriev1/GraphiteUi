@@ -4,12 +4,15 @@
 <UiComponent As="@As"
              Class="@RootClass"
              tabindex="0"
+             data-slot="tooltip-root"
+             data-tooltip-align="@Align"
              @attributes="@AdditionalAttributes">
     @ChildContent
 
     @if (!string.IsNullOrWhiteSpace(Text))
     {
         <span role="tooltip"
+              data-slot="tooltip-bubble"
               class="@BubbleClass">
             @Text
         </span>
