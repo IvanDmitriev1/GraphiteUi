@@ -37,10 +37,28 @@ internal static class SkeletonStyleChecks
         AssertRendered(html, "loaded-template-child", true);
         AssertRendered(html, "loaded-template-skeleton", false);
 
+        var boundControls = ElementWithId(html, "bound-controls-root");
+        Assert(boundControls.Contains("data-loading=\"true\"", StringComparison.Ordinal),
+            "Bound controls are not rendered inside a loading skeleton.");
+        Assert(html.Contains("data-slot=\"input-wrapper\"", StringComparison.Ordinal),
+            "Skeleton probe Textbox is missing its input wrapper slot.");
+        Assert(html.Contains("data-slot=\"popup-trigger\"", StringComparison.Ordinal),
+            "Skeleton probe Select is missing its popup trigger slot.");
+        Assert(Count(html, "data-slot=\"label\"") >= 2,
+            "Bound Textbox and Select labels are missing from the skeleton probe.");
+
         var automaticContent = ParentDivClassTokens(html, "automatic-child");
         AssertTokens(automaticContent, "graphite-skeleton-mimic");
-        Assert(Count(html, "graphite-skeleton-mimic") == 1,
+        Assert(Count(html, "graphite-skeleton-mimic") == 3,
             "Only automatically mimicked loading content should receive the named marker.");
+        var nativeContent = ElementWithId(html, "native-content-root");
+        Assert(nativeContent.Contains("data-loading=\"true\"", StringComparison.Ordinal),
+            "Native content fixture is not inside a loading skeleton.");
+        foreach (var id in new[] { "native-label", "native-notes", "native-select", "native-paragraph", "native-inline", "native-strong", "native-em", "native-code", "native-image", "native-icon", "native-button", "button-inline", "button-icon" })
+            Assert(html.Contains($"id=\"{id}\"", StringComparison.Ordinal),
+                $"Native skeleton fixture is missing {id}.");
+        Assert(!ElementWithId(html, "outside-native-label").Contains("graphite-skeleton-mimic", StringComparison.Ordinal),
+            "Content outside auto-mimic was unexpectedly changed.");
         Assert(!automaticContent.Any(token => token.StartsWith("[&", StringComparison.Ordinal)),
             "Automatic skeleton content still carries descendant utility selectors.");
     }

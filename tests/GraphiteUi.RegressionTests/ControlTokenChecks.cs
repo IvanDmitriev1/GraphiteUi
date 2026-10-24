@@ -32,6 +32,67 @@ internal static class ControlTokenChecks
         });
         string[] inputWrappers = InputWrapperClasses(html);
         Assert(inputWrappers.Length == 5, "Control token probe did not render each input size and fallback.");
+        string[] selectTriggerElements = SelectTriggerElements(html);
+        string[] selectTriggers = SelectTriggerClasses(selectTriggerElements);
+        Assert(selectTriggers.Length == 5, "Select token probe did not render all five trigger sizes and state cases.");
+
+        string selectSmall = InputElement(html, "select-small");
+        string smallLabel = LabelElement(html, "select-small");
+        bool hasVisibleLabel = smallLabel.Contains("Small select", StringComparison.Ordinal)
+            && smallLabel.Contains("class=\"", StringComparison.Ordinal);
+        bool hasSmallSize = HasToken(selectTriggers[0], HeightTokens[(int)Size.Small]);
+        Assert(hasVisibleLabel && hasSmallSize,
+            $"Select should render a visible linked label and small trigger height (label={hasVisibleLabel}, height={hasSmallSize}).");
+        Assert(Regex.Matches(html, "\\bid=\"select-small\"").Count == 1
+            && smallLabel.Contains("for=\"select-small\"", StringComparison.Ordinal),
+            "The visible Select label is not linked to one unique custom input id.");
+        Assert(selectSmall.Contains("aria-describedby=\"caller-help select-small-description\"", StringComparison.Ordinal),
+            "Select did not merge its description id with caller aria-describedby.");
+        Assert(HasToken(smallLabel, "block") && HasToken(smallLabel, "text-body-sm"),
+            "Visible Select label does not use the field label typography/layout.");
+
+        for (int index = 0; index < selectTriggers.Length; index++)
+        {
+            int sizeIndex = index switch
+            {
+                0 => (int)Size.Small,
+                2 => (int)Size.Large,
+                _ => (int)Size.Medium
+            };
+            AssertToken(selectTriggers[index], HeightTokens[sizeIndex], $"Select trigger {index} has the wrong height token.");
+            for (int candidate = 0; candidate < HeightTokens.Length; candidate++)
+            {
+                if (candidate != sizeIndex)
+                {
+                    Assert(!HasToken(selectTriggers[index], HeightTokens[candidate]),
+                        $"Select trigger {index} retained a conflicting height token.");
+                }
+            }
+
+            AssertToken(selectTriggers[index], "focus-within:ring-offset-0", "Select trigger lost its zero-offset focus ring.");
+            AssertToken(selectTriggers[index], "focus-within:border-transparent", "Select trigger gained a second border at focus.");
+            AssertToken(selectTriggers[index], "aria-[invalid=true]:focus-within:ring-focus-invalid",
+                "Select trigger is missing its value-qualified invalid ring.");
+        }
+
+        Assert(selectTriggerElements[0].Contains("aria-invalid=\"true\"", StringComparison.Ordinal)
+            && selectTriggerElements[1].Contains("aria-invalid=\"false\"", StringComparison.Ordinal),
+            "Select did not forward true and false invalid states to its owning frame.");
+        Assert(InputElement(html, "select-medium").Contains("readonly", StringComparison.OrdinalIgnoreCase)
+            && InputElement(html, "select-medium").Contains("aria-readonly=\"true\"", StringComparison.Ordinal),
+            "Readonly Select lost its non-editable input state.");
+        Assert(InputElement(html, "select-large").Contains("disabled", StringComparison.OrdinalIgnoreCase)
+            && InputElement(html, "select-large").Contains("aria-disabled=\"true\"", StringComparison.Ordinal),
+            "Disabled Select lost its non-editable input state.");
+        string noLabel = InputElement(html, "select-no-label");
+        Assert(noLabel.Contains("aria-label=\"Caller select label\"", StringComparison.Ordinal)
+            && Regex.Matches(html, "<label[^>]*for=\"select-no-label\"").Count == 0,
+            "Select without Label did not preserve the caller accessible name.");
+        string selectRoot = ElementWithAttribute(html, "data-select-probe", "small");
+        string selectRootClasses = WebUtility.HtmlDecode(Regex.Match(selectRoot, "\\bclass=\"([^\"]*)\"").Groups[1].Value);
+        AssertToken(selectRootClasses, "select-root-probe", "Select root dropped the consumer class.");
+        AssertToken(selectRootClasses, "px-4", "Select root did not retain the last consumer padding override.");
+        Assert(!HasToken(selectRootClasses, "px-2"), "Select root retained conflicting consumer padding.");
 
         for (int sizeIndex = 0; sizeIndex < HeightTokens.Length; sizeIndex++)
         {
@@ -95,6 +156,36 @@ internal static class ControlTokenChecks
         }
 
         return classes;
+    }
+
+    private static string[] SelectTriggerElements(string html) =>
+        Regex.Matches(html, "<[^>]*data-slot=\"popup-trigger\"[^>]*>")
+            .Select(match => match.Value)
+            .ToArray();
+
+    private static string[] SelectTriggerClasses(string[] triggers) =>
+        triggers
+            .Select(trigger => WebUtility.HtmlDecode(Regex.Match(trigger, "\\bclass=\"([^\"]*)\"").Groups[1].Value))
+            .ToArray();
+
+    private static string InputElement(string html, string id)
+    {
+        Match match = Regex.Match(html, "<input[^>]*\\bid=\"" + Regex.Escape(id) + "\"[^>]*>");
+        Assert(match.Success, $"Missing Select input {id}.");
+        return match.Value;
+    }
+
+    private static string LabelElement(string html, string inputId)
+    {
+        Match match = Regex.Match(html, "<label[^>]*\\bfor=\"" + Regex.Escape(inputId) + "\"[^>]*>.*?</label>");
+        return match.Success ? match.Value : string.Empty;
+    }
+
+    private static string ElementWithAttribute(string html, string name, string value)
+    {
+        Match match = Regex.Match(html, "<[^>]*\\b" + Regex.Escape(name) + "=\"" + Regex.Escape(value) + "\"[^>]*>");
+        Assert(match.Success, $"Missing element with {name}={value}.");
+        return WebUtility.HtmlDecode(match.Value);
     }
 
     private static void AssertMergeOverride(

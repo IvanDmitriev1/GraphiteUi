@@ -6,6 +6,7 @@ public static class PopupStyles
 {
     public static string RootClass { get; } = new CssClassBuilder(stackalloc char[256])
         .Add("relative inline-flex flex-col")
+        .Add("isolate has-[>[data-slot=popup-content]:not([hidden])]:z-50")
         .Add(Utils.DataDisabled)
         .ToString();
 

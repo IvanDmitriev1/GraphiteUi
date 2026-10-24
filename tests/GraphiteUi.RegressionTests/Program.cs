@@ -84,6 +84,8 @@ Assert(html.Contains("field-wrapper-probe px-2 px-4", StringComparison.Ordinal),
 var buttonClasses = ElementClasses(html, "merge-button");
 Assert(buttonClasses.Contains("px-4") && !buttonClasses.Contains("px-2"),
     "Button consumer spacing did not override built-in classes.");
+Assert(buttonClasses.Contains("text-danger-subtle-foreground") && !buttonClasses.Contains("text-foreground"),
+    "Button consumer color did not override its built-in foreground.");
 var inputClasses = ElementClasses(html, "merge-input");
 Assert(inputClasses.Contains("px-4") && !inputClasses.Contains("px-2"),
     "Input consumer spacing did not use the configured merger.");
@@ -132,7 +134,8 @@ StyleCompositionChecks.Run();
 StyleOwnershipChecks.Run();
 await ControlTokenChecks.RunAsync(renderer, merger);
 await SkeletonStyleChecks.RunAsync(renderer, merger);
-Console.WriteLine("Passed: Tailwind merging, menu composition, SSR forms, accessibility, decimal precision, typed selects, popup slots, debounce lifecycle, style variants, style composition, card ownership, control tokens and skeleton rendering/overrides.");
+await ButtonLoadingChecks.RunAsync(renderer);
+Console.WriteLine("Passed: Tailwind merging, menu composition, SSR forms, accessibility, decimal precision, typed selects, popup slots, debounce lifecycle, style variants, style composition, card ownership, control tokens, skeleton rendering/overrides and button loading.");
 
 static string[] ElementClasses(string html, string id)
 {

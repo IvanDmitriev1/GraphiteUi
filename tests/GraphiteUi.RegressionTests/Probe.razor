@@ -9,7 +9,7 @@
     <UiSelect TValue="TestId?" @bind-Value="Model.Location" id="location" Label="Location" Description="Select help">
         <UiSelectItem TValue="TestId?" Value="LocationId" Text="A-01" />
     </UiSelect>
-    <UiButton id="merge-button" Class="px-2 px-4">Merged button</UiButton>
+    <UiButton id="merge-button" Variant="GraphiteUi.Common.ButtonVariant.Outline" Class="px-2 px-4 text-danger-subtle-foreground">Merged button</UiButton>
     <UiCheckbox id="merge-input" Class="px-2 px-4" @bind-Value="Model.Checked" Disabled>Disabled input</UiCheckbox>
     <UiPopup id="popup-root" Class="p-2 p-4" TriggerAs="div" TriggerMode="open"
              ContentClass="content-probe p-2 p-4" TriggerClass="trigger-probe h-8" BackdropClass="z-30"

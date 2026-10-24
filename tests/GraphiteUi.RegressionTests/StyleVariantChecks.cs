@@ -46,6 +46,42 @@ internal static class StyleVariantChecks
         "h-[var(--control-height-md)]",
         "h-[var(--control-height-lg)]"
     ];
+    private static readonly string[] ButtonIconSizeTokens =
+    [
+        "size-[var(--control-height-sm)]",
+        "size-[var(--control-height-md)]",
+        "size-[var(--control-height-lg)]"
+    ];
+    private static readonly string[] ButtonSubtleToneTokens =
+    [
+        "secondary",
+        "accent",
+        "secondary",
+        "success",
+        "warning",
+        "danger",
+        "info"
+    ];
+    private static readonly string[] ButtonOutlineBorderTokens =
+    [
+        "border-control",
+        "border-control",
+        "border-control",
+        "border-success-subtle-foreground",
+        "border-warning-subtle-foreground",
+        "border-danger-subtle-foreground",
+        "border-info-subtle-foreground"
+    ];
+    private static readonly string[] ButtonNonSolidForegroundTokens =
+    [
+        "",
+        "text-foreground",
+        "text-foreground",
+        "text-success-subtle-foreground",
+        "text-warning-subtle-foreground",
+        "text-danger-subtle-foreground",
+        "text-info-subtle-foreground"
+    ];
     private static readonly string[] BadgeSizeTokens = ["px-2", "px-2.5", "px-3"];
     private static readonly string[] AvatarSizeTokens = ["size-8", "size-10", "size-14"];
 
@@ -64,22 +100,110 @@ internal static class StyleVariantChecks
     private static void CheckButtons()
     {
         var component = new UiButton();
+        var variants = Enum.GetValues<ButtonVariant>();
 
         foreach (ThemeColor color in Enum.GetValues<ThemeColor>())
         {
             for (int sizeIndex = 0; sizeIndex < ButtonSizeTokens.Length; sizeIndex++)
             {
                 var size = (Size)sizeIndex;
-                SetParameters(component, new Dictionary<string, object?>
+                foreach (ButtonVariant variant in variants)
                 {
-                    [nameof(UiButton.Color)] = color,
-                    [nameof(UiButton.Size)] = size
-                });
+                    foreach (bool iconOnly in new[] { false, true })
+                    {
+                        SetParameters(component, new Dictionary<string, object?>
+                        {
+                            [nameof(UiButton.Color)] = color,
+                            [nameof(UiButton.Size)] = size,
+                            [nameof(UiButton.Variant)] = variant,
+                            [nameof(UiButton.IconOnly)] = iconOnly
+                        });
 
-                string classes = ButtonStyles.GetRootClasses(color, size);
-                AssertToken(classes, ButtonToneTokens[(int)color], $"Button tone missing for {color}.");
-                AssertToken(classes, ButtonSizeTokens[sizeIndex], $"Button size missing for {size}.");
-                AssertEqual(classes, ButtonStyles.GetRootClasses(component), "Button component overload diverged.");
+                        string classes = ButtonStyles.GetRootClasses(color, size, variant, iconOnly);
+                        AssertEqual(classes, ButtonStyles.GetRootClasses(component), "Button component overload diverged.");
+                        AssertToken(classes, "border", $"Button {variant} lost its allocated border geometry.");
+                        AssertToken(classes, "rounded-md", $"Button {variant} lost its radius.");
+                        AssertToken(classes, "focus-visible:ring-focus", $"Button {variant} lost its focus ring.");
+                        AssertToken(classes, "motion-reduce:transition-none", $"Button {variant} lost reduced motion support.");
+                        Assert(!classes.Contains("data-disabled:bg-", StringComparison.Ordinal),
+                            "Button disabled styling uses a presence-only data selector.");
+
+                        if (iconOnly)
+                        {
+                            AssertToken(classes, ButtonIconSizeTokens[sizeIndex], $"Icon-only button size missing for {size}.");
+                            AssertToken(classes, "p-0", "Icon-only button has horizontal padding.");
+                            AssertNoPrefix(classes, "min-w-", "Icon-only button inherited a minimum width.");
+                            AssertNoPrefix(classes, "px-", "Icon-only button inherited horizontal padding.");
+                            AssertNoPrefix(classes, "h-[var(--control-height-", "Icon-only button has a second height utility.");
+                        }
+                        else
+                        {
+                            AssertToken(classes, ButtonSizeTokens[sizeIndex], $"Button size missing for {size}.");
+                            if (variant == ButtonVariant.Link)
+                            {
+                                AssertNoPrefix(classes, "min-w-", "Link button has a labeled minimum width.");
+                                AssertNoPrefix(classes, "px-", "Link button has horizontal padding.");
+                            }
+                            else
+                            {
+                                AssertAnyPrefix(classes, "min-w-", $"Labeled {variant} button has no minimum width.");
+                                AssertAnyPrefix(classes, "px-", $"Labeled {variant} button has no horizontal padding.");
+                            }
+                        }
+
+                        if (variant == ButtonVariant.Solid)
+                        {
+                            AssertToken(classes, ButtonToneTokens[(int)color], $"Solid tone missing for {color}: {classes}.");
+                            AssertToken(classes, "shadow-xs", "Solid button lost its existing shadow.");
+                            Assert(!HasToken(classes, "underline"), "Solid button became underlined.");
+                        }
+                        else
+                        {
+                            AssertToken(classes, "bg-transparent", $"{variant} button gained a resting fill.");
+                            string foreground = ButtonNonSolidForegroundTokens[(int)color];
+                            if (foreground.Length > 0)
+                            {
+                                AssertToken(classes, foreground, $"{variant} button foreground is not readable for {color}.");
+                            }
+                            else
+                            {
+                                Assert(!HasToken(classes, "text-foreground"), "Inherit button stopped inheriting its text color.");
+                            }
+                            Assert(!HasToken(classes, "shadow-xs"), $"{variant} button retained a solid shadow.");
+
+                            if (variant is ButtonVariant.Outline or ButtonVariant.Ghost)
+                            {
+                                string tone = ButtonSubtleToneTokens[(int)color];
+                                AssertToken(classes, $"hover:bg-{tone}-subtle-hover", $"{variant} {color} hover state missing.");
+                                AssertToken(classes, $"active:bg-{tone}-subtle-active", $"{variant} {color} pressed state missing.");
+                            }
+
+                            if (variant == ButtonVariant.Outline)
+                            {
+                                AssertToken(classes, ButtonOutlineBorderTokens[(int)color], $"Outline border missing for {color}.");
+                                Assert(!HasToken(classes, "underline"), "Outline button became underlined.");
+                            }
+                            else if (variant == ButtonVariant.Ghost)
+                            {
+                                AssertToken(classes, "border-transparent", "Ghost button is not visually borderless.");
+                                Assert(!HasToken(classes, "underline"), "Ghost button became underlined.");
+                            }
+                            else
+                            {
+                                AssertToken(classes, "border-transparent", "Link button is not visually borderless.");
+                                AssertToken(classes, "underline", "Link button lost its underline.");
+                                Assert(!classes.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                    .Any(token => token.StartsWith("hover:bg-", StringComparison.Ordinal)
+                                        || token.StartsWith("active:bg-", StringComparison.Ordinal)),
+                                    "Link button gained an unrequested interaction fill.");
+                            }
+                        }
+                    }
+                }
+
+                string oldOverload = ButtonStyles.GetRootClasses(color, size);
+                AssertEqual(oldOverload, ButtonStyles.GetRootClasses(color, size, ButtonVariant.Solid, false),
+                    "The two-argument button style overload stopped forwarding to labeled Solid.");
             }
         }
 
@@ -94,7 +218,21 @@ internal static class StyleVariantChecks
             ButtonStyles.GetRootClasses(ThemeColor.Primary, (Size)(-1)), "Negative button size did not fall back to medium.");
         AssertEqual(ButtonStyles.GetRootClasses(ThemeColor.Primary, Size.Medium),
             ButtonStyles.GetRootClasses(ThemeColor.Primary, (Size)99), "Out-of-range button size did not fall back to medium.");
+        AssertEqual(ButtonStyles.GetRootClasses(ThemeColor.Primary, Size.Medium),
+            ButtonStyles.GetRootClasses(ThemeColor.Primary, Size.Medium, (ButtonVariant)(-1), false),
+            "Negative button variant did not fall back to Solid.");
+        AssertEqual(ButtonStyles.GetRootClasses(ThemeColor.Primary, Size.Medium),
+            ButtonStyles.GetRootClasses(ThemeColor.Primary, Size.Medium, (ButtonVariant)99, false),
+            "Out-of-range button variant did not fall back to Solid.");
     }
+
+    private static void AssertAnyPrefix(string classes, string prefix, string message) =>
+        Assert(classes.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Any(token => token.StartsWith(prefix, StringComparison.Ordinal)), message);
+
+    private static void AssertNoPrefix(string classes, string prefix, string message) =>
+        Assert(!classes.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Any(token => token.StartsWith(prefix, StringComparison.Ordinal)), message);
 
     private static void CheckBadges()
     {

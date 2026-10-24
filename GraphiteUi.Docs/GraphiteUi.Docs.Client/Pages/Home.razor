@@ -9,20 +9,20 @@
 
 Welcome to your new app.
 
-<div class="flex flex-row flex-wrap gap-1">
+<div class="flex flex-row flex-wrap gap-2">
     <UiButton OnClick="Callback">Primary</UiButton>
-    <UiButton Color="ThemeColor.Info" OnClick="ShowInfoToast">Toast</UiButton>
-    <UiButton Disabled="true">Disabled</UiButton>
-    <UiButton Color="ThemeColor.Danger">Danger</UiButton>
-    <UiButton Color="ThemeColor.Success">Success</UiButton>
-    <UiButton Color="ThemeColor.Warning">Warning</UiButton>
-    <UiButton As="a" href="/simple-form">Link</UiButton>
-    <UiButton As="a" href="/skeleton">Skeleton</UiButton>
-    <UiButton As="a" href="/notifications">Notifications</UiButton>
-    <UiButton As="a" href="/data-display">Data Display</UiButton>
-    <UiButton As="a" href="/navigation">Navigation</UiButton>
-    <UiButton As="a" href="/form-controls">Form Controls</UiButton>
-    <UiButton As="a" href="/primitives">Primitives</UiButton>
+    <UiButton Color="ThemeColor.Info" Variant="ButtonVariant.Outline" OnClick="ShowInfoToast">Toast</UiButton>
+    <UiButton Variant="ButtonVariant.Outline" Disabled="true">Disabled</UiButton>
+    <UiButton Color="ThemeColor.Danger" Variant="ButtonVariant.Outline">Danger</UiButton>
+    <UiButton Color="ThemeColor.Success" Variant="ButtonVariant.Ghost">Success</UiButton>
+    <UiButton Color="ThemeColor.Warning" Variant="ButtonVariant.Ghost">Warning</UiButton>
+    <UiButton As="a" href="/simple-form" Variant="ButtonVariant.Ghost">Link</UiButton>
+    <UiButton As="a" href="/skeleton" Variant="ButtonVariant.Link">Skeleton</UiButton>
+    <UiButton As="a" href="/notifications" Variant="ButtonVariant.Link">Notifications</UiButton>
+    <UiButton As="a" href="/data-display" Variant="ButtonVariant.Link">Data Display</UiButton>
+    <UiButton As="a" href="/navigation" Variant="ButtonVariant.Link">Navigation</UiButton>
+    <UiButton As="a" href="/form-controls" Variant="ButtonVariant.Link">Form Controls</UiButton>
+    <UiButton As="a" href="/primitives" Variant="ButtonVariant.Link">Primitives</UiButton>
 </div>
 
 @code {

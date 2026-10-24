@@ -7,9 +7,15 @@
         <UiButton OnClick="Choose">Choose option</UiButton>
     </ChildContent>
 </UiPopup>
+<UiPopup ShowBackdrop="false">
+    <TriggerContent>Open popup without backdrop</TriggerContent>
+    <ChildContent>
+        <p>Popup content without backdrop</p>
+    </ChildContent>
+</UiPopup>
 <p role="status">@_result</p>
 
-<UiSelect TValue="string" Label="Compatibility choice" Placeholder="Choose location"
+<UiSelect id="compatibility-select" TValue="string" Label="Compatibility choice" Placeholder="Choose location"
           ClearText="Clear choice" @bind-Value="_selected">
     <UiSelectItem TValue="string" Value='@("A-01")' Text="A-01" />
     <UiSelectItem TValue="string" Value='@("A-02")' Text="A-02" />
@@ -53,4 +59,12 @@
             </UiTooltip>
         </div>
     </div>
+</section>
+
+<section class="mt-8 flex flex-col gap-3">
+    <h2 class="text-h5">Shared button and select compatibility</h2>
+    <p class="max-w-3xl text-body-sm text-muted-foreground">
+        This fixture runs in static SSR and WebAssembly hosts. Links and native forms remain usable in static SSR; managed button callbacks require an interactive renderer. Select keyboard, clear, and disabled-option behavior is enhanced by the library JavaScript.
+    </p>
+    <ButtonRefinementDemo />
 </section>

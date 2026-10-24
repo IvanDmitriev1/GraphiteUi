@@ -5,11 +5,21 @@
                 Class="@RootClass"
                 data-slot="button"
                 type="@Type.ToHtmlValue()"
-                disabled="@Disabled"
-                data-disabled="@Disabled"
+                disabled="@NativeDisabled"
+                data-disabled="@Disabled.ToAttributeValue()"
+                data-loading="@IsLoading.ToAttributeValue()"
+                aria-busy="@IsLoading.ToAttributeValue()"
                 @attributes="@AdditionalAttributes"
                 @onclick="@OnClickAsync">
-    @StartContent
-    @ChildContent
-    @EndContent
+    <span class="@ContentClass">
+        @StartContent
+        @ChildContent
+        @EndContent
+    </span>
+    @if (IsLoading)
+    {
+        <span class="@ButtonStyles.LoadingSpinnerContainerClass" aria-hidden="true">
+            <span class="@ButtonStyles.LoadingSpinnerClass"></span>
+        </span>
+    }
 </UiComponent>

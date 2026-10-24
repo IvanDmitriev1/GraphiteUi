@@ -6,8 +6,13 @@ internal static class StyleCompositionChecks
 {
     public static void Run()
     {
+        var popupRoot = Tokens(PopupStyles.RootClass);
         var popup = Tokens(PopupStyles.ContentClass);
         var menu = Tokens(MenuStyles.ContentClass);
+
+        Require(popupRoot.Contains("isolate"), "Popup roots must isolate their local stacking order.");
+        Require(popupRoot.Contains("has-[>[data-slot=popup-content]:not([hidden])]:z-50"),
+            "Popup roots must rise above siblings while direct popup content is visible.");
 
         RequireOnlyMinimumWidth(popup, "min-w-40", "Popup");
         RequireOnlyMinimumWidth(menu, "min-w-44", "Menu");

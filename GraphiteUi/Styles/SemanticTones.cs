@@ -59,11 +59,50 @@ internal static class SemanticTones
         "bg-info"
     ];
 
+    private static readonly string[] ButtonNonSolidForegroundByColor =
+    [
+        "",
+        "text-foreground",
+        "text-foreground",
+        "text-success-subtle-foreground",
+        "text-warning-subtle-foreground",
+        "text-danger-subtle-foreground",
+        "text-info-subtle-foreground"
+    ];
+
+    private static readonly string[] ButtonOutlineBorderByColor =
+    [
+        "border-control",
+        "border-control",
+        "border-control",
+        "border-success-subtle-foreground",
+        "border-warning-subtle-foreground",
+        "border-danger-subtle-foreground",
+        "border-info-subtle-foreground"
+    ];
+
+    private static readonly string[] ButtonSubtleStatesByColor =
+    [
+        "hover:bg-secondary-subtle-hover active:bg-secondary-subtle-active",
+        "hover:bg-accent-subtle-hover active:bg-accent-subtle-active",
+        "hover:bg-secondary-subtle-hover active:bg-secondary-subtle-active",
+        "hover:bg-success-subtle-hover active:bg-success-subtle-active",
+        "hover:bg-warning-subtle-hover active:bg-warning-subtle-active",
+        "hover:bg-danger-subtle-hover active:bg-danger-subtle-active",
+        "hover:bg-info-subtle-hover active:bg-info-subtle-active"
+    ];
+
     public static string Solid(ThemeColor color) => Get(SolidByColor, color);
 
     public static string Subtle(ThemeColor color) => Get(SubtleByColor, color);
 
     public static string Indicator(ThemeColor color) => Get(IndicatorByColor, color);
+
+    public static string ButtonNonSolidForeground(ThemeColor color) => Get(ButtonNonSolidForegroundByColor, color);
+
+    public static string ButtonOutlineBorder(ThemeColor color) => Get(ButtonOutlineBorderByColor, color);
+
+    public static string ButtonSubtleStates(ThemeColor color) => Get(ButtonSubtleStatesByColor, color);
 
     public static int Count => SolidByColor.Length;
 

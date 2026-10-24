@@ -1,0 +1,17 @@
+@using GraphiteUi.Components
+
+<UiButton id="loading-native" Type="GraphiteUi.Common.ButtonType.Submit" IsLoading StartContent="@StartIcon">
+    Save document
+</UiButton>
+<UiButton id="idle-reset" Type="GraphiteUi.Common.ButtonType.Reset">Clear form</UiButton>
+<UiButton id="loading-icon" IsLoading IconOnly aria-label="Refresh list">
+    <span>R</span>
+</UiButton>
+<UiButton id="loading-anchor" As="a" IsLoading href="/caller-owned" role="link" tabindex="-1"
+          aria-disabled="false" aria-label="Open report">
+    Open report
+</UiButton>
+
+@code {
+    private static readonly RenderFragment StartIcon = builder => builder.AddContent(0, "*");
+}

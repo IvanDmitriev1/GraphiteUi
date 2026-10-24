@@ -24,7 +24,7 @@ Call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` 
 
 Class composition uses the merger directly with no additional component cache. Empty overrides return existing style strings, and finite style variants are precomputed. The merger's own cache avoids repeated conflict parsing, but merge calls can still allocate argument arrays and lookup strings.
 
-Style helpers also accept presentation values directly: button/badge `GetRootClasses(ThemeColor color, Size size)`, avatar `GetRootClasses(Size size)`, alert `GetRootClasses(ThemeColor color)` and `GetIndicatorClass(ThemeColor color)`, drawer `GetPanelClass(Align side)`, tooltip `GetBubbleClass(Align align, bool bottom)`, toast `GetHostRootClasses(ToastPlacement placement)`, and checkbox `GetRootClasses()`. Existing component-taking overloads remain available and forward to these methods. Enum fallback behavior is unchanged.
+Style helpers also accept presentation values directly: button `GetRootClasses(ThemeColor color, Size size, ButtonVariant variant, bool iconOnly)` (the existing two-argument overload forwards to Solid/labeled), badge `GetRootClasses(ThemeColor color, Size size)`, avatar `GetRootClasses(Size size)`, alert `GetRootClasses(ThemeColor color)` and `GetIndicatorClass(ThemeColor color)`, drawer `GetPanelClass(Align side)`, tooltip `GetBubbleClass(Align align, bool bottom)`, toast `GetHostRootClasses(ToastPlacement placement)`, and checkbox `GetRootClasses()`. Existing component-taking overloads remain available and forward to these methods. Enum fallback behavior is unchanged.
 
 `_Imports.razor`:
 
@@ -56,6 +56,7 @@ Dark theme: `class="dark"` or `data-theme="dark"` on `<html>`. Light theme is th
 | `Align` | `Start`, `Center`, `End` |
 | `AlignItems` | `None`, `Baseline`, `Center`, `Start`, `End`, `Stretch` |
 | `ButtonType` | `Button`, `Submit`, `Reset` (native HTML reset semantics) |
+| `ButtonVariant` | `Solid`, `Outline`, `Ghost`, `Link` (appearance only; `As` still selects the HTML element) |
 | `InputType` | `Text`, `Password`, `Email` |
 | `ToastPlacement` | `TopRight`, `TopCenter`, `BottomRight` |
 
@@ -109,12 +110,12 @@ Plus Blazor's `Value`, `ValueChanged`, `ValueExpression` (`@bind-Value`), `Displ
 
 | Parameter | Type | Default | Notes |
 |---|---|---|---|
-| `Label` | `string?` | `null` | Floating label; also becomes `aria-label`. |
-| `Placeholder` | `string?` | `null` | Also forces the "active" (floated-label) state. |
+| `Label` | `string?` | `null` | Textbox/Numbox float it; Select shows it above the trigger. It also names the input. |
+| `Placeholder` | `string?` | `null` | Also keeps Textbox/Numbox labels floated. |
 | `Description` | `string?` | `null` | Rendered below Textbox/Numbox/Select and linked with `aria-describedby`. |
-| `Size` | `Size` | `Medium` | Controls Textbox/Numbox height; Select retains its existing size. |
+| `Size` | `Size` | `Medium` | Controls Textbox/Numbox height and Select trigger height (32/40/48px). |
 
-Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three components is **not** TwMerge-merged.
+Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` merges `Class` with its existing Popup root; the visible label and description sit in a field wrapper around it.
 
 ---
 
@@ -146,7 +147,7 @@ Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three
 ### `UiBadge` — `As="span"`
 
 | Parameter | Type | Default |
-|---|---|---|
+|---|---|---|---|
 | `Color` | `ThemeColor` | `Primary` |
 | `Size` | `Size` | **`Small`** (not `Medium`) |
 | `ChildContent` | `RenderFragment?` | `null` |
@@ -177,10 +178,15 @@ Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three
 | `Type` | `ButtonType` | `Button` | Use `Submit` inside `EditForm`. |
 | `Color` | `ThemeColor` | `Primary` | |
 | `Size` | `Size` | `Medium` | |
+| `Variant` | `ButtonVariant` | `Solid` | Appearance only; Solid preserves the existing filled treatment. |
+| `IconOnly` | `bool` | `false` | Uses square control geometry; provide `aria-label` or `aria-labelledby`. |
 | `Disabled` | `bool` | `false` | Suppresses `OnClick`. |
+| `IsLoading` | `bool` | `false` | Caller-controlled busy state; keeps the original content and accessible name, disables native buttons, and suppresses `OnClick` while true. |
 | `OnClick` | `EventCallback<MouseEventArgs>` | — | |
 
-Link form: `<UiButton As="a" href="/path">Go</UiButton>` — `href` flows through `AdditionalAttributes`.
+Link form: `<UiButton As="a" href="/path">Go</UiButton>` — `href` flows through `AdditionalAttributes`; `Variant="ButtonVariant.Link"` changes appearance without changing the element or navigation semantics. For disabled/loading anchors, the caller controls navigation and supplies the appropriate `href`, `aria-disabled`, and `tabindex` attributes; the component does not rewrite them.
+
+Primary color selection is deferred; this refinement preserves the existing palette and adds no theme settings.
 
 ### `UiCard` — `As="section"`
 
@@ -301,13 +307,16 @@ Throws `InvalidOperationException` in `OnInitialized` if not nested in a `UiRadi
 
 ### `UiSelect<TValue>` — `UiInputFieldBase<TValue>`, `[CascadingTypeParameter]`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | `null` |
-| `ClearText` | `string` | `"Clear value"` |
-| `NoSuggestionsText` | `string` | `"No suggestions"` |
+| Parameter | Type | Default | Notes |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | `null` | Select options. |
+| `ClearText` | `string` | `"Clear value"` | |
+| `NoSuggestionsText` | `string` | `"No suggestions"` | |
+| `Label` | `string?` | `null` | Visible above the trigger and used as the input accessible name. |
+| `Size` | `Size` | `Medium` | Sets the trigger height to the shared small/medium/large control sizes. |
+| `Description` | `string?` | `null` | Shown below the field and linked through `aria-describedby`. |
 
-Plus `Label` / `Placeholder` (only `Placeholder` renders visibly), `DebounceDelay`, `Disabled` / `ReadOnly` / `Required` / `Class`, `@bind-Value`.
+Plus `Placeholder`, `DebounceDelay`, `Disabled` / `ReadOnly` / `Required` / `Class`, `@bind-Value`.
 Requires explicit `TValue`. Filtering and keyboard behaviour live in `wwwroot/js/uiSelect.js`.
 
 ### `UiSelectItem<TValue>` — plain `ComponentBase, IDisposable` (**no `Class` / `As`**)
@@ -670,6 +679,7 @@ Because nothing above the primitive layer holds a literal, changing any color is
 | Surfaces | `surface1`, `surface2`, `surface3` (+ `-foreground` each), `divider`, `scrim` |
 | Surface states | `surface-hover`, `surface-active`, `disabled-surface`, `selected`, `selected-foreground`, `skeleton` |
 | Content | `foreground` (body), `muted-foreground` (secondary), `subtle-foreground` (tertiary), `disabled-foreground` |
+| Validation | `error-foreground` (text), `invalid` (border), `focus-invalid` (ring) |
 | Borders | `border`, `border-strong`, `control`, `control-hover`, `disabled`, `focus`, `invalid` — all as `border-*` |
 | Focus | `focus` (ring + accent-tinted text), `focus-invalid` |
 | Controls | `control-track`, `control-track-hover`, `control-thumb`, `control-thumb-disabled`, `control-checked`, `control-checked-hover`, `control-checked-foreground` |
@@ -810,8 +820,7 @@ Parameters that compile but do nothing, and behaviours that will surprise you. D
 
 | Item | Detail |
 |---|---|
-| `UiSelect.Size` | Select retains its existing dimensions; Size currently affects only Textbox/Numbox. |
-| `UiInputFieldBase.Class` | Applied raw (`class="@Class"`), **not** TwMerge-merged, unlike every `UiComponentBase` component. |
+| `UiInputFieldBase.Class` | Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` merges it on its existing Popup root. |
 | `UiDrawer.CloseOnEscape` | Never read — the drawer is pure CSS with no JS or data attribute. |
 | `UiDrawer` open state | No `Open` / `OpenChanged` parameter. `@bind-Open` compiles (falls into `AdditionalAttributes`) and silently does nothing. |
 | `UiSelect.UnregisterItem` | Empty body, so `UiSelectItem.Dispose()` is a no-op. |

@@ -261,7 +261,8 @@
     --color-control: var(--graphite-control-border);
     --color-control-hover: var(--graphite-foreground);
     --color-disabled: var(--graphite-neutral-10);
-    --color-invalid: var(--graphite-danger);
+    --color-invalid: var(--graphite-danger-subtle-foreground);
+    --color-error-foreground: var(--graphite-danger-subtle-foreground);
 
     /* ---- Controls: checkbox, radio, switch. Split from the accent tone so a
             rebrand can leave the controls alone, or vice versa. ---- */
@@ -275,7 +276,7 @@
 
     /* ---- Focus ---- */
     --color-focus: var(--graphite-focus);
-    --color-focus-invalid: var(--graphite-danger);
+    --color-focus-invalid: var(--graphite-danger-subtle-foreground);
 
     --color-shimmer-from: var(--graphite-shimmer-from);
     --color-shimmer-via: var(--graphite-shimmer-via);
@@ -292,6 +293,8 @@
     --color-secondary-subtle: var(--graphite-surface2);
     --color-secondary-subtle-foreground: var(--graphite-surface2-foreground);
     --color-secondary-border-subtle: var(--graphite-neutral-15);
+    --color-secondary-subtle-hover: color-mix(in oklab, var(--color-secondary-subtle) 94%, var(--color-secondary-subtle-foreground));
+    --color-secondary-subtle-active: color-mix(in oklab, var(--color-secondary-subtle) 88%, var(--color-secondary-subtle-foreground));
     --color-secondary-indicator: var(--graphite-neutral-50);
 
     /* ---- ACCENT tone (ThemeColor.Primary). The ramp steps are primitives; only
@@ -303,6 +306,8 @@
     --color-accent-subtle: var(--graphite-accent-subtle);
     --color-accent-subtle-foreground: var(--graphite-accent-subtle-foreground);
     --color-accent-border: var(--graphite-accent-border);
+    --color-accent-subtle-hover: color-mix(in oklab, var(--graphite-accent-subtle) 94%, var(--graphite-accent-subtle-foreground));
+    --color-accent-subtle-active: color-mix(in oklab, var(--graphite-accent-subtle) 88%, var(--graphite-accent-subtle-foreground));
 
     /* SUCCESS */
     --color-success: var(--graphite-success);
@@ -312,6 +317,8 @@
     --color-success-subtle: var(--graphite-success-subtle);
     --color-success-subtle-foreground: var(--graphite-success-subtle-foreground);
     --color-success-border: var(--graphite-success-border);
+    --color-success-subtle-hover: color-mix(in oklab, var(--graphite-success-subtle) 94%, var(--graphite-success-subtle-foreground));
+    --color-success-subtle-active: color-mix(in oklab, var(--graphite-success-subtle) 88%, var(--graphite-success-subtle-foreground));
 
     /* WARNING */
     --color-warning: var(--graphite-warning);
@@ -321,6 +328,8 @@
     --color-warning-subtle: var(--graphite-warning-subtle);
     --color-warning-subtle-foreground: var(--graphite-warning-subtle-foreground);
     --color-warning-border: var(--graphite-warning-border);
+    --color-warning-subtle-hover: color-mix(in oklab, var(--graphite-warning-subtle) 94%, var(--graphite-warning-subtle-foreground));
+    --color-warning-subtle-active: color-mix(in oklab, var(--graphite-warning-subtle) 88%, var(--graphite-warning-subtle-foreground));
 
     /* DANGER */
     --color-danger: var(--graphite-danger);
@@ -330,6 +339,8 @@
     --color-danger-subtle: var(--graphite-danger-subtle);
     --color-danger-subtle-foreground: var(--graphite-danger-subtle-foreground);
     --color-danger-border: var(--graphite-danger-border);
+    --color-danger-subtle-hover: color-mix(in oklab, var(--graphite-danger-subtle) 94%, var(--graphite-danger-subtle-foreground));
+    --color-danger-subtle-active: color-mix(in oklab, var(--graphite-danger-subtle) 88%, var(--graphite-danger-subtle-foreground));
 
     /* INFO */
     --color-info: var(--graphite-info);
@@ -339,6 +350,8 @@
     --color-info-subtle: var(--graphite-info-subtle);
     --color-info-subtle-foreground: var(--graphite-info-subtle-foreground);
     --color-info-border: var(--graphite-info-border);
+    --color-info-subtle-hover: color-mix(in oklab, var(--graphite-info-subtle) 94%, var(--graphite-info-subtle-foreground));
+    --color-info-subtle-active: color-mix(in oklab, var(--graphite-info-subtle) 88%, var(--graphite-info-subtle-foreground));
 
     /* ---- Type scale. Every size carries a line-height; the old scale defined
             none outside label-*, so vertical rhythm drifted per component. ---- */

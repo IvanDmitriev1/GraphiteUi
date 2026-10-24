@@ -17,6 +17,7 @@ public partial class UiSelect<TValue> : UiInputFieldBase<TValue>
     [Parameter] public string NoSuggestionsText { get; set; } = "No suggestions";
 
     private protected string RootClass => MergeRootClass(SelectStyles.RootClass);
+    private protected string TriggerClass => SelectStyles.GetTriggerClass(Size);
 
     private bool HasSelectedItem => CurrentValue is not null;
     private string HiddenValue => HasSelectedItem ? CurrentValueAsString ?? string.Empty : string.Empty;

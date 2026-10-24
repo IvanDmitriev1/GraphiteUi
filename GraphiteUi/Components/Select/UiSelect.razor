@@ -3,16 +3,22 @@
 @attribute [CascadingTypeParameter(nameof(TValue))]
 @inherits UiInputFieldBase<TValue>
 
-<UiPopup Class="@RootClass"
+<div class="@SelectStyles.FieldClass">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label for="@InputId" class="@SelectStyles.LabelClass" data-slot="label">@Label</label>
+    }
+
+    <UiPopup Class="@RootClass"
          Disabled="@(Disabled || ReadOnly)"
          TriggerMode="open"
          TriggerAs="div"
-         TriggerClass="@SelectStyles.TriggerClass"
+         TriggerClass="@TriggerClass"
          TriggerAttributes="@TriggerAttributes"
          data-select-root="true"
          @attributes="@RootAttributes">
 
-    <TriggerContent>
+        <TriggerContent>
         <input id="@InputId"
                aria-label="@AccessibleLabel"
                aria-describedby="@DescribedBy"
@@ -49,9 +55,9 @@
                     stroke="currentColor"
                     stroke-width="1.8" />
         </svg>
-    </TriggerContent>
+        </TriggerContent>
 
-    <ChildContent>
+        <ChildContent>
         <input type="hidden"
                data-slot="select-value"
                name="@NameAttributeValue"
@@ -114,10 +120,11 @@
 
             <span>@ClearText</span>
         </button>
-    </ChildContent>
-</UiPopup>
+        </ChildContent>
+    </UiPopup>
 
-@if (!string.IsNullOrWhiteSpace(Description))
-{
-    <p id="@DescriptionId" class="@DefaultUiInputFieldStyles.DescriptionClass">@Description</p>
-}
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <p id="@DescriptionId" class="@DefaultUiInputFieldStyles.DescriptionClass">@Description</p>
+    }
+</div>

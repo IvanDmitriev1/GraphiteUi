@@ -7,6 +7,26 @@ public static class SelectStyles
     public static string RootClass { get; } = "group w-full min-w-0";
 
     public const string TriggerClass = "w-full min-w-0";
+    internal const string FieldClass = "flex w-full min-w-0 flex-col";
+    public const string LabelClass = "mb-1 block text-body-sm text-muted-foreground";
+
+    private static readonly string TriggerStateClass =
+        "focus-within:ring-2 focus-within:ring-focus focus-within:ring-offset-0 focus-within:border-transparent focus-within:hover:border-transparent aria-[invalid=true]:border-invalid aria-[invalid=true]:focus-within:border-transparent aria-[invalid=true]:focus-within:ring-focus-invalid";
+
+    private static readonly string[] TriggerClasses =
+    [
+        new CssClassBuilder(stackalloc char[448]).Add(TriggerClass).Add("h-[var(--control-height-sm)]").Add(TriggerStateClass).ToString(),
+        new CssClassBuilder(stackalloc char[448]).Add(TriggerClass).Add("h-[var(--control-height-md)]").Add(TriggerStateClass).ToString(),
+        new CssClassBuilder(stackalloc char[448]).Add(TriggerClass).Add("h-[var(--control-height-lg)]").Add(TriggerStateClass).ToString()
+    ];
+
+    public static string GetTriggerClass(GraphiteUi.Common.Size size)
+    {
+        int sizeIndex = (int)size;
+        return (uint)sizeIndex < (uint)TriggerClasses.Length
+            ? TriggerClasses[sizeIndex]
+            : TriggerClasses[(int)GraphiteUi.Common.Size.Medium];
+    }
 
     public static string TriggerInputClass { get; } = new CssClassBuilder(stackalloc char[384])
         .Add("w-full min-w-0 flex-1 bg-transparent outline-none appearance-none text-body text-surface1-foreground")
