@@ -684,7 +684,7 @@ Because nothing above the primitive layer holds a literal, changing any color is
 | Content | `foreground` (body), `muted-foreground` (secondary), `subtle-foreground` (tertiary), `disabled-foreground` |
 | Validation | `error-foreground` (text), `invalid` (border), `focus-invalid` (ring) |
 | Borders | `border`, `border-strong`, `control`, `control-hover`, `disabled`, `focus`, `invalid` — all as `border-*` |
-| Focus | `focus` (ring + accent-tinted text), `focus-invalid` |
+| Focus | `focus` (neutral ring), `focus-invalid` |
 | Controls | `control-track`, `control-track-hover`, `control-thumb`, `control-thumb-disabled`, `control-checked`, `control-checked-hover`, `control-checked-foreground` |
 | Accent (`ThemeColor.Primary`) | `accent`, `accent-hover`, `accent-active`, `accent-foreground`, `accent-subtle`, `accent-subtle-foreground`, `accent-border` |
 | Secondary (`ThemeColor.Secondary`) | `secondary`, `secondary-hover`, `secondary-active`, `secondary-foreground`, `secondary-border`, `secondary-border-hover`, `secondary-subtle`, `secondary-subtle-foreground`, `secondary-border-subtle`, `secondary-indicator` |
@@ -775,11 +775,11 @@ To retune a *role* rather than a value — "disabled text should be lighter", "t
 
 ### Rules worth knowing
 
-**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is black-alpha in light and white-alpha in dark; `--graphite-overlay-*` is the reverse. Neutral suffixes name tuned steps, not exact alpha percentages: light `neutral-10` is 8%, `neutral-15` is 12%, `neutral-30` is 28%, and `neutral-50` is 48%. Overlay suffixes match their alpha percentages. Roles built on these primitives — `surface-hover`, `muted-foreground`, `control-track` — work in both themes with no `dark:` variant.
+**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is dark-alpha in light and light-alpha in dark; `--graphite-overlay-*` is the reverse. Neutral suffixes name tuned steps, not exact alpha percentages: `neutral-10` is 8%, `neutral-15` is 12%, `neutral-30` is 28%, and `neutral-50` is 70% in light / 72% in dark. Overlay suffixes match their alpha percentages. Roles built on these primitives — `surface-hover`, `muted-foreground`, `control-track` — work in both themes with no `dark:` variant.
 
-**Hover and active are roles, not shades.** Use `hover:bg-accent-hover`, never a numbered step. Semantic fills move *away* from their own foreground on hover, so contrast improves in every state. The accent is the exception — it already sits at an extreme of the ramp, so it steps one notch toward the middle (17.72:1 base, 14.89:1 hover, 10.44:1 active in light).
+**Hover and active are roles, not shades.** Use `hover:bg-accent-hover`, never a numbered step. Semantic fills move away from their foreground on hover; danger and info states use shared formulas, while accent and success/warning states are explicit palette values. The light accent is near-black (`#1C1B1D`) and the dark accent is silver (`#D4D6DB`), with separate hover and active values in each theme.
 
-**The accent is a lightness inversion, not a hue.** `ThemeColor.Primary` is a near-black fill with white text in light (`--graphite-accent-900`) and a white fill with near-black text in dark (`--graphite-accent-50`). Emphasis comes from inverting against the page. `ThemeColor.Secondary` is the graphite fill, and is the only solid tone that draws a visible border — its fill sits ~1.2–1.4:1 from the page, so the edge is what gives it a shape.
+**The accent is graphite, not a hue.** `ThemeColor.Primary` is a near-black fill with light text in light and a silver fill with dark text in dark. `ThemeColor.Secondary` uses the neutral surface role and draws a visible border because its fill sits close to the page color.
 
 **Two border weights, deliberately.** `border-control` holds 3:1 (WCAG 1.4.11) for anything interactive — inputs, checkboxes, radios, switches, triggers. `border-border` is a decorative hairline for containers and measures ~1.2:1 against the page; do not use it as a control boundary.
 

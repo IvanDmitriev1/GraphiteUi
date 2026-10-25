@@ -149,12 +149,6 @@
     :where([data-ui="button"][data-color="warning"]:focus:not(:focus-visible)) { @apply ring-warning/10; }
     :where([data-ui="button"][data-color="danger"]:focus:not(:focus-visible)) { @apply ring-danger/10; }
     :where([data-ui="button"][data-color="info"]:focus:not(:focus-visible)) { @apply ring-info/10; }
-    :where([data-ui="button"][data-color="primary"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-accent; }
-    :where([data-ui="button"][data-color="success"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-success; }
-    :where([data-ui="button"][data-color="warning"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-warning; }
-    :where([data-ui="button"][data-color="danger"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-danger; }
-    :where([data-ui="button"][data-color="info"]:focus-visible:not(:disabled):not([data-disabled="true"]):not([data-loading="true"])) { @apply ring-info; }
-
     :where([data-ui="button"] > [data-part="content"]) { @apply inline-flex items-center justify-center gap-1.5; }
     :where([data-ui="button"][data-icon-only="true"] > [data-part="content"]) { @apply gap-0; }
     :where([data-ui="button"][data-loading="true"] > [data-part="content"]) { @apply opacity-0; }

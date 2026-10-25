@@ -1,0 +1,52 @@
+@inherits LayoutComponentBase
+
+<script suppress-error="BL9992">
+    (() => {
+        const query = new URLSearchParams(location.search);
+        document.documentElement.classList.toggle('dark', query.get('theme') !== 'light');
+        const palettes = {
+            blue: [
+                '[--graphite-accent:#2458C5]!',
+                '[--graphite-accent-foreground:#FAFAF8]!',
+                '[--graphite-accent-hover:#1E4FAF]!',
+                '[--graphite-accent-active:#194398]!',
+                '[--graphite-accent-subtle:#E8F0FE]!',
+                '[--graphite-accent-subtle-foreground:#1D4EAA]!',
+                '[--graphite-accent-border:#A9C2F3]!',
+                '[--graphite-focus:#2458C5]!',
+                '[&.dark]:[--graphite-accent:#388BFD]!',
+                '[&.dark]:[--graphite-accent-foreground:#242424]!',
+                '[&.dark]:[--graphite-accent-hover:#4C98FF]!',
+                '[&.dark]:[--graphite-accent-active:#62A5FF]!',
+                '[&.dark]:[--graphite-accent-subtle:#1B3354]!',
+                '[&.dark]:[--graphite-accent-subtle-foreground:#A7CBFF]!',
+                '[&.dark]:[--graphite-accent-border:#3E72B7]!',
+                '[&.dark]:[--graphite-focus:#388BFD]!'
+            ],
+            emerald: [
+                '[--graphite-accent:#176B4A]!',
+                '[--graphite-accent-foreground:#FAFAF8]!',
+                '[--graphite-accent-hover:#135E40]!',
+                '[--graphite-accent-active:#105338]!',
+                '[--graphite-accent-subtle:#E6F4EC]!',
+                '[--graphite-accent-subtle-foreground:#145B40]!',
+                '[--graphite-accent-border:#A8D5B6]!',
+                '[--graphite-focus:#176B4A]!',
+                '[&.dark]:[--graphite-accent:#00CD83]!',
+                '[&.dark]:[--graphite-accent-foreground:#242424]!',
+                '[&.dark]:[--graphite-accent-hover:#00C27A]!',
+                '[&.dark]:[--graphite-accent-active:#00B671]!',
+                '[&.dark]:[--graphite-accent-subtle:#173B2B]!',
+                '[&.dark]:[--graphite-accent-subtle-foreground:#98E4BA]!',
+                '[&.dark]:[--graphite-accent-border:#2C8058]!',
+                '[&.dark]:[--graphite-focus:#00CD83]!'
+            ]
+        };
+        const palette = query.get('palette');
+        document.documentElement.classList.add(...(palette === 'blue' || palette === 'emerald' ? palettes[palette] : []));
+    })();
+</script>
+
+@Body
+
+<script type="module" src="js/theme-lab.js" suppress-error="BL9992"></script>

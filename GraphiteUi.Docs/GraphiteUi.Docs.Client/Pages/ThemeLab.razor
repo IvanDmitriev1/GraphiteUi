@@ -1,0 +1,124 @@
+@page "/theme-lab"
+@layout GraphiteUi.Docs.Client.Layout.ThemeLabLayout
+
+<PageTitle>Graphite color lab</PageTitle>
+
+@if (Sample)
+{
+    <main id="theme-sample" class="p-6 text-sm leading-[1.6] antialiased max-[760px]:px-4 max-[760px]:py-5 [&>section]:mt-7 [&_h2]:mb-2.5 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:leading-[1.4] [&_p]:my-2 [&_p]:max-w-[70ch]">
+        <header class="border-b border-divider pb-5">
+            <h1 class="text-2xl font-semibold tracking-[-0.02em]">@(IsLight ? "Light theme" : "Dark theme")</h1>
+            <p class="text-muted-foreground">@PaletteTitle palette using the library stylesheet.</p>
+        </header>
+
+        <section aria-label="Reading sample">
+            <h2>A clearer place to work</h2>
+            <p>Good contrast should make the content easy to read. This paragraph uses the main foreground; the next two lines show the quieter text roles.</p>
+            <p class="text-muted-foreground">Secondary information stays readable.</p>
+            <p class="text-subtle-foreground">Supporting details should still be easy to find.</p>
+            <a class="text-inherit underline underline-offset-4" href="@PaletteDetailsUrl" data-enhance-nav="false">Inspect the palette values</a>
+        </section>
+
+        <section aria-labelledby="actions-title">
+            <h2 id="actions-title">Actions &amp; interaction</h2>
+            <p class="text-muted-foreground">Hover, press, or Tab through the controls. These are local samples.</p>
+            <div class="my-3 flex flex-wrap items-center gap-2">
+                <UiButton data-preview-action="Primary">Primary</UiButton>
+                <UiButton Color="ThemeColor.Secondary" data-preview-action="Secondary">Secondary</UiButton>
+                <UiButton Variant="ButtonVariant.Outline" data-preview-action="Outline">Outline</UiButton>
+                <UiButton Variant="ButtonVariant.Ghost" data-preview-action="Ghost">Ghost</UiButton>
+                <UiButton Disabled="true">Disabled</UiButton>
+                <UiButton IsLoading="true">Loading</UiButton>
+            </div>
+            <p class="min-h-[1.6em] text-muted-foreground" role="status" id="preview-feedback">No action selected.</p>
+        </section>
+
+        <section aria-labelledby="form-title">
+            <h2 id="form-title">Fields &amp; selection</h2>
+            <div class="grid gap-4">
+                <UiTextbox Label="Project name" @bind-Value="ProjectName" Description="Try typing and checking the focus ring." />
+                <UiTextbox Label="Search" Placeholder="Search projects" @bind-Value="Search" />
+                <UiTextbox Label="Unavailable field" Value="Disabled value" ValueExpression="@(() => ProjectName)" Disabled="true" />
+                <UiCheckbox @bind-Value="Notifications">Send project updates</UiCheckbox>
+                <UiSwitch @bind-Value="AutoSave">Enable automatic saving</UiSwitch>
+            </div>
+        </section>
+
+        <section aria-labelledby="status-title">
+            <h2 id="status-title">Status colors</h2>
+            <p class="text-muted-foreground">Solid actions, subtle badges, and message surfaces.</p>
+            @foreach (var color in StatusColors)
+            {
+                <div class="mt-5">
+                    <div class="my-3 flex flex-wrap items-center gap-2">
+                        <UiButton Color="color" data-preview-action="@color.ToString()">@color</UiButton>
+                        <UiButton Color="color" Variant="ButtonVariant.Outline" data-preview-action="@color.ToString()">Outline</UiButton>
+                        <UiBadge Color="color">@color</UiBadge>
+                    </div>
+                    <UiAlert Color="color" Title="@StatusTitle(color)">Sample message for reviewing text and surface contrast.</UiAlert>
+                </div>
+            }
+        </section>
+
+        <section aria-labelledby="surface-title">
+            <h2 id="surface-title">Surfaces &amp; depth</h2>
+            <div class="my-4 grid grid-cols-4 overflow-hidden rounded-[10px] border border-divider [&>div]:flex [&>div]:min-h-18 [&>div]:items-center [&>div]:justify-center [&>div]:px-1 [&>div]:py-2 [&>div]:text-xs [&>div]:leading-[1.6]">
+                <div class="bg-background">Page</div>
+                <div class="bg-surface1">Surface 1</div>
+                <div class="bg-surface2">Surface 2</div>
+                <div class="bg-surface3">Surface 3</div>
+            </div>
+            <UiCard Title="An elevated surface">
+                <p>Compare the panel edge, text, and shadow with the page behind it.</p>
+                <UiBadge>Selected</UiBadge>
+            </UiCard>
+            <div class="mt-5 h-3 w-[65%] rounded-[4px] bg-skeleton" aria-label="Loading placeholder"></div>
+        </section>
+
+        <section id="palette-details" aria-labelledby="palette-title">
+            <h2 id="palette-title">Measured colors</h2>
+            <p class="text-muted-foreground">Computed in this browser. Text target: 4.5:1. Control boundary target: 3:1.</p>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-xs leading-[1.6] tabular-nums [&_tr>*]:border-b [&_tr>*]:border-divider [&_tr>*]:px-1.5 [&_tr>*]:py-2 [&_tr>*]:text-left [&_th]:font-semibold [&_td:nth-child(2)]:font-mono [&_td:nth-child(2)]:text-[11px] [&_td:nth-child(2)]:whitespace-nowrap [&_tr[data-pass=false]>td:last-child]:font-semibold [&_tr[data-pass=false]>td:last-child]:text-danger-subtle-foreground [&_tr[data-pass=true]>td:last-child]:text-success-subtle-foreground">
+                    <thead><tr><th scope="col">Role</th><th scope="col">Colors</th><th scope="col">Ratio</th></tr></thead>
+                    <tbody id="contrast-results"><tr><td colspan="3">Enable JavaScript to see measured values.</td></tr></tbody>
+                </table>
+            </div>
+            <p class="text-muted-foreground">Measurements cover the displayed pairings, not a full accessibility audit. Disabled controls and decorative borders are excluded.</p>
+        </section>
+    </main>
+}
+else
+{
+    <main class="mx-auto max-w-[1480px] px-[clamp(16px,3vw,48px)] py-9 text-sm leading-[1.6] antialiased [&_:focus-visible]:outline-2 [&_:focus-visible]:outline-focus [&_:focus-visible]:outline-offset-3">
+        <header class="flex items-end justify-between gap-6 max-[760px]:flex-col max-[760px]:items-start max-[760px]:gap-[18px]">
+            <div>
+                <a class="text-inherit underline underline-offset-4" href="/" data-enhance-nav="false">Back to components</a>
+                <h1 class="mt-3 text-[clamp(26px,3vw,36px)] font-semibold tracking-[-0.03em]">Graphite color lab</h1>
+                <p class="mt-2 max-w-[65ch] text-muted-foreground">The approved library palette. Compare the same components in light and dark themes.</p>
+            </div>
+            <nav class="flex gap-1 rounded-[10px] border border-control p-1" aria-label="Preview theme">
+                <a class="rounded-md px-4 py-1.5 no-underline hover:bg-surface-hover aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground aria-[current=page]:hover:bg-accent" href="@ThemeUrl("light")" data-enhance-nav="false" aria-current="@(IsLight ? "page" : null)">Light</a>
+                <a class="rounded-md px-4 py-1.5 no-underline hover:bg-surface-hover aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground aria-[current=page]:hover:bg-accent" href="@ThemeUrl("dark")" data-enhance-nav="false" aria-current="@(!IsLight ? "page" : null)">Dark</a>
+            </nav>
+        </header>
+        <nav class="my-5 flex flex-wrap gap-2" aria-label="Accent examples">
+            <a class="flex items-center gap-2 rounded-lg border border-control px-3 py-2 aria-[current=page]:bg-surface-active aria-[current=page]:outline-1 aria-[current=page]:outline-focus" href="@PaletteUrl("graphite")" data-enhance-nav="false" aria-current="@(PreviewPalette == "graphite" ? "page" : null)"><span class="size-3 rounded-[3px] bg-[#1C1B1D] [.dark_&]:bg-[#D4D6DB]" aria-hidden="true"></span>Library default</a>
+            <a class="flex items-center gap-2 rounded-lg border border-control px-3 py-2 aria-[current=page]:bg-surface-active aria-[current=page]:outline-1 aria-[current=page]:outline-focus" href="@PaletteUrl("blue")" data-enhance-nav="false" aria-current="@(PreviewPalette == "blue" ? "page" : null)"><span class="size-3 rounded-[3px] bg-[#388BFD]" aria-hidden="true"></span>Vivid blue</a>
+            <a class="flex items-center gap-2 rounded-lg border border-control px-3 py-2 aria-[current=page]:bg-surface-active aria-[current=page]:outline-1 aria-[current=page]:outline-focus" href="@PaletteUrl("emerald")" data-enhance-nav="false" aria-current="@(PreviewPalette == "emerald" ? "page" : null)"><span class="size-3 rounded-[3px] bg-[#00CD83]" aria-hidden="true"></span>Emerald green</a>
+        </nav>
+        <p class="mt-7 mb-6 max-w-[90ch] text-muted-foreground">Graphite is now the library default. Light mode uses #FCFCFC with neutral gray surfaces; dark mode keeps #242424 with white body text. Both use yellow warning fills with dark labels. Blue and emerald remain optional accent examples.</p>
+        <nav class="mb-4 flex flex-wrap gap-5" aria-label="Palette comparison">
+            <a class="text-inherit underline underline-offset-4" href="@ComparisonUrl("light-theme")" data-enhance-nav="false">Light theme</a>
+            <a class="text-inherit underline underline-offset-4" href="@ComparisonUrl("dark-theme")" data-enhance-nav="false">Dark theme</a>
+        </nav>
+        <div id="theme-comparison" class="grid grid-cols-2 items-start gap-6 max-[760px]:grid-cols-1">
+            <iframe class="block h-[2600px] w-full rounded-[14px] border border-divider bg-background" id="light-theme" title="Light theme" src="@SampleUrl("light")"></iframe>
+            <iframe class="block h-[2600px] w-full rounded-[14px] border border-divider bg-background" id="dark-theme" title="Dark theme" src="@SampleUrl("dark")"></iframe>
+        </div>
+        <footer class="mt-8 max-w-[75ch] text-muted-foreground">
+            <p>Eye comfort depends on your display, brightness, and surroundings. Use these samples to judge your preference while preserving readable contrast.</p>
+            <a class="text-inherit underline underline-offset-4" href="https://www.w3.org/TR/WCAG22/#contrast-minimum">WCAG contrast guidance</a>
+        </footer>
+    </main>
+}
