@@ -1,0 +1,21 @@
+@layer components {
+    :where([data-ui="toast-host"]) { @apply fixed z-[120] flex w-full p-2 pointer-events-none; }
+    :where([data-ui="toast-host"][data-placement="top-right"]) { @apply top-0 left-0 items-start justify-center; }
+    :where([data-ui="toast-host"][data-placement="top-center"]) { @apply top-0 left-0 items-start justify-center; }
+    :where([data-ui="toast-host"][data-placement="bottom-right"]) { @apply bottom-0 left-0 items-end justify-center; }
+    @media (width >= 40rem) {
+        :where([data-ui="toast-host"]) { @apply p-4; }
+        :where([data-ui="toast-host"][data-placement="top-right"], [data-ui="toast-host"][data-placement="bottom-right"]) { @apply left-auto right-0 justify-end; }
+    }
+    :where([data-ui="toast-host"] > [data-part="stack"]) { @apply flex w-[calc(100dvw-1rem)] max-w-full flex-col gap-2; }
+    @media (width >= 40rem) {
+        :where([data-ui="toast-host"] > [data-part="stack"]) { width: min(calc(100dvw - 2rem), 28rem); }
+    }
+    :where([data-ui="toast-host"] > [data-part="stack"] > [data-toast="true"]) { @apply relative pointer-events-auto w-full; }
+    :where([data-ui="toast-host"] > [data-part="stack"] > [data-toast="true"]:nth-child(n+3)) { display: none; }
+    :where([data-ui="toast-host"] > [data-part="stack"] > [data-toast="true"] > [data-part="dismiss"]) { width: 2.5rem; height: 2.5rem; }
+    @media (width >= 40rem) {
+        :where([data-ui="toast-host"] > [data-part="stack"] > [data-toast="true"]:nth-child(n+3)) { display: flex; }
+        :where([data-ui="toast-host"] > [data-part="stack"] > [data-toast="true"] > [data-part="dismiss"]) { width: 1.75rem; height: 1.75rem; }
+    }
+}

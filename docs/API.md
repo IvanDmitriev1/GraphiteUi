@@ -3,9 +3,9 @@
 Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 
 - Works in **static SSR**, **Interactive Server**, and **Interactive WebAssembly**. Most components render usable markup under static SSR and are enhanced by JS after load.
-- **Ready-to-use CSS ships with the package** at `_content/GraphiteUi/css/graphite-ui.css`. Add its stylesheet before application CSS. It contains library utilities without Tailwind preflight, so it does not reset the consuming application. Custom Tailwind class strings still require the consumer's own CSS build. Regenerate library CSS with `npm ci && npm run build:css`.
-- **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios and selects on `enhancedload`.
-- Namespaces: components/services in `GraphiteUi.Components`, enums in `GraphiteUi.Common`, style class constants in `GraphiteUi.Styles`.
+- **Generate CSS during the consuming application's server build.** Import Tailwind first, then the copied `Styles/graphite-ui.css` entrypoint. It imports GraphiteUi's theme and per-family component CSS. The package ships CSS source files; generated application stylesheets are build output. The docs app's `Tailwindcss.targets` and `wwwroot/styles/app.css` demonstrate this pipeline.
+- **No `<script>` tag needed.** `wwwroot/GraphiteUi.lib.module.js` is a Blazor JS initializer; `blazor.web.js` loads it automatically. It re-wires inputs, popups, radios, selects and tooltips on `enhancedload`.
+- Namespaces: components/services in `GraphiteUi.Components` and enums in `GraphiteUi.Common`.
 
 ---
 
@@ -14,18 +14,27 @@ Blazor Razor Class Library, `net10.0`, `PackageId GraphiteUi`.
 ```csharp
 using GraphiteUI.Extensions;   // NOTE: capital "UI" — see Known gaps
 
-builder.Services.AddGraphiteUi();          // optional: AddGraphiteUi(cfg => ...) for TwConfig
+builder.Services.AddGraphiteUi();
 ```
 
-Registers `TwMerge` with bounded cache size 500 by default (customizable through `AddGraphiteUi` options), scoped `IDialogService`, scoped `IToastService`.
-Services are **scoped**, so call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` **and** `.Client/Program.cs` for an Auto/WASM app).
+In the consuming Tailwind input, import the library entrypoint after Tailwind and scan the app's Razor sources:
+
+```css
+@import "tailwindcss";
+@import "../../bin/GraphiteUi/Styles/graphite-ui.css";
+@source "../../../MyApp.Client/**/*.razor";
+```
+
+`GraphiteUi.targets` copies package CSS files to `bin/GraphiteUi/Styles` by default. Set `GraphiteUiThemeDir` to choose another copy directory and update the CSS import accordingly. Keep the entrypoint import after Tailwind and do not scan GraphiteUi source files from the consumer stylesheet.
+
+Registers scoped `IDialogService` and `IToastService` services.
+Call `AddGraphiteUi()` in *every* render-mode host project (server `Program.cs` **and** `.Client/Program.cs` for an Auto/WASM app).
 
 `_Imports.razor`:
 
 ```razor
 @using GraphiteUi.Components
 @using GraphiteUi.Common
-@using GraphiteUi.Styles   @* only if you use CommonStyles etc. *@
 ```
 
 Layout — both hosts need an interactive render mode:
@@ -50,6 +59,7 @@ Dark theme: `class="dark"` or `data-theme="dark"` on `<html>`. Light theme is th
 | `Align` | `Start`, `Center`, `End` |
 | `AlignItems` | `None`, `Baseline`, `Center`, `Start`, `End`, `Stretch` |
 | `ButtonType` | `Button`, `Submit`, `Reset` (native HTML reset semantics) |
+| `ButtonVariant` | `Solid`, `Outline`, `Ghost`, `Link` (appearance only; `As` still selects the HTML element) |
 | `InputType` | `Text`, `Password`, `Email` |
 | `ToastPlacement` | `TopRight`, `TopCenter`, `BottomRight` |
 
@@ -75,7 +85,7 @@ ComponentBase
 | Member | Type | Default | Notes |
 |---|---|---|---|
 | `As` | `string` | `"div"` | Root HTML tag. Most components override in their constructor. |
-| `Class` | `string?` | `null` | Merged into core classes via TwMerge — **your classes win conflicts**. |
+| `Class` | `string?` | `null` | Passed to component roots unchanged. Component styles use low-specificity selectors so consumer utilities can override appearance. |
 | `AdditionalAttributes` | `IReadOnlyDictionary<string, object>?` | `null` | `CaptureUnmatchedValues`, splatted on root. |
 | `ElementReference` | `ElementReference?` | `null` | Public, `protected set`. Not a parameter. Only populated by `UiComponent` and `UiToastHost`. |
 | `Rerender()` | `void` | — | Public. Calls `StateHasChanged()`. |
@@ -103,12 +113,12 @@ Plus Blazor's `Value`, `ValueChanged`, `ValueExpression` (`@bind-Value`), `Displ
 
 | Parameter | Type | Default | Notes |
 |---|---|---|---|
-| `Label` | `string?` | `null` | Floating label; also becomes `aria-label`. |
-| `Placeholder` | `string?` | `null` | Also forces the "active" (floated-label) state. |
+| `Label` | `string?` | `null` | Textbox/Numbox float it; Select shows it above the trigger. It also names the input. |
+| `Placeholder` | `string?` | `null` | Also keeps Textbox/Numbox labels floated. |
 | `Description` | `string?` | `null` | Rendered below Textbox/Numbox/Select and linked with `aria-describedby`. |
-| `Size` | `Size` | `Medium` | Controls Textbox/Numbox height; Select retains its existing size. |
+| `Size` | `Size` | `Medium` | Controls Textbox/Numbox height and Select trigger height (32/40/48px). |
 
-Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three components is **not** TwMerge-merged.
+Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` passes `Class` raw to its Popup root; the visible label and description sit in a field wrapper around it.
 
 ---
 
@@ -140,7 +150,7 @@ Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three
 ### `UiBadge` — `As="span"`
 
 | Parameter | Type | Default |
-|---|---|---|
+|---|---|---|---|
 | `Color` | `ThemeColor` | `Primary` |
 | `Size` | `Size` | **`Small`** (not `Medium`) |
 | `ChildContent` | `RenderFragment?` | `null` |
@@ -171,10 +181,15 @@ Note: the root `<div>` uses `class="@Class"` directly, so `Class` on these three
 | `Type` | `ButtonType` | `Button` | Use `Submit` inside `EditForm`. |
 | `Color` | `ThemeColor` | `Primary` | |
 | `Size` | `Size` | `Medium` | |
+| `Variant` | `ButtonVariant` | `Solid` | Appearance only; Solid preserves the existing filled treatment. |
+| `IconOnly` | `bool` | `false` | Uses square control geometry; provide `aria-label` or `aria-labelledby`. |
 | `Disabled` | `bool` | `false` | Suppresses `OnClick`. |
+| `IsLoading` | `bool` | `false` | Caller-controlled busy state; keeps the original content and accessible name, disables native buttons, and suppresses `OnClick` while true. |
 | `OnClick` | `EventCallback<MouseEventArgs>` | — | |
 
-Link form: `<UiButton As="a" href="/path">Go</UiButton>` — `href` flows through `AdditionalAttributes`.
+Link form: `<UiButton As="a" href="/path">Go</UiButton>` — `href` flows through `AdditionalAttributes`; `Variant="ButtonVariant.Link"` changes appearance without changing the element or navigation semantics. For disabled/loading anchors, the caller controls navigation and supplies the appropriate `href`, `aria-disabled`, and `tabindex` attributes; the component does not rewrite them.
+
+Primary color selection is deferred; this refinement preserves the existing palette and adds no theme settings.
 
 ### `UiCard` — `As="section"`
 
@@ -235,7 +250,7 @@ Bind with `@bind-Value`. `TryParseValueFromString` throws `NotSupportedException
 | `Disabled` | `bool` | `false` |
 | `CloseOnOutsideClick` | `bool` | `true` |
 | `CloseOnEscape` | `bool` | `true` |
-| `ShowBackdrop` | `bool` | `true` |
+| `ShowBackdrop` | `bool` | `false` |
 
 Per-slot classes, attributes and `TriggerAs` are forwarded to `UiPopup`.
 
@@ -267,7 +282,7 @@ No own parameters. Surface = `UiInputFieldBase<TValue>` + `DebounceDelay` + `UiI
 | `Disabled` | `bool` | `false` | → `data-disabled` |
 | `CloseOnOutsideClick` | `bool` | `true` | → `data-close-outside` |
 | `CloseOnEscape` | `bool` | `true` | → `data-close-escape` |
-| `ShowBackdrop` | `bool` | `true` | → `data-show-backdrop` |
+| `ShowBackdrop` | `bool` | `false` | → `data-show-backdrop` |
 
 `TriggerClass`, `ContentClass`, `BackdropClass`, `ContentAttributes` and `BackdropAttributes` are accepted and applied to the corresponding elements.
 
@@ -295,13 +310,16 @@ Throws `InvalidOperationException` in `OnInitialized` if not nested in a `UiRadi
 
 ### `UiSelect<TValue>` — `UiInputFieldBase<TValue>`, `[CascadingTypeParameter]`
 
-| Parameter | Type | Default |
-|---|---|---|
-| `ChildContent` | `RenderFragment?` | `null` |
-| `ClearText` | `string` | `"Clear value"` |
-| `NoSuggestionsText` | `string` | `"No suggestions"` |
+| Parameter | Type | Default | Notes |
+|---|---|---|---|
+| `ChildContent` | `RenderFragment?` | `null` | Select options. |
+| `ClearText` | `string` | `"Clear value"` | |
+| `NoSuggestionsText` | `string` | `"No suggestions"` | |
+| `Label` | `string?` | `null` | Visible above the trigger and used as the input accessible name. |
+| `Size` | `Size` | `Medium` | Sets the trigger height to the shared small/medium/large control sizes. |
+| `Description` | `string?` | `null` | Shown below the field and linked through `aria-describedby`. |
 
-Plus `Label` / `Placeholder` (only `Placeholder` renders visibly), `DebounceDelay`, `Disabled` / `ReadOnly` / `Required` / `Class`, `@bind-Value`.
+Plus `Placeholder`, `DebounceDelay`, `Disabled` / `ReadOnly` / `Required` / `Class`, `@bind-Value`.
 Requires explicit `TValue`. Filtering and keyboard behaviour live in `wwwroot/js/uiSelect.js`.
 
 ### `UiSelectItem<TValue>` — plain `ComponentBase, IDisposable` (**no `Class` / `As`**)
@@ -350,6 +368,8 @@ Same binding rule as `UiCheckbox`.
 | `Align` | `Align` | `Center` | |
 | `Bottom` | `bool` | `false` | Places the bubble below instead of above. |
 | `ChildContent` | `RenderFragment?` | `null` | The hover target. |
+
+Tooltip text wraps, including unbroken strings, within a 14rem maximum width constrained by the viewport. CSS provides hover and keyboard-focus visibility; the JS initializer enhances horizontal placement to keep an 8px viewport gutter. `Align` remains the preferred placement, adjusted near viewport edges; `Bottom` is unchanged.
 
 ### `UiToastHost` — `UiComponentBase, IAsyncDisposable`
 
@@ -588,7 +608,7 @@ There is **no plain-string message API** — the minimum body is a `RenderFragme
     <ChildContent>
         <div class="flex items-center gap-3">
             <UiAvatar Name="Alex Johnson" />
-            <div class="text-body-sm text-neutral-60">alex@example.com</div>
+            <div class="text-body-sm text-muted-foreground">alex@example.com</div>
         </div>
     </ChildContent>
     <FooterContent>
@@ -638,7 +658,7 @@ Custom placeholder:
         </div>
     </SkeletonContent>
     <ChildContent>
-        <div class="@CommonStyles.SurfaceFrameRegularPaddedClass">Loaded: <strong>@Summary</strong></div>
+        <div class="rounded-md border border-border bg-surface1 p-3 text-body text-foreground">Loaded: <strong>@Summary</strong></div>
     </ChildContent>
 </UiSkeleton>
 ```
@@ -662,8 +682,9 @@ Because nothing above the primitive layer holds a literal, changing any color is
 | Surfaces | `surface1`, `surface2`, `surface3` (+ `-foreground` each), `divider`, `scrim` |
 | Surface states | `surface-hover`, `surface-active`, `disabled-surface`, `selected`, `selected-foreground`, `skeleton` |
 | Content | `foreground` (body), `muted-foreground` (secondary), `subtle-foreground` (tertiary), `disabled-foreground` |
+| Validation | `error-foreground` (text), `invalid` (border), `focus-invalid` (ring) |
 | Borders | `border`, `border-strong`, `control`, `control-hover`, `disabled`, `focus`, `invalid` — all as `border-*` |
-| Focus | `focus` (ring + accent-tinted text), `focus-invalid` |
+| Focus | `focus` (neutral ring), `focus-invalid` |
 | Controls | `control-track`, `control-track-hover`, `control-thumb`, `control-thumb-disabled`, `control-checked`, `control-checked-hover`, `control-checked-foreground` |
 | Accent (`ThemeColor.Primary`) | `accent`, `accent-hover`, `accent-active`, `accent-foreground`, `accent-subtle`, `accent-subtle-foreground`, `accent-border` |
 | Secondary (`ThemeColor.Secondary`) | `secondary`, `secondary-hover`, `secondary-active`, `secondary-foreground`, `secondary-border`, `secondary-border-hover`, `secondary-subtle`, `secondary-subtle-foreground`, `secondary-border-subtle`, `secondary-indicator` |
@@ -693,13 +714,45 @@ Never referenced as classes. Redefine them to retheme.
 | Semantic fills | `--graphite-success/warning/danger/info` (+ `-foreground`, `-subtle`, `-subtle-foreground`, `-border`, `-hover`, `-active`) |
 | Focus, shimmer, shadows | `--graphite-focus`, `--graphite-shimmer-from/via`, `--graphite-shadow-xs`…`-2xl` |
 
+### Control sizes and popup motion
+
+These inherited CSS properties can be overridden after the stylesheet import or on a containing element. They remain variable references in generated CSS and do not require rebuilding GraphiteUi.
+
+| Property | Default | Applies to |
+|---|---|---|
+| `--control-height-sm` | `calc(var(--spacing, 0.25rem) * 8)` | Small buttons and input wrappers |
+| `--control-height-md` | `calc(var(--spacing, 0.25rem) * 10)` | Medium buttons/input wrappers and popup, drawer, menu, and select triggers |
+| `--control-height-lg` | `calc(var(--spacing, 0.25rem) * 12)` | Large buttons and input wrappers |
+| `--popup-backdrop-duration` | `220ms` | Popup backdrop open/close transitions |
+| `--popup-content-duration` | `240ms` | Popup/menu content open/close transitions |
+| `--popup-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Popup backdrop/content easing |
+
+At the standard spacing and 16px root font size, control heights are 32/40/48px. Input wrappers use the same property for height and minimum height. Option rows and unrelated component animations retain their own sizing and motion. Reduced-motion preferences still disable popup transitions.
+
+```css
+.compact-form {
+    --control-height-md: 2.25rem;
+    --popup-backdrop-duration: 120ms;
+    --popup-content-duration: 140ms;
+    --popup-easing: ease-out;
+}
+```
+
+Component root and part classes are passed through unchanged. Consumer utility classes can override library appearance because GraphiteUi component selectors use the `components` layer with low specificity.
+
+### Style ownership and normalization
+
+Component roots expose stable `data-ui` identities, and their styled children expose `data-part` markers. For example, Menu keeps `data-ui="popup"` and adds `data-menu="true"`; JS continues to use the existing `data-slot` and state attributes. Enum state attributes use normalized lowercase kebab-case values, and boolean state attributes use `true` or `false`.
+
+The required library stylesheet entrypoint is `GraphiteUi/Styles/graphite-ui.css`. It does not import Tailwind itself; import it after `tailwindcss`. It imports per-family styles from the same `Styles/` directory and scopes base normalization to library roots and their owned parts.
+
 ### 8.3 Rebranding without touching the library
 
 `@theme static inline` inlines the primitive reference into every generated utility — `bg-accent` compiles to `background-color: var(--graphite-accent)`, not to a hex. So redefining a primitive at `:root` **after** the theme import retints the whole library at runtime, with no rebuild of GraphiteUi:
 
 ```css
 @import "tailwindcss";
-@import "GraphiteUi/theme";
+@import "../../bin/GraphiteUi/Styles/graphite-ui.css";
 
 /* Swap the graphite accent for a real hue. */
 :root {
@@ -722,11 +775,11 @@ To retune a *role* rather than a value — "disabled text should be lighter", "t
 
 ### Rules worth knowing
 
-**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is black-alpha in light and white-alpha in dark; `--graphite-overlay-*` is the reverse. The number is the alpha percent. That is why roles built on it — `surface-hover`, `muted-foreground`, `control-track` — are correct in both themes with no `dark:` variant, and it is what makes the light theme cheap.
+**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is dark-alpha in light and light-alpha in dark; `--graphite-overlay-*` is the reverse. Neutral suffixes name tuned steps, not exact alpha percentages: `neutral-10` is 8%, `neutral-15` is 12%, `neutral-30` is 28%, and `neutral-50` is 70% in light / 72% in dark. Overlay suffixes match their alpha percentages. Roles built on these primitives — `surface-hover`, `muted-foreground`, `control-track` — work in both themes with no `dark:` variant.
 
-**Hover and active are roles, not shades.** Use `hover:bg-accent-hover`, never a numbered step. Semantic fills move *away* from their own foreground on hover, so contrast improves in every state. The accent is the exception — it already sits at an extreme of the ramp, so it steps one notch toward the middle (17.72:1 base, 14.89:1 hover, 10.44:1 active in light).
+**Hover and active are roles, not shades.** Use `hover:bg-accent-hover`, never a numbered step. Semantic fills move away from their foreground on hover; danger and info states use shared formulas, while accent and success/warning states are explicit palette values. The light accent is near-black (`#1C1B1D`) and the dark accent is silver (`#D4D6DB`), with separate hover and active values in each theme.
 
-**The accent is a lightness inversion, not a hue.** `ThemeColor.Primary` is a near-black fill with white text in light (`--graphite-accent-900`) and a white fill with near-black text in dark (`--graphite-accent-50`). Emphasis comes from inverting against the page. `ThemeColor.Secondary` is the graphite fill, and is the only solid tone that draws a visible border — its fill sits ~1.2–1.4:1 from the page, so the edge is what gives it a shape.
+**The accent is graphite, not a hue.** `ThemeColor.Primary` is a near-black fill with light text in light and a silver fill with dark text in dark. `ThemeColor.Secondary` uses the neutral surface role and draws a visible border because its fill sits close to the page color.
 
 **Two border weights, deliberately.** `border-control` holds 3:1 (WCAG 1.4.11) for anything interactive — inputs, checkboxes, radios, switches, triggers. `border-border` is a decorative hairline for containers and measures ~1.2:1 against the page; do not use it as a control boundary.
 
@@ -770,8 +823,7 @@ Parameters that compile but do nothing, and behaviours that will surprise you. D
 
 | Item | Detail |
 |---|---|
-| `UiSelect.Size` | Select retains its existing dimensions; Size currently affects only Textbox/Numbox. |
-| `UiInputFieldBase.Class` | Applied raw (`class="@Class"`), **not** TwMerge-merged, unlike every `UiComponentBase` component. |
+| `UiInputFieldBase.Class` | Textbox/Numbox apply `Class` raw to their outer wrapper. `UiSelect` passes it unchanged to its existing Popup root. |
 | `UiDrawer.CloseOnEscape` | Never read — the drawer is pure CSS with no JS or data attribute. |
 | `UiDrawer` open state | No `Open` / `OpenChanged` parameter. `@bind-Open` compiles (falls into `AdditionalAttributes`) and silently does nothing. |
 | `UiSelect.UnregisterItem` | Empty body, so `UiSelectItem.Dispose()` is a no-op. |

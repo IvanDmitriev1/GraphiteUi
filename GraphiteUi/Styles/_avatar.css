@@ -1,0 +1,7 @@
+@layer components {
+    :where([data-ui="avatar"]) { @apply inline-flex items-center justify-center overflow-hidden rounded-full border bg-surface2 text-surface2-foreground border-border; }
+    :where([data-ui="avatar"][data-size="small"]) { @apply size-8 text-caption; }
+    :where([data-ui="avatar"][data-size="medium"]) { @apply size-10 text-body-sm; }
+    :where([data-ui="avatar"][data-size="large"]) { @apply size-14 text-body; }
+    :where([data-ui="avatar"] [data-part="image"]) { @apply size-full object-cover; }
+}

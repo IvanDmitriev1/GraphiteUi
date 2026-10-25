@@ -1,4 +1,3 @@
-﻿using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -10,6 +9,7 @@ internal abstract class DialogInstanceBase<TDialog> : IDialogInstance
     {
         Id = id;
         Options = options;
+        _zIndexStyle = $"z-index: {Id.Value + 100}";
         Render = BuildRender(parameters);
     }
 
@@ -17,6 +17,8 @@ internal abstract class DialogInstanceBase<TDialog> : IDialogInstance
     public DialogOptions Options { get; }
     public RenderFragment Render { get; }
     public ElementReference DialogElementRef { get; private set; }
+
+    private readonly string _zIndexStyle;
 
     public abstract Task WaitAsync(CancellationToken ct);
     public abstract void Close();
@@ -38,11 +40,13 @@ internal abstract class DialogInstanceBase<TDialog> : IDialogInstance
         int seq = 0;
 
         builder.OpenElement(seq++, "dialog");
-        builder.AddAttribute(seq++, "class", $"{DialogStyles.Classes} {Options.Classes}");
-        builder.AddAttribute(seq++, "style", $"z-index: {Id.Value + 100}");
+        builder.AddAttribute(seq++, "class", Options.Classes);
+        builder.AddAttribute(seq++, "style", _zIndexStyle);
         builder.AddAttribute(seq++, "id", Id.Value);
         builder.AddAttribute(seq++, "role", "dialog");
         builder.AddAttribute(seq++, "data-slot", "dialog");
+        builder.AddAttribute(seq++, "data-ui", "dialog");
+        builder.AddAttribute(seq++, "data-part", "surface");
         builder.AddAttribute(seq++, "aria-modal", "true");
 
         builder.AddAttribute(seq++, "onclose", EventCallback.Factory.Create<EventArgs>(this, Close));

@@ -1,6 +1,5 @@
 ﻿using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -39,6 +38,12 @@ public partial class UiButton : UiComponentBase
     /// </remarks>
     [Parameter] public ThemeColor Color { get; set; } = ThemeColor.Primary;
 
+    /// <summary>Gets or sets the button's visual appearance.</summary>
+    [Parameter] public ButtonVariant Variant { get; set; } = ButtonVariant.Solid;
+
+    /// <summary>Gets or sets whether this button uses square icon-only geometry.</summary>
+    [Parameter] public bool IconOnly { get; set; }
+
     /// <summary>
     /// Gets or sets the size of the button.
     /// </summary>
@@ -52,12 +57,17 @@ public partial class UiButton : UiComponentBase
     /// </summary>
     [Parameter] public bool Disabled { get; set; }
 
+    /// <summary>Gets or sets whether the button is displaying caller-controlled loading state.</summary>
+    [Parameter] public bool IsLoading { get; set; }
+
     /// <summary>
     /// Gets or sets a callback that is fired whenever the button is clicked.
     /// </summary>
     [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-    private protected string RootClass => MergeRootClass(ButtonStyles.GetRootClasses(this));
+    private protected bool IsUnavailable => Disabled || IsLoading;
+    private protected bool NativeDisabled => Disabled
+        || (IsLoading && string.Equals(As, "button", StringComparison.OrdinalIgnoreCase));
 
     public UiButton()
     {
@@ -66,6 +76,6 @@ public partial class UiButton : UiComponentBase
 
     private protected virtual Task OnClickAsync(MouseEventArgs args)
     {
-        return Disabled ? Task.CompletedTask : OnClick.InvokeAsync(args);
+        return IsUnavailable ? Task.CompletedTask : OnClick.InvokeAsync(args);
     }
 }

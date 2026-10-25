@@ -4,26 +4,28 @@
 @if (Visible)
 {
     <UiComponent As="@As"
-                 Class="@RootClass"
+                 Class="@Class"
+                 DataUi="alert"
                  role="@ResolvedRole"
                  data-slot="alert"
+                 data-color="@Color.ToAttributeValue()"
                  @attributes="@AdditionalAttributes">
         @if (StartContent is not null)
         {
-            <span class="@AlertStyles.StartContentClass">
+            <span data-part="start-content">
                 @StartContent
             </span>
         }
 
-        <div class="@AlertStyles.ContentClass">
+        <div data-part="content">
             @if (!string.IsNullOrWhiteSpace(Title))
             {
-                <div class="@AlertStyles.TitleClass">@Title</div>
+                <div data-part="title">@Title</div>
             }
 
             @if (ChildContent is not null)
             {
-                <div class="@AlertStyles.BodyClass">
+                <div data-part="body">
                     @ChildContent
                 </div>
             }
@@ -33,13 +35,13 @@
         {
             <button type="button"
                     data-slot="alert-dismissButton"
-                    class="@AlertStyles.DismissButtonClass"
+                    data-part="dismiss"
                     hidden="@(!ShowDismissButton)"
                     tabindex="@(ShowDismissButton ? 0 : -1)"
                     aria-hidden="@((!ShowDismissButton).ToAttributeValue())"
                     aria-label="Dismiss alert"
                     @onclick="DismissAsync">
-                <svg class="@AlertStyles.DismissIconClass"
+                <svg data-part="dismiss-icon"
                      viewBox="0 0 16 16"
                      fill="none"
                      aria-hidden="true"

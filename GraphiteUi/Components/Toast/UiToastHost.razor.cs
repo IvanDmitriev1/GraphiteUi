@@ -1,7 +1,6 @@
 using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
 using GraphiteUi.Extensions;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -22,8 +21,6 @@ public partial class UiToastHost : UiComponentBase, IAsyncDisposable
     [Parameter] public int MaxVisible { get; set; } = 4;
     [Parameter] public bool DangerStickyByDefault { get; set; } = true;
     [Parameter] public bool NewestOnTop { get; set; } = true;
-
-    private protected string RootClass => MergeRootClass(ToastStyles.GetHostRootClasses(this));
 
     public void Show(ToastOptions options)
     {

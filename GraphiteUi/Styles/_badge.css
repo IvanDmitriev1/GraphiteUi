@@ -1,0 +1,12 @@
+@layer components {
+    :where([data-ui="badge"]) { @apply inline-flex items-center rounded-full border font-medium whitespace-nowrap; }
+    :where([data-ui="badge"][data-color="primary"]) { @apply bg-accent-subtle text-accent-subtle-foreground border-accent-border; }
+    :where([data-ui="badge"][data-color="secondary"]) { @apply bg-secondary-subtle text-secondary-subtle-foreground border-secondary-border-subtle; }
+    :where([data-ui="badge"][data-color="success"]) { @apply bg-success-subtle text-success-subtle-foreground border-success-border; }
+    :where([data-ui="badge"][data-color="warning"]) { @apply bg-warning-subtle text-warning-subtle-foreground border-warning-border; }
+    :where([data-ui="badge"][data-color="danger"]) { @apply bg-danger-subtle text-danger-subtle-foreground border-danger-border; }
+    :where([data-ui="badge"][data-color="info"]) { @apply bg-info-subtle text-info-subtle-foreground border-info-border; }
+    :where([data-ui="badge"][data-size="small"]) { @apply px-2 py-0.5 text-caption; }
+    :where([data-ui="badge"][data-size="medium"]) { @apply px-2.5 py-1 text-body-sm; }
+    :where([data-ui="badge"][data-size="large"]) { @apply px-3 py-1.5 text-body; }
+}

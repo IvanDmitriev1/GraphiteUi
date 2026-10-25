@@ -1,0 +1,9 @@
+@layer components {
+    :where([data-ui="breadcrumb"]) { @apply w-full; }
+    :where([data-ui="breadcrumb"] [data-part="list"]) { @apply inline-flex items-center gap-2 text-body-sm; }
+    :where([data-ui="breadcrumb-item"]) { @apply inline-flex items-center gap-2; }
+    :where([data-ui="breadcrumb-item"] [data-part="link"]) { @apply text-muted-foreground transition-colors; }
+    @media (hover: hover) { :where([data-ui="breadcrumb-item"] [data-part="link"]:hover) { @apply text-foreground; } }
+    :where([data-ui="breadcrumb-item"] [data-part="current"]) { @apply text-foreground; }
+    :where([data-ui="breadcrumb-item"] [data-part="separator"]) { @apply text-subtle-foreground; }
+}

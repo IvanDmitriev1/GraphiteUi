@@ -3,16 +3,25 @@
 @attribute [CascadingTypeParameter(nameof(TValue))]
 @inherits UiInputFieldBase<TValue>
 
-<UiPopup Class="@RootClass"
+<div data-ui="select"
+     data-size="@Size.ToAttributeValue()"
+     data-disabled="@Disabled.ToAttributeValue()"
+     data-readonly="@ReadOnly.ToAttributeValue()"
+     data-invalid="@IsInvalid.ToAttributeValue()">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <label for="@InputId" data-part="label" data-slot="label">@Label</label>
+    }
+
+    <UiPopup Class="@Class"
          Disabled="@(Disabled || ReadOnly)"
-         TriggerMode="open"
+         TriggerMode="none"
          TriggerAs="div"
-         TriggerClass="@SelectStyles.TriggerClass"
          TriggerAttributes="@TriggerAttributes"
          data-select-root="true"
          @attributes="@RootAttributes">
 
-    <TriggerContent>
+        <TriggerContent>
         <input id="@InputId"
                aria-label="@AccessibleLabel"
                aria-describedby="@DescribedBy"
@@ -21,7 +30,7 @@
                aria-haspopup="listbox"
                aria-autocomplete="list"
                type="text"
-               class="@SelectStyles.TriggerInputClass"
+                data-part="input"
                data-slot="select-input"
                value="@SelectedText"
                placeholder="@Placeholder"
@@ -33,7 +42,7 @@
                aria-readonly="@ReadOnly.ToAttributeValue()"
                autocomplete="off" />
 
-        <svg class="@SelectStyles.SearchIconClass"
+        <svg data-part="search-icon"
              viewBox="0 0 20 20"
              fill="none"
              aria-hidden="true"
@@ -49,16 +58,16 @@
                     stroke="currentColor"
                     stroke-width="1.8" />
         </svg>
-    </TriggerContent>
+        </TriggerContent>
 
-    <ChildContent>
+        <ChildContent>
         <input type="hidden"
                data-slot="select-value"
                name="@NameAttributeValue"
                value="@HiddenValue" />
 
         <CascadingValue Value="this" IsFixed="true">
-            <div class="@SelectStyles.ListClass"
+            <div data-part="list"
                  id="@(InputId + "-options")"
                  role="listbox"
                  data-slot="select-list">
@@ -66,21 +75,21 @@
             </div>
         </CascadingValue>
 
-        <div data-slot="select-empty"
-             class="@SelectStyles.EmptyClass"
+            <div data-part="empty"
+                 data-slot="select-empty"
              hidden>
             @NoSuggestionsText
         </div>
 
-        <div class="@SelectStyles.DividerClass"></div>
+        <div data-part="divider"></div>
 
         <button type="button"
                 data-slot="select-clear"
-                class="@SelectStyles.ClearButtonClass"
+                data-part="clear"
                 disabled="@(!CanClear)"
                 aria-disabled="@((!CanClear).ToAttributeValue())"
                 @onclick="Clear">
-            <svg class="@SelectStyles.ClearIconClass"
+            <svg data-part="clear-icon"
                  viewBox="0 0 20 20"
                  fill="none"
                  aria-hidden="true"
@@ -114,10 +123,11 @@
 
             <span>@ClearText</span>
         </button>
-    </ChildContent>
-</UiPopup>
+        </ChildContent>
+    </UiPopup>
 
-@if (!string.IsNullOrWhiteSpace(Description))
-{
-    <p id="@DescriptionId" class="@DefaultUiInputFieldStyles.DescriptionClass">@Description</p>
-}
+    @if (!string.IsNullOrWhiteSpace(Description))
+    {
+        <p id="@DescriptionId" data-part="description">@Description</p>
+    }
+</div>

@@ -93,7 +93,6 @@ function destroySelect(root) {
     state.setActive(null);
 
     state.trigger.removeEventListener('click', state.handleTriggerClick);
-    state.input.removeEventListener('focus', state.handleInputFocus);
     state.input.removeEventListener('input', state.handleInput);
     state.input.removeEventListener('keydown', state.handleInputKeyDown);
     state.list.removeEventListener('click', state.handleListClick);
@@ -130,7 +129,6 @@ function setupSelect(root) {
 
     const selectId = ensureSelectId(root);
     let querying = false;
-    let suppressFocusOpen = false;
 
     const getItems = () => Array.from(root.querySelectorAll(ITEM_SELECTOR));
     const getOpen = () => popup.isOpen();
@@ -308,20 +306,13 @@ function setupSelect(root) {
             return;
         }
 
-        openAndPrepare();
+        if (getOpen()) {
+            closePopup();
+        } else {
+            openAndPrepare();
+        }
+
         queueMicrotask(() => input.focus());
-    };
-
-    const handleInputFocus = () => {
-        if (suppressFocusOpen) {
-            suppressFocusOpen = false;
-            return;
-        }
-        if (!canInteract()) {
-            return;
-        }
-
-        openAndPrepare();
     };
 
     const handleInput = () => {
@@ -413,7 +404,6 @@ function setupSelect(root) {
         filterItems();
         closePopup();
 
-        suppressFocusOpen = true;
         queueMicrotask(() => input.focus());
     };
 
@@ -443,7 +433,6 @@ function setupSelect(root) {
     };
 
     trigger.addEventListener('click', handleTriggerClick);
-    input.addEventListener('focus', handleInputFocus);
     input.addEventListener('input', handleInput);
     input.addEventListener('keydown', handleInputKeyDown);
     list.addEventListener('click', handleListClick);
@@ -456,7 +445,6 @@ function setupSelect(root) {
         list,
         clearButton,
         handleTriggerClick,
-        handleInputFocus,
         handleInput,
         handleInputKeyDown,
         handleListClick,

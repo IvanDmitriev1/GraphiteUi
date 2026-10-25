@@ -33,7 +33,7 @@ jobs:
           restore-keys: ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore GraphiteUi.sln
+        run: dotnet restore GraphiteUi.slnx
 
       - name: Compute development version
         shell: bash
@@ -51,7 +51,7 @@ jobs:
           echo "Using package version: $package_version (from project Version: $version)"
 
       - name: Build (Release)
-        run: dotnet build GraphiteUi.sln -c Release --no-restore
+        run: dotnet build GraphiteUi.slnx -c Release --no-restore
 
       - name: Pack
         run: dotnet pack GraphiteUi/GraphiteUi.csproj -c Release --no-restore -p:Version="$PACKAGE_VERSION" -o ./artifacts

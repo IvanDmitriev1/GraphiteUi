@@ -26,8 +26,7 @@
             </ChildContent>
         </UiMenu>
 
-        <UiDrawer @bind-Open="_drawerOpen"
-                  Title="Drawer Navigation">
+        <UiDrawer Title="Drawer Navigation">
             <TriggerContent>
                 <span>Open Drawer</span>
             </TriggerContent>
@@ -39,11 +38,10 @@
         </UiDrawer>
     </section>
 
-    <p class="text-body-sm text-subtle-foreground">Last menu action: @_lastMenuAction</p>
+    <p class="text-body-sm text-muted-foreground">Last menu action: @_lastMenuAction</p>
 </div>
 
 @code {
-    private bool _drawerOpen;
     private string? _tabValue = "overview";
     private string _lastMenuAction = "None";
 

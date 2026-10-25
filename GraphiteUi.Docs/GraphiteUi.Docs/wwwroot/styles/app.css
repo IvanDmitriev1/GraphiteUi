@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "../../bin/GraphiteUi/_theme";
+@import "../../bin/GraphiteUi/Styles/graphite-ui.css";
 @import "./blazor" layer(components);
-@source "../../bin/GraphiteUi/**/*.{cs}";
 @source "../../../GraphiteUi.Docs.Client/**/*.{razor}";

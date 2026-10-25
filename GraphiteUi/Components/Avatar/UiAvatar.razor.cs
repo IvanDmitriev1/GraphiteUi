@@ -1,6 +1,5 @@
 using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -11,8 +10,6 @@ public partial class UiAvatar : UiComponentBase
     [Parameter] public string Alt { get; set; } = "Avatar";
     [Parameter] public string? Name { get; set; }
     [Parameter] public Size Size { get; set; } = Size.Medium;
-
-    private string RootClass => MergeRootClass(AvatarStyles.GetRootClasses(this));
 
     private string Initials
     {

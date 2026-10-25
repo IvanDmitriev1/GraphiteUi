@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>GraphiteUi</PackageId>
-    <Version>0.5.7-preview.1</Version>
+    <Version>0.5.7-preview.2</Version>
     <Authors>Ivan Dmitriev</Authors>
     <Description>GraphiteUi is a Blazor UI component library for SSR and interactive rendering modes.</Description>
     <PackageTags>blazor;ui;components;razor</PackageTags>
@@ -22,19 +22,11 @@
 	<ItemGroup>
 		<None Include="GraphiteUi.targets" Pack="true" PackagePath="buildTransitive\GraphiteUi.targets" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
-		<None Include="Styles\*.cs" Pack="true" PackagePath="theme\components\%(Filename)%(Extension)" />
-		<None Include="Styles\_theme.css" Pack="true" PackagePath="theme\theme.css" />
-		<None Include="Styles\_dark.css" Pack="true" PackagePath="theme\_dark.css" />
+		<None Update="Styles\*.css" Pack="true" PackagePath="theme\Styles\%(Filename)%(Extension)" />
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LinkDotNet.StringBuilder" Version="3.4.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
-    <PackageReference Include="TwMerge" Version="1.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <GraphiteUiStyleSource Include="Styles\*.cs" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.13" />
   </ItemGroup>
 
 </Project>

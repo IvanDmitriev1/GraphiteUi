@@ -2,8 +2,11 @@
 @inherits UiComponentBase
 
 <UiComponent As="@As"
-             Class="@RootClass"
+             Class="@Class"
+             DataUi="badge"
              data-slot="badge"
+             data-color="@Color.ToAttributeValue()"
+             data-size="@Size.ToAttributeValue(Size.Small)"
              @attributes="@AdditionalAttributes">
     @ChildContent
 </UiComponent>

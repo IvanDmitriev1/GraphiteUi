@@ -2,14 +2,29 @@
 @inherits UiComponentBase
 
 <UiComponent As="@As"
-                Class="@RootClass"
+                Class="@Class"
+                DataUi="button"
                 data-slot="button"
+                data-color="@Color.ToAttributeValue(preserveInherit: true)"
+                data-size="@Size.ToAttributeValue()"
+                data-variant="@Variant.ToAttributeValue()"
+                data-icon-only="@IconOnly.ToAttributeValue()"
                 type="@Type.ToHtmlValue()"
-                disabled="@Disabled"
-                data-disabled="@Disabled"
+                disabled="@NativeDisabled"
+                data-disabled="@Disabled.ToAttributeValue()"
+                data-loading="@IsLoading.ToAttributeValue()"
+                aria-busy="@IsLoading.ToAttributeValue()"
                 @attributes="@AdditionalAttributes"
                 @onclick="@OnClickAsync">
-    @StartContent
-    @ChildContent
-    @EndContent
+    <span data-part="content">
+        @StartContent
+        @ChildContent
+        @EndContent
+    </span>
+    @if (IsLoading)
+    {
+        <span data-part="loading" aria-hidden="true">
+            <span data-part="spinner"></span>
+        </span>
+    }
 </UiComponent>

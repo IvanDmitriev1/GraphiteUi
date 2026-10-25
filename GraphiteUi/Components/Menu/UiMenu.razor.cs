@@ -1,5 +1,4 @@
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -21,16 +20,6 @@ public partial class UiMenu : UiComponentBase
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public bool CloseOnOutsideClick { get; set; } = true;
     [Parameter] public bool CloseOnEscape { get; set; } = true;
-    [Parameter] public bool ShowBackdrop { get; set; } = true;
+    [Parameter] public bool ShowBackdrop { get; set; }
 
-    private string RootClass => MergeRootClass(MenuStyles.RootClass);
-
-    private string TriggerClassValue =>
-        Merge(MenuStyles.TriggerClass, TriggerClass);
-
-    private string ContentClassValue =>
-        Merge(MenuStyles.ContentClass, ContentClass);
-
-    private string BackdropClassValue =>
-        Merge(PopupStyles.BackdropClass, BackdropClass);
 }

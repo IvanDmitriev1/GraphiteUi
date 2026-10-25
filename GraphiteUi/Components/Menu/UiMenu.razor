@@ -1,11 +1,12 @@
 @namespace GraphiteUi.Components
 @inherits UiComponentBase
 
-<UiPopup Class="@RootClass"
+<UiPopup Class="@Class"
+         data-menu="true"
          TriggerAs="@TriggerAs"
-         TriggerClass="@TriggerClassValue"
-         ContentClass="@ContentClassValue"
-         BackdropClass="@BackdropClassValue"
+         TriggerClass="@TriggerClass"
+         ContentClass="@ContentClass"
+         BackdropClass="@BackdropClass"
          Disabled="@Disabled"
          CloseOnOutsideClick="@CloseOnOutsideClick"
          CloseOnEscape="@CloseOnEscape"
@@ -18,7 +19,7 @@
         @TriggerContent
     </TriggerContent>
     <ChildContent>
-        <div class="@MenuStyles.ListClass">
+        <div data-part="items">
             @ChildContent
         </div>
     </ChildContent>

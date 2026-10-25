@@ -2,20 +2,21 @@
 @inherits UiComponentBase
 
 <UiComponent As="@As"
-             Class="@RootClass"
+             Class="@Class"
+             DataUi="skeleton"
              data-loading="@IsLoading.ToAttributeValue()"
              aria-busy="@IsLoading.ToAttributeValue()"
              @attributes="@AdditionalAttributes">
 
     @if (UseCustomSkeleton)
     {
-        <div class="@SkeletonStyles.ContentClass">
+        <div data-part="content">
             @SkeletonContent
         </div>
     }
     else
     {
-        <div class="@ContentClass">
+        <div data-part="content" data-skeleton-mimic="@UseAutoMimic.ToAttributeValue()">
             @ChildContent
         </div>
     }

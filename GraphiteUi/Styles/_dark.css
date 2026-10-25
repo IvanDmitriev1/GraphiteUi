@@ -1,13 +1,15 @@
 /* GraphiteUi — DARK theme primitives.
    Only the values that differ from the light defaults in _theme.css live here.
-   State tokens (*-hover / *-active) are formulas defined once in _theme.css and
-   are NOT repeated: they resolve against whichever base is in scope.
+   Explicit dark state values and theme primitives live here; danger/info state
+   formulas are shared from _theme.css.
 
-   Selector is :root-qualified on purpose. @import must come first in a CSS file,
-   so this block is parsed BEFORE the light defaults in _theme.css; a bare .dark
-   would tie :root on specificity and lose on source order. */
+   graphite-ui.css imports _theme.css first, then this file. These root-qualified
+   selectors have higher specificity than the light :root defaults, so the dark
+   values win when the root theme selector matches. */
 :root.dark,
 :root[data-theme="dark"] {
+    color-scheme: dark;
+
     /* ---- Page + surfaces (explicit, so elevation steps stay distinct).
             Each surface must stay lighter than the page or elevation inverts, so
             the steps move with the background. ---- */
@@ -21,67 +23,62 @@
     --graphite-surface3-foreground: #FAFAFA;
 
     /* ---- Neutral overlay ramp: white-on-dark ---- */
-    --graphite-neutral-5: rgba(255, 255, 255, 0.05);
-    --graphite-neutral-10: rgba(255, 255, 255, 0.10);
-    --graphite-neutral-15: rgba(255, 255, 255, 0.15);
-    --graphite-neutral-20: rgba(255, 255, 255, 0.20);
-    --graphite-neutral-30: rgba(255, 255, 255, 0.30);
-    --graphite-neutral-50: rgba(255, 255, 255, 0.50);
-    --graphite-neutral-60: rgba(255, 255, 255, 0.60);
-    --graphite-neutral-70: rgba(255, 255, 255, 0.70);
-    --graphite-neutral: rgba(255, 255, 255, 0.10);
+    --graphite-neutral-5: rgba(250, 250, 250, 0.04);
+    --graphite-neutral-10: rgba(250, 250, 250, 0.08);
+    --graphite-neutral-15: rgba(250, 250, 250, 0.12);
+    --graphite-neutral-20: rgba(250, 250, 250, 0.16);
+    --graphite-neutral-30: rgba(250, 250, 250, 0.28);
+    --graphite-neutral-50: rgba(250, 250, 250, 0.72);
+    --graphite-neutral-60: rgba(250, 250, 250, 0.78);
+    --graphite-neutral-70: rgba(250, 250, 250, 0.86);
+    --graphite-neutral: var(--graphite-neutral-10);
     --graphite-neutral-foreground: #FAFAFA;
 
     /* ---- Inverse overlay ramp: black-on-dark ---- */
-    --graphite-overlay-5: rgba(0, 0, 0, 0.05);
-    --graphite-overlay-10: rgba(0, 0, 0, 0.10);
-    --graphite-overlay-15: rgba(0, 0, 0, 0.15);
-    --graphite-overlay-20: rgba(0, 0, 0, 0.20);
-    --graphite-overlay-30: rgba(0, 0, 0, 0.30);
-    --graphite-overlay-50: rgba(0, 0, 0, 0.50);
-    --graphite-overlay-90: rgba(0, 0, 0, 0.90);
-    --graphite-overlay: rgba(0, 0, 0, 0.90);
+    --graphite-overlay-5: rgba(32, 34, 40, 0.05);
+    --graphite-overlay-10: rgba(32, 34, 40, 0.10);
+    --graphite-overlay-15: rgba(32, 34, 40, 0.15);
+    --graphite-overlay-20: rgba(32, 34, 40, 0.20);
+    --graphite-overlay-30: rgba(32, 34, 40, 0.30);
+    --graphite-overlay-50: rgba(32, 34, 40, 0.50);
+    --graphite-overlay-90: rgba(32, 34, 40, 0.90);
+    --graphite-overlay: var(--graphite-overlay-90);
     --graphite-overlay-foreground: #FAFAFA;
 
-    --graphite-divider: rgba(255, 255, 255, 0.10);
-    --graphite-scrim: rgba(0, 0, 0, 0.60);
-    --graphite-control-border: rgba(255, 255, 255, 0.42);
+    --graphite-divider: var(--graphite-neutral-10);
+    --graphite-scrim: rgba(21, 22, 25, 0.58);
+    --graphite-control-border: rgba(250, 250, 250, 0.54);
 
     /* Skeleton shimmer sweep */
-    --graphite-shimmer-from: rgba(255, 255, 255, 0.02);
-    --graphite-shimmer-via: rgba(255, 255, 255, 0.10);
+    --graphite-shimmer-from: rgba(250, 250, 250, 0.03);
+    --graphite-shimmer-via: rgba(250, 250, 250, 0.09);
 
-    /* ---- Accent: inverted. Primary is a WHITE fill with near-black text here,
-            the mirror of the near-black fill in light. Emphasis comes from
-            lightness inversion against the page, not from a hue.
-            Ramp steps come from _theme.css and are shared. ---- */
-    --graphite-accent: var(--graphite-accent-50);
-    --graphite-accent-foreground: var(--graphite-accent-900);
-    --graphite-accent-hover: var(--graphite-accent-200);
-    --graphite-accent-active: var(--graphite-accent-300);
+    /* ---- Accent: silver fill with dark text. Ramp steps come from _theme.css. ---- */
+    --graphite-accent: var(--graphite-accent-200);
+    --graphite-accent-foreground: #242424;
+    --graphite-accent-hover: var(--graphite-accent-300);
+    --graphite-accent-active: var(--graphite-accent-400);
 
     /* Subtle tone stays alpha-based so it composites over any surface. */
-    --graphite-accent-subtle: rgba(255, 255, 255, 0.12);
+    --graphite-accent-subtle: rgba(250, 250, 250, 0.14);
     --graphite-accent-subtle-foreground: #FAFAFA;
-    --graphite-accent-border: rgba(255, 255, 255, 0.22);
+    --graphite-accent-border: rgba(250, 250, 250, 0.26);
 
-    --graphite-focus: #FAFAFA;
+    --graphite-focus: var(--graphite-accent-100);
 
-    /* ---- Semantic fills.
-            success/warning keep a bright fill + near-black foreground (a green or
-            yellow dark enough for white text stops reading as green or yellow).
-            danger/info keep a mid fill + white foreground. ---- */
-    --graphite-success: #2ECE51;
-    --graphite-success-foreground: #04170A;
-    --graphite-success-subtle: rgba(46, 206, 81, 0.16);
-    --graphite-success-subtle-foreground: #86EFAC;
-    --graphite-success-border: rgba(46, 206, 81, 0.32);
+    /* ---- Semantic fills. Success uses white text; warning uses dark text.
+            Danger/info retain their original palettes. ---- */
+    --graphite-success: #167A3D;
+    --graphite-success-foreground: #FFFFFF;
+    --graphite-success-hover: #146F37;
+    --graphite-success-active: #125F30;
+    --graphite-success-subtle: #173B2B;
+    --graphite-success-subtle-foreground: #86E0AC;
+    --graphite-success-border: #2C7251;
 
-    --graphite-warning: #FFD234;
-    --graphite-warning-foreground: #2A1D00;
-    --graphite-warning-subtle: rgba(255, 210, 52, 0.16);
-    --graphite-warning-subtle-foreground: #FDE68A;
-    --graphite-warning-border: rgba(255, 210, 52, 0.32);
+    --graphite-warning-subtle: #3B330F;
+    --graphite-warning-subtle-foreground: #F5E38A;
+    --graphite-warning-border: #847126;
 
     --graphite-danger: #DC2626;
     --graphite-danger-foreground: #FFFFFF;

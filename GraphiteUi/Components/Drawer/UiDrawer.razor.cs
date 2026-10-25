@@ -1,6 +1,5 @@
 using GraphiteUi.Common;
 using GraphiteUi.Components.Bases;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -19,6 +18,4 @@ public partial class UiDrawer : UiComponentBase
 
     private string ToggleId => _toggleId;
 
-    private string RootClass => MergeRootClass(DrawerStyles.RootClass);
-    private string PanelClass => DrawerStyles.GetPanelClass(this);
 }

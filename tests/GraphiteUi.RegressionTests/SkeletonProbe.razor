@@ -1,0 +1,57 @@
+@namespace GraphiteUi.RegressionTests
+@using GraphiteUi.Components
+
+<UiSkeleton id="automatic-root" IsLoading="true">
+    <span id="automatic-child">Automatic child</span>
+</UiSkeleton>
+
+<UiSkeleton id="loaded-root" IsLoading="false">
+    <span id="loaded-child">Loaded child</span>
+</UiSkeleton>
+
+<UiSkeleton id="custom-root" IsLoading="true">
+    <ChildContent><span id="custom-child">Custom child</span></ChildContent>
+    <SkeletonContent><span id="custom-skeleton">Custom skeleton</span></SkeletonContent>
+</UiSkeleton>
+
+<UiSkeleton id="loaded-template-root" IsLoading="false">
+    <ChildContent><span id="loaded-template-child">Loaded template child</span></ChildContent>
+    <SkeletonContent><span id="loaded-template-skeleton">Loaded template skeleton</span></SkeletonContent>
+</UiSkeleton>
+
+<UiSkeleton id="bound-controls-root" IsLoading="true">
+    <UiTextbox id="skeleton-name" Label="Name" @bind-Value="_name" />
+    <UiSelect id="skeleton-country" TValue="string" Label="Country" Placeholder="Select country" @bind-Value="_country">
+        <UiSelectItem TValue="string" Value="@("one")" Text="One" />
+    </UiSelect>
+</UiSkeleton>
+
+<UiSkeleton id="native-content-root" IsLoading="true">
+    <label id="native-label" for="native-notes">Native notes</label>
+    <textarea id="native-notes" rows="2">Hidden notes</textarea>
+    <select id="native-select"><option>Hidden option</option></select>
+    <p id="native-paragraph">Loading paragraph content.</p>
+    <span id="native-inline">Loading inline content.</span>
+    <strong id="native-strong">Loading strong text.</strong>
+    <em id="native-em">Loading emphasized text.</em>
+    <code id="native-code">Loading code text.</code>
+    <img id="native-image" src="profile.png" alt="Profile" />
+    <svg id="native-icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" /></svg>
+    <button id="native-button">
+        <span id="button-inline">Save</span>
+        <svg id="button-icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" /></svg>
+    </button>
+</UiSkeleton>
+
+<label id="outside-native-label" for="outside-native-input">Outside mimic</label>
+<input id="outside-native-input" />
+
+@code {
+    private string? _name;
+    private string? _country;
+}
+
+<UiSkeletonBlock id="default-block" />
+<UiSkeletonLine id="default-line" />
+<UiSkeletonBlock id="block" Class="w-48 h-10 bg-[image:url(/block.png)] bg-[length:12px_8px] animate-[pulse_2s_linear_infinite]" />
+<UiSkeletonLine id="line" Class="w-56 h-6 bg-[image:url(/line.png)] bg-[length:16px_10px] animate-[bounce_3s_ease-in-out_infinite]" />

@@ -34,14 +34,19 @@
 	<ItemGroup>
 		<TailwindInputs Include="$(MSBuildProjectDirectory)\$(TailwindInput)" />
 		<TailwindInputs Include="$(MSBuildProjectDirectory)\wwwroot\styles\**\*.css" />
+		<TailwindInputs Include="$(MSBuildProjectDirectory)\bin\GraphiteUi\Styles\**\*.css" />
 		<TailwindInputs Include="$(MSBuildProjectDirectory)\..\GraphiteUi.Docs.Client\**\*.razor" />
-		<TailwindInputs Include="$(SolutionDir)GraphiteUi\Styles\**\*.cs" />
 		<TailwindInputs Include="$(SolutionDir)GraphiteUi\Styles\**\*.css" />
+		<!-- Include generated CSS even when it does not exist during SDK item evaluation. -->
+		<Content Remove="$(TailwindOutput)" />
+		<Content Include="$(TailwindOutput)"
+		         CopyToOutputDirectory="PreserveNewest"
+		         CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
 
 	<!-- Ensure CLI is present -->
 	<Target Name="EnsureTailwind"
-	        AfterTargets="Build;Publish"
+	        BeforeTargets="RunTailwind"
 			Condition="'$(DesignTimeBuild)' != 'true' and !Exists('$(TailwindBin)')">
 		<Message Importance="High" Text="Downloading Tailwind CLI $(TailwindVersion) to $(TailwindBin)..." />
 		<MakeDir Directories="$(TailwindDir)" />
@@ -52,7 +57,7 @@
 	<!-- Build CSS with a FULL PATH to the binary -->
 	<Target Name="RunTailwind"
 			DependsOnTargets="EnsureTailwind;GraphiteUiDocs_CopyLocalThemeContents"
-			AfterTargets="Build;Publish"
+			BeforeTargets="PrepareForBuild"
 			Condition="'$(DesignTimeBuild)' != 'true'"
 			Inputs="@(TailwindInputs)"
 			Outputs="$(MSBuildProjectDirectory)\$(TailwindOutput)">

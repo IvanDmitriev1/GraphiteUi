@@ -2,15 +2,21 @@
 @inherits UiComponentBase
 
 <UiComponent As="@As"
-             Class="@RootClass"
+             Class="@Class"
+             DataUi="tooltip"
              tabindex="0"
-             @attributes="@AdditionalAttributes">
+             @attributes="@AdditionalAttributes"
+             data-slot="tooltip-root"
+             data-tooltip-align="@Align"
+             data-align="@Align.ToAttributeValue()"
+             data-bottom="@Bottom.ToAttributeValue()">
     @ChildContent
 
     @if (!string.IsNullOrWhiteSpace(Text))
     {
         <span role="tooltip"
-              class="@BubbleClass">
+              data-slot="tooltip-bubble"
+               data-part="bubble">
             @Text
         </span>
     }

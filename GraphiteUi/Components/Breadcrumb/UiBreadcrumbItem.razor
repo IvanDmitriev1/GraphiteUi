@@ -1,10 +1,10 @@
 @namespace GraphiteUi.Components
 
-<li class="@BreadcrumbStyles.ItemClass">
+<li data-ui="breadcrumb-item" data-part="item" data-current="@Current.ToAttributeValue()">
     @if (!Current && !string.IsNullOrWhiteSpace(Href))
     {
         <a href="@Href"
-           class="@BreadcrumbStyles.LinkClass"
+           data-part="link"
            target="@Target"
            rel="@Rel">
             @ChildContent
@@ -12,7 +12,7 @@
     }
     else
     {
-        <span class="@BreadcrumbStyles.CurrentClass"
+        <span data-part="current"
               aria-current="@(Current ? "page" : null)">
             @ChildContent
         </span>
@@ -20,7 +20,7 @@
 
     @if (!Current)
     {
-        <span class="@BreadcrumbStyles.SeparatorClass"
+        <span data-part="separator"
               aria-hidden="true">/</span>
     }
 </li>

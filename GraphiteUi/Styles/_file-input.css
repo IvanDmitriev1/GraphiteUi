@@ -1,0 +1,16 @@
+@layer components {
+    :where([data-ui="file-input"]) { @apply flex w-full flex-col gap-1; }
+    :where([data-ui="file-input"] > [data-part="label"], [data-ui="file-input"] > [data-part="info"]) { @apply text-body-sm text-muted-foreground; }
+    :where([data-ui="file-input"] > [data-part="input"]) {
+        @apply rounded-md border border-control bg-surface1 text-surface1-foreground text-body w-full px-3 py-2 file:mr-3 file:rounded-md file:border file:border-border file:bg-surface2 file:px-2 file:py-1 file:text-body-sm file:text-surface2-foreground file:transition-colors file:cursor-pointer;
+    }
+    @media (hover: hover) {
+        :where([data-ui="file-input"] > [data-part="input"]:hover::file-selector-button) { @apply bg-surface-active; }
+    }
+    :where([data-ui="file-input"] > [data-part="input"]:focus-visible) { @apply outline-hidden ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="file-input"] > [data-part="input"][aria-invalid="true"]) { @apply border-invalid; }
+    :where([data-ui="file-input"] > [data-part="input"]:disabled) { @apply bg-disabled-surface text-disabled-foreground cursor-default; }
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="file-input"] > [data-part="input"]::file-selector-button) { transition: none; }
+    }
+}

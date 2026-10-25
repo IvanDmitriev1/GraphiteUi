@@ -1,0 +1,52 @@
+@using GraphiteUi.Common
+@using GraphiteUi.Components
+
+<UiButton id="styled-button" Class="button-raw px-2 px-4" Color="ThemeColor.Success" Size="Size.Large" Variant="ButtonVariant.Ghost" IconOnly IsLoading>
+    <ChildContent>Refresh</ChildContent>
+</UiButton>
+<UiButton id="fallback-button" Color="@((ThemeColor)99)" Size="@((Size)99)" Variant="@((ButtonVariant)99)" />
+<UiButton id="inherit-button" Color="ThemeColor.Inherit" Variant="ButtonVariant.Outline" />
+
+<UiAlert id="styled-alert" Class="alert-raw px-2 px-4" Color="ThemeColor.Danger" Title="Alert title" Dismissible StartContent="@StartContent">
+    Alert body
+</UiAlert>
+<UiAlert id="fallback-alert" Color="@((ThemeColor)(-1))" />
+
+<UiBadge id="styled-badge" Class="badge-raw px-2 px-4" Color="ThemeColor.Info" Size="Size.Large">Badge</UiBadge>
+<UiBadge id="fallback-badge" Color="@((ThemeColor)99)" Size="@((Size)(-1))">Fallback</UiBadge>
+<UiAvatar id="styled-avatar" Class="avatar-raw px-2 px-4" Name="Ada Lovelace" Src="ada.png" Size="Size.Large" />
+<UiAvatar id="fallback-avatar" Size="@((Size)99)" />
+
+<UiCard id="styled-card" Class="card-raw px-2 px-4" Title="Card title">
+    <ChildContent><span id="card-body">Body</span></ChildContent>
+    <FooterContent><span id="card-footer">Footer</span></FooterContent>
+</UiCard>
+<UiBreadcrumb id="styled-breadcrumb" Class="breadcrumb-raw px-2 px-4">
+    <UiBreadcrumbItem Href="/home">Home</UiBreadcrumbItem>
+    <UiBreadcrumbItem Current>Current</UiBreadcrumbItem>
+</UiBreadcrumb>
+<UiDivider id="vertical-divider" Vertical Class="divider-raw h-6" />
+<UiDivider id="horizontal-divider" Class="divider-raw w-10" />
+
+<UiSkeleton id="mimic-root" IsLoading>
+    <button id="mimic-button">Save</button>
+</UiSkeleton>
+<UiSkeleton id="custom-skeleton-root" IsLoading>
+    <SkeletonContent><span id="custom-skeleton-content">Loading</span></SkeletonContent>
+    <ChildContent><span>Loaded</span></ChildContent>
+</UiSkeleton>
+<UiSkeletonBlock id="styled-skeleton-block" Class="block-raw h-10" />
+<UiSkeletonLine id="styled-skeleton-line" Class="line-raw h-6" />
+
+<UiPopup id="styled-popup" Class="popup-raw px-2 px-4" TriggerClass="trigger-raw h-8" ContentClass="content-raw min-w-52" BackdropClass="backdrop-raw z-30" CloseOnEscape="false" ShowBackdrop="false">
+    <TriggerContent>Open</TriggerContent>
+    <ChildContent>Popup</ChildContent>
+</UiPopup>
+<UiMenu id="styled-menu" Class="menu-raw px-2 px-4" TriggerClass="menu-trigger-raw h-8" ContentClass="menu-content-raw min-w-56">
+    <TriggerContent>Menu</TriggerContent>
+    <ChildContent><UiMenuItem id="styled-menu-item" Class="item-raw px-2 px-4" Disabled>Item</UiMenuItem></ChildContent>
+</UiMenu>
+
+@code {
+    private static readonly RenderFragment StartContent = builder => builder.AddContent(0, "!");
+}

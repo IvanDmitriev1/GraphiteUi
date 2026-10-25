@@ -23,11 +23,12 @@ public enum Align
 
 public static class AlignExtensions
 {
-    public static string ToTailwindCss(this Align align) => align switch
+    public static string ToAttributeValue(this Align align) => align switch
     {
-        Align.Center => "text-center",
-        Align.Start => "text-start",
-        Align.End => "text-end",
-        _ => throw new ArgumentOutOfRangeException(nameof(align), align, null)
+        Align.Start => "start",
+        Align.End => "end",
+        _ => "center"
     };
+
+    public static string ToDrawerSideAttribute(this Align side) => side == Align.End ? "end" : "start";
 }

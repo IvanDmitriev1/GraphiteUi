@@ -1,0 +1,24 @@
+@layer components {
+    :where([data-ui="checkbox"]) { @apply p-1 -m-1 relative max-w-full min-w-0 inline-flex items-center justify-start gap-2 flex-shrink-0 outline-hidden cursor-pointer transition-transform; }
+    :where([data-ui="checkbox"] > [data-part="input"]) { @apply sr-only; }
+    :where([data-ui="checkbox"] > [data-part="control"]) {
+        @apply relative inline-flex items-center justify-center size-5 shrink-0 rounded-sm border border-control bg-surface1 text-transparent select-none transition-[background-color,border-color,color,box-shadow];
+    }
+    :where([data-ui="checkbox"]:has(> [data-part="input"]:checked) > [data-part="control"]) { @apply bg-control-checked border-control-checked text-control-checked-foreground; }
+    @media (hover: hover) {
+        :where([data-ui="checkbox"]:hover > [data-part="control"]) { @apply border-control-hover; }
+        :where([data-ui="checkbox"]:hover:has(> [data-part="input"]:checked) > [data-part="control"]) { @apply bg-control-checked-hover border-control-checked-hover; }
+    }
+    :where([data-ui="checkbox"][data-invalid="true"] > [data-part="control"]) { @apply border-invalid; }
+    :where([data-ui="checkbox"]:has(> [data-part="input"]:focus-visible) > [data-part="control"]) { @apply ring-2 ring-focus ring-offset-2 ring-offset-background; }
+    :where([data-ui="checkbox"] > [data-part="control"] > [data-part="icon"]) { @apply size-3.5; }
+    :where([data-ui="checkbox"] > [data-part="label"]) { @apply text-body text-foreground leading-normal; }
+    :where([data-ui="checkbox"][data-readonly="true"]) { @apply cursor-default; }
+    :where([data-ui="checkbox"]:active) { @apply scale-95; }
+    :where([data-ui="checkbox"]:has(> [data-part="input"]:disabled) > [data-part="control"]) { @apply bg-disabled-surface border-disabled text-disabled-foreground; }
+    :where([data-ui="checkbox"]:has(> [data-part="input"]:disabled) > [data-part="label"]) { @apply text-disabled-foreground; }
+    :where([data-ui="checkbox"][data-disabled="true"], [data-ui="checkbox"]:has(> [data-part="input"]:disabled)) { @apply cursor-default; }
+    @media (prefers-reduced-motion: reduce) {
+        :where([data-ui="checkbox"], [data-ui="checkbox"] > [data-part="control"]) { transition: none; }
+    }
+}

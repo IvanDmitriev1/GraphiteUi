@@ -1,0 +1,110 @@
+@namespace GraphiteUi.Docs.Client.Components
+
+<section class="flex flex-col gap-4" aria-labelledby="button-refinement-title">
+    <h2 id="button-refinement-title" class="text-h5">Button appearances</h2>
+    <p class="max-w-3xl text-body-sm text-muted-foreground">
+        Appearance controls emphasis, Color controls the semantic role, and Size controls the button geometry. Focus a button or text field to see its focus indicator; ghost buttons keep theirs inside the button. Press a button to see its edge compress.
+    </p>
+
+    <section class="flex flex-col gap-3" aria-label="Variant and color examples">
+        @foreach (var variant in Variants)
+        {
+            <div class="flex flex-wrap items-center gap-2">
+                @foreach (var color in Colors)
+                {
+                    <UiButton Color="@color" Variant="@variant" data-refinement-button="@($"{variant}-{color}")">
+                        @color @variant
+                    </UiButton>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="flex flex-col gap-3" aria-label="Mixed component sizes">
+        @foreach (var size in Sizes)
+        {
+            var index = (int)size;
+            <div class="grid grid-cols-1 items-end gap-3 sm:grid-cols-3">
+                <UiTextbox Label="@($"{size} text")" Size="@size" @bind-Value="_textValues[index]" />
+                <UiSelect TValue="string" Label="@($"{size} choice")" Size="@size" Placeholder="Choose" @bind-Value="_choices[index]">
+                    <UiSelectItem TValue="string" Value="@("one")" Text="One" />
+                    <UiSelectItem TValue="string" Value="@("two")" Text="Two" />
+                </UiSelect>
+                <UiButton Size="@size">@size button</UiButton>
+            </div>
+        }
+    </section>
+
+    <section class="flex flex-col gap-2" aria-label="Invalid select example">
+        <CascadingValue Value="_invalidContext">
+        <UiSelect id="refinement-invalid-select" TValue="string" Label="Required choice" Placeholder="Choose an option"
+                  aria-describedby="refinement-select-error" @bind-Value="_invalidModel.Choice">
+            <UiSelectItem TValue="string" Value="@("one")" Text="One" />
+            <UiSelectItem TValue="string" Value="@("two")" Text="Two" />
+        </UiSelect>
+        </CascadingValue>
+        <p id="refinement-select-error" class="text-body-sm text-error-foreground">Choose an option before continuing.</p>
+    </section>
+
+    <section class="flex flex-col gap-3" aria-labelledby="button-content-title">
+        <h3 id="button-content-title" class="text-body-sm font-semibold">Content and interaction</h3>
+        <div class="flex flex-wrap items-center gap-2">
+            <UiButton IconOnly="true" aria-label="Add item">
+                <StartContent><svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 4v12M4 10h12" /></svg></StartContent>
+            </UiButton>
+            <UiButton Variant="ButtonVariant.Outline">
+                <StartContent><svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 10 4 4 8-8" /></svg></StartContent>
+                <ChildContent>Start icon</ChildContent>
+            </UiButton>
+            <UiButton Variant="ButtonVariant.Ghost">
+                <ChildContent>End icon</ChildContent>
+                <EndContent><svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h12m-5-5 5 5-5 5" /></svg></EndContent>
+            </UiButton>
+            <UiButton Variant="ButtonVariant.Outline">Save these carefully reviewed changes</UiButton>
+            <UiButton Variant="ButtonVariant.Link">Save / Guardar</UiButton>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+            <UiButton As="a" href="/simple-form" Variant="ButtonVariant.Link">Enabled anchor</UiButton>
+            <UiButton As="a" Variant="ButtonVariant.Outline" Disabled="true" aria-disabled="true" tabindex="-1">Disabled anchor</UiButton>
+            <UiButton As="a" Variant="ButtonVariant.Outline" IsLoading="true" aria-disabled="true" tabindex="-1">Loading anchor</UiButton>
+        </div>
+        <p class="text-caption text-muted-foreground">
+            Anchor navigation attributes remain caller-owned. Add a real href for enabled links; remove it and provide aria-disabled and tabindex for disabled or busy links.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2">
+            <UiButton id="refinement-action" IsLoading="@_isLoading" OnClick="Activate">Activate action</UiButton>
+            <UiButton id="refinement-toggle" Variant="ButtonVariant.Ghost" OnClick="ToggleLoading">Toggle loading</UiButton>
+            <span id="refinement-count" role="status">Activations: @_activationCount</span>
+        </div>
+    </section>
+</section>
+
+@code {
+    private static readonly ButtonVariant[] Variants = Enum.GetValues<ButtonVariant>();
+    private static readonly ThemeColor[] Colors = Enum.GetValues<ThemeColor>();
+    private static readonly Size[] Sizes = Enum.GetValues<Size>();
+
+    private bool _isLoading;
+    private int _activationCount;
+    private readonly string[] _textValues = [string.Empty, string.Empty, string.Empty];
+    private readonly string[] _choices = [string.Empty, string.Empty, string.Empty];
+    private readonly ChoiceModel _invalidModel = new();
+    private EditContext _invalidContext = default!;
+
+    protected override void OnInitialized()
+    {
+        _invalidContext = new EditContext(_invalidModel);
+        new ValidationMessageStore(_invalidContext).Add(_invalidContext.Field(nameof(ChoiceModel.Choice)), "Choose an option before continuing.");
+    }
+
+    private sealed class ChoiceModel
+    {
+        public string Choice { get; set; } = string.Empty;
+    }
+
+    private void Activate() => _activationCount++;
+
+    private void ToggleLoading() => _isLoading = !_isLoading;
+}

@@ -5,10 +5,11 @@
 		<GraphiteUiThemeDir Condition="'$(GraphiteUiThemeDir)' == ''">$(MSBuildProjectDirectory)\bin\GraphiteUi</GraphiteUiThemeDir>
 	</PropertyGroup>
 
-	<Target Name="GraphiteUi_CopyThemeContents" AfterTargets="Build">
+	<Target Name="GraphiteUi_CopyThemeContents" BeforeTargets="PrepareForBuild">
 		<ItemGroup>
 			<GraphiteUiThemeFiles Include="$(MSBuildThisFileDirectory)..\theme\**\*" />
 		</ItemGroup>
+		<MakeDir Directories="$(GraphiteUiThemeDir)" />
 
 		<Copy SourceFiles="@(GraphiteUiThemeFiles)"
 		      DestinationFiles="@(GraphiteUiThemeFiles->'$(GraphiteUiThemeDir)/%(RecursiveDir)%(Filename)%(Extension)')"

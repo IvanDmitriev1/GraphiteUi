@@ -1,42 +1,45 @@
 @namespace GraphiteUi.Components
 @inherits UiComponentBase
 
-<input id="@ToggleId"
-       type="checkbox"
-       class="@DrawerStyles.ToggleInputClass"
-       disabled="@Disabled" />
+<div data-ui="drawer" data-part="host">
+    <input id="@ToggleId"
+           type="checkbox"
+           data-part="toggle"
+           disabled="@Disabled" />
 
-@if (TriggerContent is not null)
-{
-    <label for="@ToggleId"
-           data-slot="drawer-trigger"
-           class="@DrawerStyles.TriggerClass">
-        @TriggerContent
-    </label>
-}
-
-<div class="@RootClass"
-     data-slot="drawer-root"
-     @attributes="@AdditionalAttributes">
-    @if (ShowBackdrop)
+    @if (TriggerContent is not null)
     {
-        <label for="@ToggleId"
-               data-slot="drawer-backdrop"
-               class="@DrawerStyles.BackdropClass"
-               aria-hidden="true"></label>
+        <label for="@ToggleId" data-slot="drawer-trigger" data-part="trigger">
+            @TriggerContent
+        </label>
     }
 
-    <aside class="@PanelClass"
-           data-slot="drawer-panel"
-           tabindex="-1"
-           role="dialog">
-        @if (!string.IsNullOrWhiteSpace(Title))
+    <div class="@Class"
+         @attributes="@AdditionalAttributes"
+         data-slot="drawer-root"
+         data-part="overlay"
+       data-side="@Side.ToDrawerSideAttribute()"
+         >
+        @if (ShowBackdrop)
         {
-            <div class="@DrawerStyles.HeaderClass">@Title</div>
+            <label for="@ToggleId"
+                   data-slot="drawer-backdrop"
+                   data-part="backdrop"
+                   aria-hidden="true"></label>
         }
 
-        <div class="@DrawerStyles.ContentClass">
-            @ChildContent
-        </div>
-    </aside>
+        <aside data-slot="drawer-panel"
+               data-part="panel"
+               tabindex="-1"
+               role="dialog">
+            @if (!string.IsNullOrWhiteSpace(Title))
+            {
+                <div data-part="header">@Title</div>
+            }
+
+            <div data-part="content">
+                @ChildContent
+            </div>
+        </aside>
+    </div>
 </div>

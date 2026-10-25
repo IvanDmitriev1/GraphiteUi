@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using GraphiteUi.Styles;
 using Microsoft.AspNetCore.Components;
 
 namespace GraphiteUi.Components;
@@ -21,8 +20,6 @@ public partial class UiRadioGroup<TValue> : UiInputBase<TValue>
 
     internal string InputGroupName => $"{FormFieldName}__items";
     internal string FormFieldValue => CurrentValueAsString ?? string.Empty;
-    private protected string RootClass => MergeRootClass(RadioStyles.GroupClass);
-
     internal bool IsSelected(TValue value) =>
         EqualityComparer<TValue>.Default.Equals(value, CurrentValue);
 

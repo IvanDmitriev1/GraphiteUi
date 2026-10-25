@@ -1,7 +1,3 @@
-@import "./_dark";
-
-@custom-variant dark (&:where(.dark, [data-theme="dark"]));
-
 @layer theme, base, components, utilities;
 
 /* ---- LIGHT PRIMITIVES (defaults) ---------------------------------------
@@ -9,94 +5,110 @@
    Everything a component consumes goes through the --color-* aliases in the
    @theme block below, never through --graphite-* directly. */
 :root {
+    color-scheme: light;
+    caret-color: var(--graphite-focus);
+    scrollbar-color: var(--graphite-neutral-50) var(--graphite-background);
+
+    --control-height-sm: calc(var(--spacing, 0.25rem) * 8);
+    --control-height-md: calc(var(--spacing, 0.25rem) * 10);
+    --control-height-lg: calc(var(--spacing, 0.25rem) * 12);
+    --popup-backdrop-duration: 220ms;
+    --popup-content-duration: 240ms;
+    --popup-easing: cubic-bezier(0.16, 1, 0.3, 1);
+
     /* Page + surfaces. Explicit values, not alpha overlays — that is what keeps
        surface1 and surface2 from composing to the same color. */
-    --graphite-background: #FFFFFF;
-    --graphite-foreground: #18181B;
-    --graphite-surface1: #FAFAFA;
-    --graphite-surface1-foreground: #18181B;
-    --graphite-surface2: #F4F4F5;
-    --graphite-surface2-foreground: #18181B;
-    --graphite-surface3: #FFFFFF;
-    --graphite-surface3-foreground: #18181B;
+    --graphite-background: #FCFCFC;
+    --graphite-foreground: #1C1B1D;
+    --graphite-surface1: #F6F6F6;
+    --graphite-surface1-foreground: #1C1B1D;
+    --graphite-surface2: #EFEFEF;
+    --graphite-surface2-foreground: #1C1B1D;
+    --graphite-surface3: #FAFAFA;
+    --graphite-surface3-foreground: #1C1B1D;
 
-    /* Neutral overlay ramp: black-on-light. The number is the alpha percent.
-       Because the ramp flips polarity per theme, a class like `bg-neutral-10`
-       or `text-neutral-60` is correct in both themes with no dark: variant. */
-    --graphite-neutral-5: rgba(0, 0, 0, 0.05);
-    --graphite-neutral-10: rgba(0, 0, 0, 0.08);
-    --graphite-neutral-15: rgba(0, 0, 0, 0.12);
-    --graphite-neutral-20: rgba(0, 0, 0, 0.16);
-    --graphite-neutral-30: rgba(0, 0, 0, 0.28);
-    --graphite-neutral-50: rgba(0, 0, 0, 0.48);
-    --graphite-neutral-60: rgba(0, 0, 0, 0.60);
-    --graphite-neutral-70: rgba(0, 0, 0, 0.72);
-    --graphite-neutral: rgba(0, 0, 0, 0.08);
-    --graphite-neutral-foreground: #18181B;
+    /* Neutral overlay ramp: black-on-light. Light values are tuned steps, so
+       suffixes are not exact alpha percentages (neutral-10 is 8%, neutral-50 70%).
+       The ramp flips polarity per theme, keeping semantic roles correct without
+       a dark: variant. */
+    --graphite-neutral-5: rgba(28, 27, 29, 0.04);
+    --graphite-neutral-10: rgba(28, 27, 29, 0.08);
+    --graphite-neutral-15: rgba(28, 27, 29, 0.12);
+    --graphite-neutral-20: rgba(28, 27, 29, 0.16);
+    --graphite-neutral-30: rgba(28, 27, 29, 0.28);
+    --graphite-neutral-50: rgba(28, 27, 29, 0.70);
+    --graphite-neutral-60: rgba(28, 27, 29, 0.78);
+    --graphite-neutral-70: rgba(28, 27, 29, 0.86);
+    --graphite-neutral: var(--graphite-neutral-10);
+    --graphite-neutral-foreground: var(--graphite-foreground);
 
     /* Inverse overlay ramp: white-on-light. */
-    --graphite-overlay-5: rgba(255, 255, 255, 0.05);
-    --graphite-overlay-10: rgba(255, 255, 255, 0.10);
-    --graphite-overlay-15: rgba(255, 255, 255, 0.15);
-    --graphite-overlay-20: rgba(255, 255, 255, 0.20);
-    --graphite-overlay-30: rgba(255, 255, 255, 0.30);
-    --graphite-overlay-50: rgba(255, 255, 255, 0.50);
-    --graphite-overlay-90: rgba(255, 255, 255, 0.90);
-    --graphite-overlay: rgba(255, 255, 255, 0.90);
-    --graphite-overlay-foreground: #18181B;
+    --graphite-overlay-5: rgba(231, 232, 235, 0.05);
+    --graphite-overlay-10: rgba(231, 232, 235, 0.10);
+    --graphite-overlay-15: rgba(231, 232, 235, 0.15);
+    --graphite-overlay-20: rgba(231, 232, 235, 0.20);
+    --graphite-overlay-30: rgba(231, 232, 235, 0.30);
+    --graphite-overlay-50: rgba(231, 232, 235, 0.50);
+    --graphite-overlay-90: rgba(231, 232, 235, 0.90);
+    --graphite-overlay: var(--graphite-overlay-90);
+    --graphite-overlay-foreground: var(--graphite-foreground);
 
-    --graphite-divider: rgba(0, 0, 0, 0.10);
-    --graphite-scrim: rgba(0, 0, 0, 0.35);
+    --graphite-divider: var(--graphite-neutral-10);
+    --graphite-scrim: rgba(39, 40, 44, 0.38);
 
     /* Border for interactive controls — inputs, checkboxes, radios, switches,
        triggers. WCAG 1.4.11 wants 3:1 for a control's visual boundary, and the
        decorative neutral hairline only reaches 1.19:1 against the page. Kept
-       separate so containers can stay subtle. Measures 3.12:1 light, 3.72:1 dark. */
-    --graphite-control-border: rgba(0, 0, 0, 0.42);
+       separate so containers can stay subtle. */
+    --graphite-control-border: rgba(28, 27, 29, 0.54);
 
     /* Skeleton shimmer sweep */
-    --graphite-shimmer-from: rgba(0, 0, 0, 0.03);
-    --graphite-shimmer-via: rgba(0, 0, 0, 0.09);
+    --graphite-shimmer-from: rgba(28, 27, 29, 0.03);
+    --graphite-shimmer-via: rgba(28, 27, 29, 0.09);
 
-    /* ---- Accent ramp: graphite, not a hue. The library's emphasis signal is
-            LIGHTNESS INVERSION, not color — Primary is a near-black fill on the
-            light theme and a white fill on the dark one. The ramp itself is
-            shared by both themes; only which step is "base" flips.
+    /* ---- Accent ramp: graphite, not a hue. Primary is near-black in light and
+            silver in dark. The ramp is shared by both themes.
 
             To rebrand with a real hue, replace these eleven values and set
             --graphite-accent / -foreground in both this file and _dark.css. ---- */
-    --graphite-accent-50: #FAFAFA;
-    --graphite-accent-100: #F4F4F5;
-    --graphite-accent-200: #E4E4E7;
-    --graphite-accent-300: #D4D4D8;
-    --graphite-accent-400: #A1A1AA;
-    --graphite-accent-500: #71717A;
-    --graphite-accent-600: #52525B;
-    --graphite-accent-700: #3F3F46;
-    --graphite-accent-800: #27272A;
-    --graphite-accent-900: #18181B;
-    --graphite-accent-950: #09090B;
+    --graphite-accent-50: #F4F5F7;
+    --graphite-accent-100: #E7E9EE;
+    --graphite-accent-200: #D4D6DB;
+    --graphite-accent-300: #C1C4CB;
+    --graphite-accent-400: #ADB2BC;
+    --graphite-accent-500: #858B96;
+    --graphite-accent-600: #656C78;
+    --graphite-accent-700: #4C535F;
+    --graphite-accent-800: #30343B;
+    --graphite-accent-900: #262A31;
+    --graphite-accent-950: #1F2329;
 
-    --graphite-accent: var(--graphite-accent-900);
-    --graphite-accent-foreground: #FFFFFF;
-    --graphite-accent-subtle: var(--graphite-accent-200);
-    --graphite-accent-subtle-foreground: var(--graphite-accent-900);
+    --graphite-accent: #1C1B1D;
+    --graphite-accent-foreground: #F6F6F4;
+    --graphite-accent-hover: #2B292D;
+    --graphite-accent-active: #39363C;
+    --graphite-accent-subtle: var(--graphite-accent-100);
+    --graphite-accent-subtle-foreground: #1C1B1D;
     --graphite-accent-border: var(--graphite-accent-300);
 
-    --graphite-focus: var(--graphite-accent-900);
+    --graphite-focus: #1C1B1D;
 
     /* ---- Semantic fills ---- */
-    --graphite-success: #15803D;
-    --graphite-success-foreground: #FFFFFF;
-    --graphite-success-subtle: #F0FDF4;
-    --graphite-success-subtle-foreground: #166534;
-    --graphite-success-border: #BBF7D0;
+    --graphite-success: #167A45;
+    --graphite-success-foreground: #FAFAF8;
+    --graphite-success-subtle: #E8F5EC;
+    --graphite-success-subtle-foreground: #17643B;
+    --graphite-success-border: #A8D5B6;
+    --graphite-success-hover: #12683A;
+    --graphite-success-active: #105B33;
 
-    --graphite-warning: #B45309;
-    --graphite-warning-foreground: #FFFFFF;
-    --graphite-warning-subtle: #FFFBEB;
-    --graphite-warning-subtle-foreground: #92400E;
-    --graphite-warning-border: #FDE68A;
+    --graphite-warning: #F0D000;
+    --graphite-warning-foreground: #242424;
+    --graphite-warning-subtle: #FFF9D1;
+    --graphite-warning-subtle-foreground: #5A4B00;
+    --graphite-warning-border: #E8D769;
+    --graphite-warning-hover: #F5D91C;
+    --graphite-warning-active: #E3C600;
 
     --graphite-danger: #DC2626;
     --graphite-danger-foreground: #FFFFFF;
@@ -119,24 +131,10 @@
     --graphite-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
     /* ---- INTERACTION STATE TOKENS ------------------------------------------
-       Defined once, for both themes. Custom properties substitute lazily, so
-       these resolve against whichever --graphite-<name> is in scope.
-
-       Rule: hover/active always move a fill AWAY from its own foreground, so
-       contrast improves in every state. Fills with a white foreground darken;
-       fills with a near-black foreground lighten. That replaces the old
-       per-color `-400`/`-500` shade references, where `-400` happened to be
-       darker for success/warning but lighter for danger/info. */
+       Danger and info states are formulas; accent and success/warning states
+       are explicit palette values. */
     --graphite-tint-toward-dark: #000000;
     --graphite-tint-toward-light: #FFFFFF;
-
-    /* Accent is the one fill that does NOT follow the move-away-from-foreground
-       rule. It sits at an extreme of the ramp (900 light / 50 dark), so there is
-       nowhere further to go; base contrast is already ~16:1, and stepping one
-       notch toward the middle still leaves ~13:1. Named ramp steps, not
-       color-mix, so the two hover states are visibly different from each other. */
-    --graphite-accent-hover: var(--graphite-accent-800);
-    --graphite-accent-active: var(--graphite-accent-700);
 
     --graphite-danger-hover: color-mix(in oklab, var(--graphite-danger) 88%, var(--graphite-tint-toward-dark));
     --graphite-danger-active: color-mix(in oklab, var(--graphite-danger) 78%, var(--graphite-tint-toward-dark));
@@ -144,25 +142,9 @@
     --graphite-info-hover: color-mix(in oklab, var(--graphite-info) 88%, var(--graphite-tint-toward-dark));
     --graphite-info-active: color-mix(in oklab, var(--graphite-info) 78%, var(--graphite-tint-toward-dark));
 
-    /* success + warning carry a near-black foreground in dark and a white one in
-       light, so they are the two that get overridden per theme below. */
-    --graphite-success-hover: color-mix(in oklab, var(--graphite-success) 88%, var(--graphite-tint-toward-dark));
-    --graphite-success-active: color-mix(in oklab, var(--graphite-success) 78%, var(--graphite-tint-toward-dark));
-
-    --graphite-warning-hover: color-mix(in oklab, var(--graphite-warning) 88%, var(--graphite-tint-toward-dark));
-    --graphite-warning-active: color-mix(in oklab, var(--graphite-warning) 78%, var(--graphite-tint-toward-dark));
 }
 
-/* Dark flips success/warning only: there the fill is bright with a near-black
-   foreground, so it must lighten on hover to keep gaining contrast. */
-:root.dark,
-:root[data-theme="dark"] {
-    --graphite-success-hover: color-mix(in oklab, var(--graphite-success) 88%, var(--graphite-tint-toward-light));
-    --graphite-success-active: color-mix(in oklab, var(--graphite-success) 78%, var(--graphite-tint-toward-light));
-
-    --graphite-warning-hover: color-mix(in oklab, var(--graphite-warning) 88%, var(--graphite-tint-toward-light));
-    --graphite-warning-active: color-mix(in oklab, var(--graphite-warning) 78%, var(--graphite-tint-toward-light));
-}
+/* Accent and success/warning use explicit states; danger/info retain formulas. */
 
 /* ---- THEME (static, inline) ------------------------------------------- */
 @theme static inline {
@@ -171,6 +153,7 @@
 
     /* typography */
     --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-sans: var(--font-family-sans);
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -250,7 +233,8 @@
     --color-control: var(--graphite-control-border);
     --color-control-hover: var(--graphite-foreground);
     --color-disabled: var(--graphite-neutral-10);
-    --color-invalid: var(--graphite-danger);
+    --color-invalid: var(--graphite-danger-subtle-foreground);
+    --color-error-foreground: var(--graphite-danger-subtle-foreground);
 
     /* ---- Controls: checkbox, radio, switch. Split from the accent tone so a
             rebrand can leave the controls alone, or vice versa. ---- */
@@ -264,7 +248,7 @@
 
     /* ---- Focus ---- */
     --color-focus: var(--graphite-focus);
-    --color-focus-invalid: var(--graphite-danger);
+    --color-focus-invalid: var(--graphite-danger-subtle-foreground);
 
     --color-shimmer-from: var(--graphite-shimmer-from);
     --color-shimmer-via: var(--graphite-shimmer-via);
@@ -281,6 +265,8 @@
     --color-secondary-subtle: var(--graphite-surface2);
     --color-secondary-subtle-foreground: var(--graphite-surface2-foreground);
     --color-secondary-border-subtle: var(--graphite-neutral-15);
+    --color-secondary-subtle-hover: color-mix(in oklab, var(--color-secondary-subtle) 94%, var(--color-secondary-subtle-foreground));
+    --color-secondary-subtle-active: color-mix(in oklab, var(--color-secondary-subtle) 88%, var(--color-secondary-subtle-foreground));
     --color-secondary-indicator: var(--graphite-neutral-50);
 
     /* ---- ACCENT tone (ThemeColor.Primary). The ramp steps are primitives; only
@@ -292,6 +278,8 @@
     --color-accent-subtle: var(--graphite-accent-subtle);
     --color-accent-subtle-foreground: var(--graphite-accent-subtle-foreground);
     --color-accent-border: var(--graphite-accent-border);
+    --color-accent-subtle-hover: color-mix(in oklab, var(--graphite-accent-subtle) 94%, var(--graphite-accent-subtle-foreground));
+    --color-accent-subtle-active: color-mix(in oklab, var(--graphite-accent-subtle) 88%, var(--graphite-accent-subtle-foreground));
 
     /* SUCCESS */
     --color-success: var(--graphite-success);
@@ -301,6 +289,8 @@
     --color-success-subtle: var(--graphite-success-subtle);
     --color-success-subtle-foreground: var(--graphite-success-subtle-foreground);
     --color-success-border: var(--graphite-success-border);
+    --color-success-subtle-hover: color-mix(in oklab, var(--graphite-success-subtle) 94%, var(--graphite-success-subtle-foreground));
+    --color-success-subtle-active: color-mix(in oklab, var(--graphite-success-subtle) 88%, var(--graphite-success-subtle-foreground));
 
     /* WARNING */
     --color-warning: var(--graphite-warning);
@@ -310,6 +300,8 @@
     --color-warning-subtle: var(--graphite-warning-subtle);
     --color-warning-subtle-foreground: var(--graphite-warning-subtle-foreground);
     --color-warning-border: var(--graphite-warning-border);
+    --color-warning-subtle-hover: color-mix(in oklab, var(--graphite-warning-subtle) 94%, var(--graphite-warning-subtle-foreground));
+    --color-warning-subtle-active: color-mix(in oklab, var(--graphite-warning-subtle) 88%, var(--graphite-warning-subtle-foreground));
 
     /* DANGER */
     --color-danger: var(--graphite-danger);
@@ -319,6 +311,8 @@
     --color-danger-subtle: var(--graphite-danger-subtle);
     --color-danger-subtle-foreground: var(--graphite-danger-subtle-foreground);
     --color-danger-border: var(--graphite-danger-border);
+    --color-danger-subtle-hover: color-mix(in oklab, var(--graphite-danger-subtle) 94%, var(--graphite-danger-subtle-foreground));
+    --color-danger-subtle-active: color-mix(in oklab, var(--graphite-danger-subtle) 88%, var(--graphite-danger-subtle-foreground));
 
     /* INFO */
     --color-info: var(--graphite-info);
@@ -328,6 +322,8 @@
     --color-info-subtle: var(--graphite-info-subtle);
     --color-info-subtle-foreground: var(--graphite-info-subtle-foreground);
     --color-info-border: var(--graphite-info-border);
+    --color-info-subtle-hover: color-mix(in oklab, var(--graphite-info-subtle) 94%, var(--graphite-info-subtle-foreground));
+    --color-info-subtle-active: color-mix(in oklab, var(--graphite-info-subtle) 88%, var(--graphite-info-subtle-foreground));
 
     /* ---- Type scale. Every size carries a line-height; the old scale defined
             none outside label-*, so vertical rhythm drifted per component. ---- */
@@ -414,14 +410,9 @@
         color: var(--color-foreground);
         font-family: var(--font-family-sans);
     }
-}
 
-@keyframes graphite-skeleton-shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
+    ::selection {
+        background: var(--color-selected);
+        color: var(--color-selected-foreground);
     }
 }
