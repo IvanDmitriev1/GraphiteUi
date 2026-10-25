@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>GraphiteUi</PackageId>
-    <Version>0.5.7-preview.1</Version>
+    <Version>0.5.7-preview.2</Version>
     <Authors>Ivan Dmitriev</Authors>
     <Description>GraphiteUi is a Blazor UI component library for SSR and interactive rendering modes.</Description>
     <PackageTags>blazor;ui;components;razor</PackageTags>

@@ -5,7 +5,10 @@
     :where([data-ui="input-field"] > [data-part="wrapper"][data-size="small"]) { height: var(--control-height-sm); min-height: var(--control-height-sm); }
     :where([data-ui="input-field"] > [data-part="wrapper"][data-size="medium"]) { height: var(--control-height-md); min-height: var(--control-height-md); }
     :where([data-ui="input-field"] > [data-part="wrapper"][data-size="large"]) { height: var(--control-height-lg); min-height: var(--control-height-lg); }
-    :where([data-ui="input-field"] > [data-part="wrapper"]:has(> [data-part="label"])) { margin-top: calc(var(--text-body-sm) + 10px); }
+    :where([data-ui="input-field"]:has(> [data-part="wrapper"] > [data-part="label"])) {
+        @apply text-body-sm;
+        padding-top: calc(1lh + var(--spacing));
+    }
     @media (hover: hover) {
         :where([data-ui="input-field"] > [data-part="wrapper"]:hover) { @apply border-control-hover; }
     }
@@ -14,10 +17,10 @@
     :where([data-ui="input-field"] > [data-part="wrapper"][data-invalid="true"]:focus-within) { @apply ring-focus-invalid; }
     :where([data-ui="input-field"] > [data-part="wrapper"][data-disabled="true"]) { @apply bg-disabled-surface text-disabled-foreground cursor-default border-transparent; }
     :where([data-ui="input-field"] > [data-part="wrapper"] > [data-part="label"]) {
-        @apply absolute block origin-top-left pointer-events-none subpixel-antialiased pe-2 max-w-full text-ellipsis transition-[transform,color,left,opacity,translate,scale] z-20 top-1/2 -translate-y-1/2 left-3 text-body-sm text-muted-foreground;
+        @apply absolute block origin-top-left pointer-events-none subpixel-antialiased pe-2 max-w-full text-ellipsis transition-[top,transform,color,left,opacity,translate,scale] z-20 top-1/2 -translate-y-1/2 left-3 text-body-sm text-muted-foreground;
     }
     :where([data-ui="input-field"] > [data-part="wrapper"][data-active="true"] > [data-part="label"], [data-ui="input-field"] > [data-part="wrapper"]:focus-within > [data-part="label"]) {
-        @apply left-0 pointer-events-auto -translate-y-[calc(100%_+_var(--text-body-sm)/2_+_18px)] text-foreground;
+        @apply top-0 left-0 pointer-events-auto -translate-y-[calc(100%_+_var(--spacing)_+_1px)] text-foreground;
     }
     :where([data-ui="input-field"] > [data-part="wrapper"]:focus-within > [data-part="label"]) { @apply text-focus; }
     :where([data-ui="input-field"] > [data-part="wrapper"][data-disabled="true"] > [data-part="label"]) { @apply text-disabled-foreground; }

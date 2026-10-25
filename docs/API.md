@@ -608,7 +608,7 @@ There is **no plain-string message API** — the minimum body is a `RenderFragme
     <ChildContent>
         <div class="flex items-center gap-3">
             <UiAvatar Name="Alex Johnson" />
-            <div class="text-body-sm text-neutral-60">alex@example.com</div>
+            <div class="text-body-sm text-muted-foreground">alex@example.com</div>
         </div>
     </ChildContent>
     <FooterContent>
@@ -775,7 +775,7 @@ To retune a *role* rather than a value — "disabled text should be lighter", "t
 
 ### Rules worth knowing
 
-**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is black-alpha in light and white-alpha in dark; `--graphite-overlay-*` is the reverse. The number is the alpha percent. That is why roles built on it — `surface-hover`, `muted-foreground`, `control-track` — are correct in both themes with no `dark:` variant, and it is what makes the light theme cheap.
+**The neutral ramp flips polarity per theme.** `--graphite-neutral-*` is black-alpha in light and white-alpha in dark; `--graphite-overlay-*` is the reverse. Neutral suffixes name tuned steps, not exact alpha percentages: light `neutral-10` is 8%, `neutral-15` is 12%, `neutral-30` is 28%, and `neutral-50` is 48%. Overlay suffixes match their alpha percentages. Roles built on these primitives — `surface-hover`, `muted-foreground`, `control-track` — work in both themes with no `dark:` variant.
 
 **Hover and active are roles, not shades.** Use `hover:bg-accent-hover`, never a numbered step. Semantic fills move *away* from their own foreground on hover, so contrast improves in every state. The accent is the exception — it already sits at an extreme of the ramp, so it steps one notch toward the middle (17.72:1 base, 14.89:1 hover, 10.44:1 active in light).
 

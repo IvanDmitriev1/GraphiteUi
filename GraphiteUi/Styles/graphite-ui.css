@@ -12,7 +12,7 @@
 @import "./_skeleton.css";
 @import "./_popup.css";
 @import "./_menu.css";
-@custom-variant dark (&:where(.dark, [data-theme="dark"]));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 @import "./_input-field.css";
 @import "./_file-input.css";
 @import "./_checkbox.css";

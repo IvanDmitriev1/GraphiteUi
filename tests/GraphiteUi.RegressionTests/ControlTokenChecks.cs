@@ -16,14 +16,34 @@ internal static class ControlTokenChecks
         });
 
         string[] inputWrappers = Tags(html, "data-slot", "input-wrapper");
-        Require(inputWrappers.Length == 5, "Control token probe did not render each input size and fallback.");
-        string[] expectedSizes = ["small", "medium", "large", "medium", "medium"];
+        Require(inputWrappers.Length == 6, "Control token probe did not render each input size, type and fallback.");
+        string[] expectedSizes = ["small", "medium", "large", "small", "medium", "medium"];
         for (int index = 0; index < inputWrappers.Length; index++)
         {
             Require(inputWrappers[index].Contains("data-part=\"wrapper\"", StringComparison.Ordinal)
                 && inputWrappers[index].Contains($"data-size=\"{expectedSizes[index]}\"", StringComparison.Ordinal),
                 $"Input wrapper {index} emitted the wrong CSS size state.");
         }
+
+        string inputLabel = LabelElement(html, "control-small");
+        string input = InputElement(html, "control-small");
+        string smallWrapper = Wrapper(html, "control-small");
+        Require(inputLabel.Contains("Small input", StringComparison.Ordinal)
+            && input.Contains("placeholder=\"Enter text\"", StringComparison.Ordinal)
+            && smallWrapper.Contains("data-active=\"true\"", StringComparison.Ordinal),
+            "Placeholder input lost its linked floating-label state.");
+        Require(LabelElement(html, "control-medium").Contains("Medium input", StringComparison.Ordinal)
+            && InputElement(html, "control-medium").Contains("aria-readonly=\"true\"", StringComparison.Ordinal)
+            && Wrapper(html, "control-medium").Contains("data-active=\"false\"", StringComparison.Ordinal),
+            "Empty read-only input lost its linked label or inactive state.");
+        Require(LabelElement(html, "control-large").Contains("Large input", StringComparison.Ordinal)
+            && InputElement(html, "control-large").Contains("aria-disabled=\"true\"", StringComparison.Ordinal)
+            && Wrapper(html, "control-large").Contains("data-active=\"true\"", StringComparison.Ordinal),
+            "Disabled populated input lost its linked floating-label state.");
+        Require(LabelElement(html, "control-number").Contains("Number input", StringComparison.Ordinal)
+            && InputElement(html, "control-number").Contains("value=\"1.25\"", StringComparison.Ordinal)
+            && Wrapper(html, "control-number").Contains("data-active=\"true\"", StringComparison.Ordinal),
+            "Populated number input lost its linked floating-label state.");
 
         string[] selectTriggers = Tags(html, "data-slot", "popup-trigger");
         Require(selectTriggers.Length == 5, "Select token probe did not render all five trigger sizes and state cases.");
@@ -104,6 +124,18 @@ internal static class ControlTokenChecks
         Match match = Regex.Match(html[rootIndex..], "<div[^>]*>");
         Require(match.Success, $"Missing Select root tag for {inputId}.");
         return WebUtility.HtmlDecode(match.Value);
+    }
+
+    private static string Wrapper(string html, string inputId)
+    {
+        int inputIndex = html.IndexOf($"id=\"{inputId}\"", StringComparison.Ordinal);
+        Require(inputIndex >= 0, $"Missing input {inputId}.");
+        int wrapperIndex = html.LastIndexOf("data-part=\"wrapper\"", inputIndex, StringComparison.Ordinal);
+        Require(wrapperIndex >= 0, $"Missing input wrapper for {inputId}.");
+        int start = html.LastIndexOf("<div", wrapperIndex, StringComparison.Ordinal);
+        int end = html.IndexOf('>', wrapperIndex);
+        Require(start >= 0 && end >= 0, $"Missing input wrapper tag for {inputId}.");
+        return WebUtility.HtmlDecode(html[start..(end + 1)]);
     }
 
     private static void Require(bool condition, string message)

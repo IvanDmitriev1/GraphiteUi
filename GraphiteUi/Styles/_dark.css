@@ -3,9 +3,9 @@
    State tokens (*-hover / *-active) are formulas defined once in _theme.css and
    are NOT repeated: they resolve against whichever base is in scope.
 
-   Selector is :root-qualified on purpose. @import must come first in a CSS file,
-   so this block is parsed BEFORE the light defaults in _theme.css; a bare .dark
-   would tie :root on specificity and lose on source order. */
+   graphite-ui.css imports _theme.css first, then this file. These root-qualified
+   selectors have higher specificity than the light :root defaults, so the dark
+   values win when the root theme selector matches. */
 :root.dark,
 :root[data-theme="dark"] {
     color-scheme: dark;

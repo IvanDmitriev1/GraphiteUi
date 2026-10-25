@@ -25,9 +25,10 @@
     --graphite-surface3: #FFFFFF;
     --graphite-surface3-foreground: #18181B;
 
-    /* Neutral overlay ramp: black-on-light. The number is the alpha percent.
-       Because the ramp flips polarity per theme, a class like `bg-neutral-10`
-       or `text-neutral-60` is correct in both themes with no dark: variant. */
+    /* Neutral overlay ramp: black-on-light. Light values are tuned steps, so
+       suffixes are not exact alpha percentages (neutral-10 is 8%, neutral-50 48%).
+       The ramp flips polarity per theme, keeping semantic roles correct without
+       a dark: variant. */
     --graphite-neutral-5: rgba(0, 0, 0, 0.05);
     --graphite-neutral-10: rgba(0, 0, 0, 0.08);
     --graphite-neutral-15: rgba(0, 0, 0, 0.12);
