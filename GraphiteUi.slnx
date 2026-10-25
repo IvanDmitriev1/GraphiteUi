@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="GraphiteUi.Docs/GraphiteUi.Docs.Client/GraphiteUi.Docs.Client.csproj" />
+  <Project Path="GraphiteUi.Docs/GraphiteUi.Docs/GraphiteUi.Docs.csproj" />
+  <Project Path="GraphiteUi/GraphiteUi.csproj" />
+</Solution>
